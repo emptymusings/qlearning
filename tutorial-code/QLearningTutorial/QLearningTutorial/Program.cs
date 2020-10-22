@@ -8,24 +8,33 @@ namespace QLearningTutorial
         static Random rnd = new Random(1);
         static void Main(string[] args)
         {
-            IMaze maze = new OriginalMaze();
-
-            Console.WriteLine("Begin Q-learning maze demo");
-            Console.WriteLine("Setting up maze and rewards");
-            int ns = 12;            
-            int[][] FT = maze.CreateMaze(ns);
-            double[][] R = maze.CreateRewards(ns);
-            double[][] Q = maze.CreateQuality(ns);
-            Console.WriteLine("Analyzing maze using Q-learning");
-            int goal = 11;
+            int numberOfStates = 12;
+            int startPosition = 8;
+            int goalPosition = 11;
             double gamma = 0.5;
             double learnRate = 0.5;
             int maxEpochs = 1000;
-            maze.Train(FT, R, Q, goal, gamma, learnRate, maxEpochs);
-            Console.WriteLine("Done. Q matrix: ");
-            Print(Q);
-            Console.WriteLine("Using Q to walk from cell 8 to 11");
-            maze.Move(8, 11, Q);
+
+            IMaze maze = new OriginalMaze(
+                numberOfStates,
+                startPosition,
+                goalPosition,
+                gamma,
+                learnRate,
+                maxEpochs);
+
+            maze.Train();
+            
+            Console.WriteLine();
+            Console.WriteLine("Done. Quality matrix: ");
+            Print(maze.Quality);
+            Console.WriteLine();
+            Console.WriteLine();
+            
+            Console.WriteLine($"Using Quality Matrix to walk from cell {startPosition} to {goalPosition}");
+            maze.RunMaze();
+            Console.WriteLine();
+            
             Console.WriteLine("End demo");
             Console.ReadLine();
         }
