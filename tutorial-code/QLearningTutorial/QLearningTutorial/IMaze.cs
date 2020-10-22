@@ -6,7 +6,9 @@ namespace QLearningTutorial
 {
     interface IMaze
     {
-        int NumberOfStates { get; set; }
+        int NumberOfStates { get; }
+        int Rows { get; set; }
+        int Columns { get; set; }
         int GoalPosition { get; set; }
         int StartPosition { get; set; }
         double Gamma { get; set; }

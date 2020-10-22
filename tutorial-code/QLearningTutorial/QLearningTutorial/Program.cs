@@ -9,16 +9,18 @@ namespace QLearningTutorial
         static Random rnd = new Random(1);
         static void Main(string[] args)
         {
-            int numberOfStates = 12;
-            int startPosition = PromptPosition(numberOfStates, "starting");
+            int rows = 3;
+            int columns = 4;
+            int startPosition = PromptPosition(rows * columns, "starting");
             int goalPosition = 11;
             double gamma = 0.5;
             double learnRate = 0.5;
             int maxEpochs = 1000;
 
             IMaze maze = MazeFactory.CreateMaze(
-                MazeTypes.CustomMaze1,
-                numberOfStates,
+                MazeTypes.OriginalMaze,
+                rows,
+                columns,
                 startPosition,
                 goalPosition,
                 gamma,

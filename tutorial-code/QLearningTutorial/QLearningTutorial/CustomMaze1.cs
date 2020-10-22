@@ -11,14 +11,16 @@ namespace QLearningTutorial
     public class CustomMaze1 : MazeBase, IMaze
     {
         public CustomMaze1(
-            int numberOfStates,
+            int rows,
+            int columns,
             int startPosition,
             int goalPosition,
             double gamma,
             double learnRate,
             int maxEpochs)
         : base(
-            numberOfStates,
+            rows,
+            columns,
             startPosition,
             goalPosition,
             gamma,

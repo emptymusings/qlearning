@@ -14,7 +14,8 @@ namespace QLearningTutorial
     {
         public static IMaze CreateMaze(
             MazeTypes mazeType,
-            int numberOfStates,
+            int rows,
+            int columns,
             int startPosition,
             int goalPosition,
             double gamma,
@@ -25,7 +26,8 @@ namespace QLearningTutorial
             {
                 case MazeTypes.OriginalMaze:
                     return new OriginalMaze(
-                        numberOfStates,
+                        rows,
+                        columns,
                         startPosition,
                         goalPosition,
                         gamma,
@@ -33,7 +35,8 @@ namespace QLearningTutorial
                         maxEpochs);
                 case MazeTypes.CustomMaze1:
                     return new CustomMaze1(
-                        numberOfStates,
+                        rows,
+                        columns,
                         startPosition,
                         goalPosition,
                         gamma,

@@ -10,14 +10,16 @@ namespace QLearningTutorial
         private Random random = new Random();
         
         public MazeBase(
-            int numberOfStates,
+            int rows,
+            int columns,
             int startPosition,
             int goalPosition,
             double gamma,
             double learnRate,
             int maxEpochs)
         {
-            this.NumberOfStates = numberOfStates;
+            this.Rows = rows;
+            this.Columns = columns;
             this.StartPosition = startPosition;
             this.GoalPosition = goalPosition;
             this.Gamma = gamma;
@@ -25,7 +27,15 @@ namespace QLearningTutorial
             this.MaxEpochs = maxEpochs;
         }
 
-        public int NumberOfStates { get; set; } = 12;
+        public int NumberOfStates 
+        { 
+            get
+            {
+                return Rows * Columns;
+            }
+        }
+        public int Rows { get; set; } = 3;
+        public int Columns { get; set; } = 4;
         public int GoalPosition { get; set; }
         public int StartPosition { get; set; }
         public double Gamma { get; set; }
@@ -46,20 +56,26 @@ namespace QLearningTutorial
 
             int[][] mazeNextStates = new int[NumberOfStates][];
 
-            for (int i = 0; i < NumberOfStates; ++i) mazeNextStates[i] = new int[NumberOfStates];
+            for (int i = 0; i < NumberOfStates; ++i)
+            {
+                mazeNextStates[i] = new int[NumberOfStates];
 
-            mazeNextStates[0][1] = mazeNextStates[0][4] = 1;
-            mazeNextStates[1][0] = mazeNextStates[1][5] = 1;
-            mazeNextStates[2][3] = mazeNextStates[2][6] = 1;
-            mazeNextStates[3][2] = mazeNextStates[3][7] = 1;
-            mazeNextStates[4][0] = mazeNextStates[4][8] = 1;
-            mazeNextStates[5][1] = mazeNextStates[5][6] = mazeNextStates[5][9] = 1;
-            mazeNextStates[6][2] = mazeNextStates[6][5] = mazeNextStates[6][7] = 1;
-            mazeNextStates[7][3] = mazeNextStates[7][6] = mazeNextStates[7][11] = 1;
-            mazeNextStates[8][4] = mazeNextStates[8][9] = 1;
-            mazeNextStates[9][5] = mazeNextStates[9][8] = mazeNextStates[9][10] = 1;
-            mazeNextStates[10][9] = 1;
-            mazeNextStates[11][11] = 1;  // Goal - Note that there is no pathway FROM space 11 to any other space
+                for (int j = 0; j < NumberOfStates; ++j)
+                {
+                    if (i != GoalPosition ||
+                        (i == GoalPosition && j == GoalPosition))
+                    {
+                        mazeNextStates[i][j] = 1;
+                    }
+                    else
+                    {
+                        mazeNextStates[i][j] = 0;
+                    }
+
+                    Console.WriteLine($"Location[{i}][{j}] = {mazeNextStates[i][j]}");
+                }
+            }
+
 
             MazeStates = mazeNextStates;
         }
