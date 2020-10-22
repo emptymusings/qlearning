@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Schema;
 
 namespace QLearningTutorial
 {
@@ -9,13 +10,14 @@ namespace QLearningTutorial
         static void Main(string[] args)
         {
             int numberOfStates = 12;
-            int startPosition = 8;
+            int startPosition = PromptPosition(numberOfStates, "starting");
             int goalPosition = 11;
             double gamma = 0.5;
             double learnRate = 0.5;
             int maxEpochs = 1000;
 
-            IMaze maze = new OriginalMaze(
+            IMaze maze = MazeFactory.CreateMaze(
+                MazeTypes.CustomMaze1,
                 numberOfStates,
                 startPosition,
                 goalPosition,
@@ -39,6 +41,33 @@ namespace QLearningTutorial
             Console.ReadLine();
         }
         
+        static int PromptPosition(int numberOfStates, string pointName)
+        {
+            bool invalidEntry = false;
+
+            Console.Write($"Enter a {pointName} point between 0 and {numberOfStates - 1}: ");
+            var entry = Console.ReadLine();
+            int result = numberOfStates + 1;
+
+            try
+            {
+                result = Convert.ToInt32(entry);
+
+                if (result < 0 || result > numberOfStates - 1) invalidEntry = true;
+            }
+            catch
+            {
+                invalidEntry = true;
+            }
+
+            if (invalidEntry)
+            {
+                Console.WriteLine($"'{entry}' is not a valid entry");
+                return PromptPosition(numberOfStates, pointName);
+            }
+
+            return result;
+        }
         static void Print(double[][] quality)
         {
             int ns = quality.Length;
