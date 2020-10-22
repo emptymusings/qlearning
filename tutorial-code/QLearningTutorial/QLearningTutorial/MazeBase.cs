@@ -36,6 +36,10 @@ namespace QLearningTutorial
         public double[][] Rewards { get; set; }
         public double[][] Quality { get; set; }
 
+        /// <summary>
+        /// Creates the maze matrix.  Anything with a value of 1 indicates the ability of free movement between 2 spaces (needs to be assigned bi-directionally).  A value of 0 (zero)
+        /// indicates a blocked path (also bi-directional)
+        /// </summary>
         protected virtual void CreateMaze()
         {
             Console.WriteLine("Creating Maze States (Observation Space)");
@@ -55,7 +59,7 @@ namespace QLearningTutorial
             mazeNextStates[8][4] = mazeNextStates[8][9] = 1;
             mazeNextStates[9][5] = mazeNextStates[9][8] = mazeNextStates[9][10] = 1;
             mazeNextStates[10][9] = 1;
-            mazeNextStates[11][11] = 1;  // Goal
+            mazeNextStates[11][11] = 1;  // Goal - Note that there is no pathway FROM space 11 to any other space
 
             MazeStates = mazeNextStates;
         }
@@ -78,11 +82,14 @@ namespace QLearningTutorial
             reward[8][4] = reward[8][9] = -0.1;
             reward[9][5] = reward[9][8] = reward[9][10] = -0.1;
             reward[10][9] = -0.1;
-            reward[7][11] = 10.0;  // Goal
+            reward[7][11] = 10.0;  // Goal - This is currently the only path to space 11, based on the 'wall' setup up
 
             Rewards = reward;
         }
 
+        /// <summary>
+        /// Creates the Q-Table matrix
+        /// </summary>
         protected virtual void CreateQuality()
         {
             Console.WriteLine("Creating Quality of States");
