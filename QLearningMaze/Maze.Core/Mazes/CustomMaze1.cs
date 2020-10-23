@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLearningMaze
+namespace QLearningMaze.Core.Mazes
 {
-    class OriginalMaze : MazeBase, IMaze
+    /// <summary>
+    /// Based off of the original maze, but adds a wall between spaces 5 & 6, and removes
+    /// the wall between 10 and 11
+    /// </summary>
+    public class CustomMaze1 : MazeBase, IMaze
     {
-        public OriginalMaze(
+        public CustomMaze1(
             int rows,
             int columns,
             int startPosition,
             int goalPosition,
             double discountRate,
             double learningRate,
-            int maxEpochs) 
-        : base (
+            int maxEpochs)
+        : base(
             rows,
             columns,
             startPosition,
@@ -29,11 +33,17 @@ namespace QLearningMaze
         protected override void CreateMazeStates()
         {
             base.CreateMazeStates();
-            AddWall(0, 1);
-            AddWall(1, 2);
+            AddWall(0, 1);            
             AddWall(4, 5);
+            AddWall(9, 10);
+            AddWall(5, 6);
+            AddWall(2, 3);
             AddWall(6, 10);
-            AddWall(10, 11);
+        }
+
+        protected override void CreateRewards()
+        {
+            base.CreateRewards();
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLearningMaze
+namespace QLearningMaze.Core
 {
-    interface IMaze
+    public interface IMaze
     {
         int NumberOfStates { get; }
         int Rows { get; set; }

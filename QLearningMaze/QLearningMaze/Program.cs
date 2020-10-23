@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Schema;
-
-namespace QLearningMaze
+﻿namespace QLearningMaze
 {
+    using System;
+    using Core;
+
     class QLearningMazeProgram
     {
         static Random rnd = new Random(1);

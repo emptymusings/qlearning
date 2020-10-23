@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QLearningMaze
+﻿
+namespace QLearningMaze.Core
 {
+    using System;
+    using Mazes;
+
     public enum MazeTypes
     {
         Undefined,
@@ -11,7 +11,7 @@ namespace QLearningMaze
         CustomMaze1,
         UserDefined
     }
-    class MazeFactory
+    public class MazeFactory
     {
         public static IMaze CreateMaze(
             MazeTypes mazeType,
