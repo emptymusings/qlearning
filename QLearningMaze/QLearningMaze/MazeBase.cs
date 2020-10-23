@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace QLearningTutorial
+namespace QLearningMaze
 {
     public abstract class MazeBase : IMaze
     {

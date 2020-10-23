@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Xml.Schema;
 
-namespace QLearningTutorial
+namespace QLearningMaze
 {
-    class QLearningProgram
+    class QLearningMazeProgram
     {
         static Random rnd = new Random(1);
         static void Main(string[] args)

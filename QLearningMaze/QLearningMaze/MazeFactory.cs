@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLearningTutorial
+namespace QLearningMaze
 {
     public enum MazeTypes
     {
