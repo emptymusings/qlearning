@@ -11,8 +11,8 @@ namespace QLearningTutorial
         int Columns { get; set; }
         int GoalPosition { get; set; }
         int StartPosition { get; set; }
-        double Gamma { get; set; }
-        double LearnRate { get; set; }
+        double DiscountRate { get; set; }
+        double LearningRate { get; set; }
         int MaxEpochs { get; set; }
         int[][] MazeStates { get; set; }
         double[][] Rewards { get; set; }
@@ -22,5 +22,6 @@ namespace QLearningTutorial
         void RemoveWall(int betweenSpace, int andSpace);
         void Train();
         void RunMaze();
+        void PrintQuality();
     }
 }

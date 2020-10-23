@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Text;
+using System.Linq;
 
 namespace QLearningTutorial
 {
     public abstract class MazeBase : IMaze
     {
-        private Random random = new Random();
+        private Random _random = new Random();
+        protected bool _mazeInitialized = false;
+        protected bool _rewardsInitialized = false;
         
         public MazeBase(
             int rows,
@@ -22,8 +23,8 @@ namespace QLearningTutorial
             this.Columns = columns;
             this.StartPosition = startPosition;
             this.GoalPosition = goalPosition;
-            this.Gamma = gamma;
-            this.LearnRate = learnRate;
+            this.DiscountRate = gamma;
+            this.LearningRate = learnRate;
             this.MaxEpochs = maxEpochs;
         }
 
@@ -38,8 +39,15 @@ namespace QLearningTutorial
         public int Columns { get; set; } = 4;
         public int GoalPosition { get; set; }
         public int StartPosition { get; set; }
-        public double Gamma { get; set; }
-        public double LearnRate { get; set; }
+        /// <summary>
+        /// Decimal value between 0 and 1 that determines how much long term reward is weighted vs immediate.  Higher values reflect more regard to long term rewards
+        /// </summary>
+        public double DiscountRate { get; set; }
+        /// <summary>
+        /// Determines to what extent newly acquired information overrides old information. A factor of 0 makes the agent learn nothing (exclusively exploiting prior knowledge),
+        /// while a factor of 1 makes the agent consider only the most recent information (ignoring prior knowledge to explore possibilities).
+        /// </summary>
+        public double LearningRate { get; set; }
         public int MaxEpochs { get; set; }
 
         public int[][] MazeStates { get; set; }
@@ -52,6 +60,9 @@ namespace QLearningTutorial
         /// </summary>
         protected virtual void CreateMazeStates()
         {
+            if (_mazeInitialized)
+                return;
+
             Console.WriteLine("Creating Maze States (Observation Space)");
 
             int[][] mazeNextStates = new int[NumberOfStates][];
@@ -62,46 +73,55 @@ namespace QLearningTutorial
 
                 for (int j = 0; j < NumberOfStates; ++j)
                 {
-                    if (
-                        i != GoalPosition || // Don't travel out of the goal position, we're already there
-                        (i == GoalPosition && j == GoalPosition)) // Only allow "moves" from goal to goal
+                    if (i != GoalPosition && // Don't map a way out of the goal position, we're already there
+                        ((i + 1 == j && j % Columns != 0) || // i and j are sequential, and j is not on the next row
+                        (i - 1 == j && i % Columns != 0) || // i and j are sequential, and i is not on the previous row
+                        i + Columns == j || // j is directly below i
+                        i - Columns == j)) // j is directly above i)
                     {
-                        if (
-                            (i + 1 == j && j % Columns != 0) || // i and j are sequential, and j is not on the next row
-                            (i - 1 == j && i % Columns != 0) || // i and j are sequential, and i is not on the previous row
-                            i + Columns == j || // j is directly below i
-                            i - Columns == j)   // j is directly above i
+                        mazeNextStates[i][j] = 1;
+                    }
+                    else if (i == GoalPosition && j == GoalPosition)
+                    {
+                        mazeNextStates[i][j] = 1;
+                    }
+                }
+            }
+            
+            MazeStates = mazeNextStates;
+            _mazeInitialized = true;
+        }
+
+        protected virtual void CreateRewards()
+        {
+            if (_rewardsInitialized)
+                return;
+
+            Console.WriteLine("Creating Reward States");
+            double[][] reward = new double[NumberOfStates][];
+
+            for (int i = 0; i < NumberOfStates; ++i)
+            {
+                reward[i] = new double[NumberOfStates];
+
+                for (int j = 0; j < NumberOfStates; ++j)
+                {
+                    if (MazeStates[i][j] == 1)
+                    {
+                        if (j == GoalPosition)
                         {
-                            mazeNextStates[i][j] = 1;
+                            reward[i][j] = 10.0;
+                        }
+                        else
+                        {
+                            reward[i][j] = -0.1;
                         }
                     }
                 }
             }
 
-            MazeStates = mazeNextStates;
-        }
-
-        protected virtual void CreateRewards()
-        {
-            Console.WriteLine("Creating Reward States");
-            double[][] reward = new double[NumberOfStates][];
-
-            for (int i = 0; i < NumberOfStates; ++i) reward[i] = new double[NumberOfStates];
-
-            reward[0][1] = reward[0][4] = -0.1;
-            reward[1][0] = reward[1][5] = -0.1;
-            reward[2][3] = reward[2][6] = -0.1;
-            reward[3][2] = reward[3][7] = -0.1;
-            reward[4][0] = reward[4][8] = -0.1;
-            reward[5][1] = reward[5][6] = reward[5][9] = -0.1;
-            reward[6][2] = reward[6][5] = reward[6][7] = -0.1;
-            reward[7][3] = reward[7][6] = -0.1;
-            reward[8][4] = reward[8][9] = -0.1;
-            reward[9][5] = reward[9][8] = reward[9][10] = -0.1;
-            reward[10][9] = -0.1;
-            reward[7][11] = 10.0;  // Goal - This is currently the only path to space 11, based on the 'wall' setup up
-
             Rewards = reward;
+            _rewardsInitialized = true;
         }
 
         /// <summary>
@@ -123,14 +143,24 @@ namespace QLearningTutorial
 
         public virtual void AddWall(int betweenSpace, int andSpace)
         {
+            if (!_mazeInitialized)
+                CreateMazeStates();
+
+            if (!_rewardsInitialized)
+                CreateRewards();
+
             MazeStates[betweenSpace][andSpace] = 0;
             MazeStates[andSpace][betweenSpace] = 0;
+            Rewards[betweenSpace][andSpace] = 0;
+            Rewards[andSpace][betweenSpace] = 0;
         }
 
         public virtual void RemoveWall(int betweenSpace, int andSpace)
         {
             MazeStates[betweenSpace][andSpace] = 1;
             MazeStates[andSpace][betweenSpace] = 1;
+            Rewards[betweenSpace][andSpace] = -0.1;
+            Rewards[andSpace][betweenSpace] = -0.1;
         }
 
         protected virtual List<int> GetPossibleNextStates(int currentState, int[][] mazeNextStates)
@@ -153,7 +183,7 @@ namespace QLearningTutorial
             List<int> possibleNextStates = GetPossibleNextStates(currentState, mazeNextStates);
 
             int count = possibleNextStates.Count;
-            int index = random.Next(0, count);
+            int index = _random.Next(0, count);
 
             return possibleNextStates[index];
         }
@@ -166,7 +196,7 @@ namespace QLearningTutorial
 
             for (int epoch = 0; epoch < MaxEpochs; ++epoch)
             {
-                int currState = random.Next(0, Rewards.Length);
+                int currState = _random.Next(0, Rewards.Length);
 
                 while (true)
                 {
@@ -177,11 +207,11 @@ namespace QLearningTutorial
                     for (int j = 0; j < possNextNextStates.Count; ++j)
                     {
                         int nnumberOfStates = possNextNextStates[j];  // short alias
-                        double q = Quality[nextState][nnumberOfStates];
-                        if (q > maxQ) maxQ = q;
+                        double quality = Quality[nextState][nnumberOfStates];
+                        if (quality > maxQ) maxQ = quality;
                     }
 
-                    Quality[currState][nextState] = ((1 - LearnRate) * Quality[currState][nextState]) + (LearnRate * (Rewards[currState][nextState] + (Gamma * maxQ)));
+                    Quality[currState][nextState] = ((1 - LearningRate) * Quality[currState][nextState]) + (LearningRate * (Rewards[currState][nextState] + (DiscountRate * maxQ)));
                     currState = nextState;
 
                     if (currState == GoalPosition) break;
@@ -218,6 +248,20 @@ namespace QLearningTutorial
             }
 
             return idx;
+        }
+
+        public virtual void PrintQuality()
+        {
+            int ns = Quality.Length;
+            Console.WriteLine($"[0] [1] . . [{NumberOfStates - 1}]");
+            for (int i = 0; i < ns; ++i)
+            {
+                for (int j = 0; j < ns; ++j)
+                {
+                    Console.Write(Quality[i][j].ToString("F2") + " ");
+                }
+                Console.WriteLine();
+            }
         }
     }
 }

@@ -13,12 +13,12 @@ namespace QLearningTutorial
             int columns = 4;
             int startPosition = PromptPosition(rows * columns, "starting");
             int goalPosition = 11;
-            double gamma = 0.5;
+            double gamma = 0.6;
             double learnRate = 0.5;
-            int maxEpochs = 1000;
+            int maxEpochs = 1500;
 
             IMaze maze = MazeFactory.CreateMaze(
-                MazeTypes.OriginalMaze,
+                MazeTypes.CustomMaze1,
                 rows,
                 columns,
                 startPosition,
@@ -31,7 +31,7 @@ namespace QLearningTutorial
             
             Console.WriteLine();
             Console.WriteLine("Done. Quality matrix: ");
-            Print(maze.Quality);
+            maze.PrintQuality();
             Console.WriteLine();
             Console.WriteLine();
             
@@ -69,19 +69,6 @@ namespace QLearningTutorial
             }
 
             return result;
-        }
-        static void Print(double[][] quality)
-        {
-            int ns = quality.Length;
-            Console.WriteLine("[0] [1] . . [11]");
-            for (int i = 0; i < ns; ++i)
-            {
-                for (int j = 0; j < ns; ++j)
-                {
-                    Console.Write(quality[i][j].ToString("F2") + " ");
-                }
-                Console.WriteLine();
-            }
         }
 
     } // Program
