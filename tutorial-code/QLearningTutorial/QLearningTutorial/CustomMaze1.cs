@@ -30,9 +30,9 @@ namespace QLearningTutorial
 
         }
 
-        protected override void CreateMaze()
+        protected override void CreateMazeStates()
         {
-            base.CreateMaze();
+            base.CreateMazeStates();
             MazeStates[5][6] = MazeStates[6][5] = 0;
             MazeStates[10][11] = MazeStates[11][10] = 1;
             

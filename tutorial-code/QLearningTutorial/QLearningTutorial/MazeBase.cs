@@ -50,7 +50,7 @@ namespace QLearningTutorial
         /// Creates the maze matrix.  Anything with a value of 1 indicates the ability of free movement between 2 spaces (needs to be assigned bi-directionally).  A value of 0 (zero)
         /// indicates a blocked path (also bi-directional)
         /// </summary>
-        protected virtual void CreateMaze()
+        protected virtual void CreateMazeStates()
         {
             Console.WriteLine("Creating Maze States (Observation Space)");
 
@@ -62,20 +62,21 @@ namespace QLearningTutorial
 
                 for (int j = 0; j < NumberOfStates; ++j)
                 {
-                    if (i != GoalPosition ||
-                        (i == GoalPosition && j == GoalPosition))
+                    if (
+                        i != GoalPosition || // Don't travel out of the goal position, we're already there
+                        (i == GoalPosition && j == GoalPosition)) // Only allow "moves" from goal to goal
                     {
-                        mazeNextStates[i][j] = 1;
+                        if (
+                            (i + 1 == j && j % Columns != 0) || // i and j are sequential, and j is not on the next row
+                            (i - 1 == j && i % Columns != 0) || // i and j are sequential, and i is not on the previous row
+                            i + Columns == j || // j is directly below i
+                            i - Columns == j)   // j is directly above i
+                        {
+                            mazeNextStates[i][j] = 1;
+                        }
                     }
-                    else
-                    {
-                        mazeNextStates[i][j] = 0;
-                    }
-
-                    Console.WriteLine($"Location[{i}][{j}] = {mazeNextStates[i][j]}");
                 }
             }
-
 
             MazeStates = mazeNextStates;
         }
@@ -120,6 +121,18 @@ namespace QLearningTutorial
             Quality = quality;
         }
 
+        public virtual void AddWall(int betweenSpace, int andSpace)
+        {
+            MazeStates[betweenSpace][andSpace] = 0;
+            MazeStates[andSpace][betweenSpace] = 0;
+        }
+
+        public virtual void RemoveWall(int betweenSpace, int andSpace)
+        {
+            MazeStates[betweenSpace][andSpace] = 1;
+            MazeStates[andSpace][betweenSpace] = 1;
+        }
+
         protected virtual List<int> GetPossibleNextStates(int currentState, int[][] mazeNextStates)
         {
             List<int> result = new List<int>();
@@ -147,7 +160,7 @@ namespace QLearningTutorial
 
         public virtual void Train()
         {
-            CreateMaze();
+            CreateMazeStates();
             CreateRewards();
             CreateQuality();
 

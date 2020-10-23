@@ -18,6 +18,8 @@ namespace QLearningTutorial
         double[][] Rewards { get; set; }
         double[][] Quality { get; set; }
 
+        void AddWall(int betweenSpace, int andSpace);
+        void RemoveWall(int betweenSpace, int andSpace);
         void Train();
         void RunMaze();
     }
