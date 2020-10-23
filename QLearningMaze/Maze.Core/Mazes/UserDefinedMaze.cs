@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QLearningMaze.Core.Mazes
+﻿namespace QLearningMaze.Core.Mazes
 {
-    class UserDefinedMaze : MazeBase, IMaze
+    public class UserDefinedMaze : MazeBase, IMaze
     {
         public UserDefinedMaze(
-            int rows,
-            int columns,
-            int startPosition,
-            int goalPosition,
-            double discountRate,
-            double learningRate,
-            int maxEpochs)
+            int rows = 4,
+            int columns = 4,
+            int startPosition = 0,
+            int goalPosition = 0,
+            double discountRate = 0.5,
+            double learningRate = 0.5,
+            int maxEpochs = 1000)
         : base(
             rows,
             columns,

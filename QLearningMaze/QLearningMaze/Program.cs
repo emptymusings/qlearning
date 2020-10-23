@@ -1,52 +1,131 @@
 ﻿namespace QLearningMaze
 {
     using System;
+    using System.IO;
     using Core;
 
     class QLearningMazeProgram
     {
-        static Random rnd = new Random(1);
+        static bool _promptSave = true;
+
         static void Main(string[] args)
         {
-            int rows = PromptDimension("rows", 3);
-            int columns = PromptDimension("columns", 4);
-            int startPosition = PromptPosition(rows * columns, "starting");
-            int goalPosition = PromptPosition(rows * columns, "goal");
-            double discountRate = PromptRate(0.6, "discount");
-            double learningRate = PromptRate(0.5, "learning");
-            int maxEpochs = PromptEpochs(1000);
-
-            IMaze maze = MazeFactory.CreateMaze(
-                MazeTypes.UserDefined,
-                rows,
-                columns,
-                startPosition,
-                goalPosition,
-                discountRate,
-                learningRate,
-                maxEpochs);
-
-            PromptWalls(maze);
-
-            maze.Train();
+            string response;
+            IMaze maze = InitializeMaze();
             
-            Console.WriteLine();
-            Console.WriteLine("Done. Quality matrix: ");
-            maze.PrintQuality();
-            Console.WriteLine();
-            Console.WriteLine();
-            
-            Console.WriteLine($"Using Quality Matrix to walk from cell {startPosition} to {goalPosition}");
+            if (maze == null)
+                Main(args);
+
+            Console.WriteLine($"Running maze from cell {maze.StartPosition} to {maze.GoalPosition}");
             maze.RunMaze();
             Console.WriteLine();
 
-            Console.Write("Maze completed.  Do you want to do it again (yes/no)? ");
-            var response = Console.ReadLine();
+            if (_promptSave)
+            {
+                Console.Write("Maze completed.  Do you want to save this maze (Y/N)? ");
+                response = Console.ReadLine();
+
+                if (response.ToLower() == "y")
+                {
+                    Console.Write("Enter a name for your maze: ");
+                    var name = Console.ReadLine();
+
+                    if (!name.EndsWith(".maze"))
+                        name += ".maze";
+
+                    MazeUtilities.SaveMaze(name, maze);
+                }
+            }
+
+            Console.Write("All done.  Do you want to restart (Y/N)? ");
+            response = Console.ReadLine();
 
             if (string.IsNullOrEmpty(response))
                 return;
-            else if (response.ToLower() == "yes")
+            else if (response.ToLower() == "y")
                 Main(args);
+        }
+
+        static IMaze InitializeMaze()
+        {
+            IMaze maze = null;
+            _promptSave = true;
+
+            Console.Write("Do you want to (C)reate a new maze or (L)oad a Maze (C/L)? ");
+            var response = Console.ReadLine();
+
+            if (response.ToLower() == "c")
+            {
+                maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
+                SetupMaze(maze);
+                TrainMaze(maze);
+            }
+            else if (response.ToLower() == "l")
+            {
+                maze = LoadMaze();
+
+                if (maze == null)
+                {
+                    return null;
+                }
+
+                Console.Write("Do you want to make modifications to the maze (Y/N)? ");
+                response = Console.ReadLine();
+
+                if (response.ToLower() == "y")
+                {
+                    SetupMaze(maze);
+                    TrainMaze(maze);
+                }
+                else
+                {
+                    _promptSave = false;
+                }
+            }
+
+            return maze;
+        }
+
+        static void SetupMaze(IMaze maze)
+        {
+            maze.Rows = PromptDimension("rows", maze.Rows);
+            maze.Columns = PromptDimension("columns", maze.Columns);
+            maze.StartPosition = PromptPosition(maze.Rows * maze.Columns, "starting", maze.StartPosition);
+            maze.GoalPosition = PromptPosition(maze.Rows * maze.Columns, "goal", maze.GoalPosition);
+            maze.DiscountRate = PromptRate(maze.DiscountRate, "discount");
+            maze.LearningRate = PromptRate(maze.LearningRate, "learning");
+            maze.MaxEpochs = PromptEpochs(maze.MaxEpochs);
+
+            PromptWalls(maze);
+        }
+
+        static IMaze LoadMaze()
+        {
+            Console.Write("Type the name of the maze you want to load: ");
+            string mazeName = Console.ReadLine();
+
+            if (!mazeName.EndsWith(".maze")) mazeName += ".maze";
+
+            if (!File.Exists(mazeName))
+            {
+                Console.WriteLine($"No maze named '{mazeName}' was found");
+                return null;
+            }
+            else
+            {
+                return MazeUtilities.LoadMaze(mazeName);
+            }
+        }
+
+        static void TrainMaze(IMaze maze)
+        {
+            maze.Train();
+
+            Console.WriteLine();
+            Console.WriteLine("Quality matrix: ");
+            maze.PrintQuality();
+            Console.WriteLine();
+            Console.WriteLine();
         }
 
         static int PromptDimension(string dimensionType, int defaultValue)
@@ -78,13 +157,18 @@
             return result;
         }
 
-        static int PromptPosition(int numberOfStates, string pointName)
+        static int PromptPosition(int numberOfStates, string pointName, int currentPosition)
         {
             bool invalidEntry = false;
 
-            Console.Write($"Enter a {pointName} point between 0 and {numberOfStates - 1}: ");
+            Console.Write($"Enter a {pointName} point between 0 and {numberOfStates - 1} ({currentPosition}): ");
             var entry = Console.ReadLine();
             int result = numberOfStates + 1;
+
+            if (string.IsNullOrWhiteSpace(entry))
+            {
+                entry = currentPosition.ToString();
+            }
 
             try
             {
@@ -100,7 +184,7 @@
             if (invalidEntry)
             {
                 Console.WriteLine($"'{entry}' is not a valid entry");
-                return PromptPosition(numberOfStates, pointName);
+                return PromptPosition(numberOfStates, pointName, currentPosition);
             }
 
             return result;
@@ -166,18 +250,18 @@
 
         static void PromptWalls(IMaze maze)
         {
-            Console.Write("Would you like to add a wall in the maze (yes/no)? ");
+            Console.Write("Would you like to add a wall in the maze (Y/N)? ");
             var entry = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(entry) ||
-                ((entry.ToLower() != "no") &&
-                (entry.ToLower() != "yes")))
+                ((entry.ToLower() != "n") &&
+                (entry.ToLower() != "y")))
             {
-                Console.WriteLine("Invalid entry.  Please type 'yes' or 'no'");
+                Console.WriteLine("Invalid entry.  Please type 'Y' or 'N'");
                 PromptWalls(maze);
             }
 
-            if (entry.ToLower() == "yes")
+            if (entry.ToLower() == "y")
             {
                 var wallInfo = PromptWallInfo();
 

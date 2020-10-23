@@ -1,8 +1,8 @@
 ﻿
 namespace QLearningMaze.Core
 {
-    using System;
     using Mazes;
+    using System;
 
     public enum MazeTypes
     {
@@ -14,14 +14,14 @@ namespace QLearningMaze.Core
     public class MazeFactory
     {
         public static IMaze CreateMaze(
-            MazeTypes mazeType,
-            int rows,
-            int columns,
-            int startPosition,
-            int goalPosition,
-            double discountRate,
-            double learningRate,
-            int maxEpochs)
+            MazeTypes mazeType = MazeTypes.Undefined,
+            int rows = 4,
+            int columns = 4,
+            int startPosition = 0,
+            int goalPosition = 0,
+            double discountRate = 0.5,
+            double learningRate = 0.5,
+            int maxEpochs = 1000)
         {
             switch(mazeType)
             {

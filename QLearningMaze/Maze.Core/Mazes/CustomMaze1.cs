@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QLearningMaze.Core.Mazes
+﻿namespace QLearningMaze.Core.Mazes
 {
     /// <summary>
     /// Based off of the original maze, but adds a wall between spaces 5 & 6, and removes

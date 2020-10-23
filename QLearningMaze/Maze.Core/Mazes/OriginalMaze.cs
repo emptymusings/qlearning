@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QLearningMaze.Core.Mazes
+﻿namespace QLearningMaze.Core.Mazes
 {
     class OriginalMaze : MazeBase, IMaze
     {

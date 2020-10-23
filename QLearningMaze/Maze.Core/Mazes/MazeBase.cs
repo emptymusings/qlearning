@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace QLearningMaze.Core.Mazes
 {
@@ -35,24 +36,25 @@ namespace QLearningMaze.Core.Mazes
                 return Rows * Columns;
             }
         }
-        public int Rows { get; set; } = 3;
+        public int Rows { get; set; } = 4;
         public int Columns { get; set; } = 4;
-        public int GoalPosition { get; set; }
-        public int StartPosition { get; set; }
+        public int GoalPosition { get; set; } = 0;
+        public int StartPosition { get; set; } = 0;
         /// <summary>
         /// Decimal value between 0 and 1 that determines how much long term reward is weighted vs immediate.  Higher values reflect more regard to long term rewards
         /// </summary>
-        public double DiscountRate { get; set; }
+        public double DiscountRate { get; set; } = 0.5;
         /// <summary>
         /// Determines to what extent newly acquired information overrides old information. A factor of 0 makes the agent learn nothing (exclusively exploiting prior knowledge),
         /// while a factor of 1 makes the agent consider only the most recent information (ignoring prior knowledge to explore possibilities).
         /// </summary>
-        public double LearningRate { get; set; }
-        public int MaxEpochs { get; set; }
+        public double LearningRate { get; set; } = 0.5;
+        public int MaxEpochs { get; set; } = 1000;
 
         public int[][] MazeStates { get; set; }
         public double[][] Rewards { get; set; }
         public double[][] Quality { get; set; }
+        public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
 
         /// <summary>
         /// Creates the maze matrix.  Anything with a value of 1 indicates the ability of free movement between 2 spaces (needs to be assigned bi-directionally).  A value of 0 (zero)
@@ -150,6 +152,18 @@ namespace QLearningMaze.Core.Mazes
             MazeStates[betweenSpace][andSpace] = 0;
             MazeStates[andSpace][betweenSpace] = 0;
 
+
+            var maze = GetObstructionFromList(betweenSpace, andSpace);
+
+            if (maze == null)
+            {
+                Obstructions.Add(new MazeObstruction
+                {
+                    BetweenSpace = betweenSpace,
+                    AndSpace = andSpace
+                });
+            }                
+
             CreateRewards();
         }
 
@@ -159,6 +173,16 @@ namespace QLearningMaze.Core.Mazes
             MazeStates[andSpace][betweenSpace] = 1;
             Rewards[betweenSpace][andSpace] = -0.1;
             Rewards[andSpace][betweenSpace] = -0.1;
+
+            var wall = GetObstructionFromList(betweenSpace, andSpace);
+
+            if (wall != null)
+                Obstructions.Remove(wall);
+        }
+
+        private MazeObstruction GetObstructionFromList(int betweenSpace, int andSpace)
+        {
+            return Obstructions.Where(x => (x.BetweenSpace == betweenSpace && x.AndSpace == andSpace) | (x.AndSpace == betweenSpace && x.BetweenSpace == andSpace)).FirstOrDefault();
         }
 
         protected virtual List<int> GetPossibleNextStates(int currentState, int[][] mazeNextStates)
@@ -266,7 +290,7 @@ namespace QLearningMaze.Core.Mazes
             return idx;
         }
 
-        protected virtual void PrintRewards()
+        public virtual void PrintRewards()
         {
             int ns = Rewards.Length;
             Console.WriteLine($"Rewards [0] [1] . . [{NumberOfStates - 1}]");
