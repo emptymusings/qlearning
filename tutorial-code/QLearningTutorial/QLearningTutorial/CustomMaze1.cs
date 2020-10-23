@@ -15,16 +15,16 @@ namespace QLearningTutorial
             int columns,
             int startPosition,
             int goalPosition,
-            double gamma,
-            double learnRate,
+            double discountRate,
+            double learningRate,
             int maxEpochs)
         : base(
             rows,
             columns,
             startPosition,
             goalPosition,
-            gamma,
-            learnRate,
+            discountRate,
+            learningRate,
             maxEpochs)
         {
 

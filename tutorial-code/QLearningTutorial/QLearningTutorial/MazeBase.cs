@@ -15,16 +15,16 @@ namespace QLearningTutorial
             int columns,
             int startPosition,
             int goalPosition,
-            double gamma,
-            double learnRate,
+            double discountRate,
+            double learningRate,
             int maxEpochs)
         {
             this.Rows = rows;
             this.Columns = columns;
             this.StartPosition = startPosition;
             this.GoalPosition = goalPosition;
-            this.DiscountRate = gamma;
-            this.LearningRate = learnRate;
+            this.DiscountRate = discountRate;
+            this.LearningRate = learningRate;
             this.MaxEpochs = maxEpochs;
         }
 
@@ -194,8 +194,12 @@ namespace QLearningTutorial
             CreateRewards();
             CreateQuality();
 
+            Console.WriteLine("Please wait while I learn the maze");
+
             for (int epoch = 0; epoch < MaxEpochs; ++epoch)
             {
+                Console.Write($"Runnging through epoch {(epoch + 1).ToString("#,##0")} of {MaxEpochs.ToString("#,##0")}\r");
+
                 int currState = _random.Next(0, Rewards.Length);
 
                 while (true)
@@ -217,6 +221,9 @@ namespace QLearningTutorial
                     if (currState == GoalPosition) break;
                 }
             }
+
+            Console.WriteLine();
+            Console.WriteLine("I'm done learning");
         }
 
         public virtual void RunMaze()
