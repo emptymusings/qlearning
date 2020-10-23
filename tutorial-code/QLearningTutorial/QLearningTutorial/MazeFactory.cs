@@ -8,36 +8,49 @@ namespace QLearningTutorial
     {
         Undefined,
         OriginalMaze,
-        CustomMaze1
+        CustomMaze1,
+        UserDefined
     }
     class MazeFactory
     {
         public static IMaze CreateMaze(
             MazeTypes mazeType,
-            int numberOfStates,
+            int rows,
+            int columns,
             int startPosition,
             int goalPosition,
-            double gamma,
-            double learnRate,
+            double discountRate,
+            double learningRate,
             int maxEpochs)
         {
             switch(mazeType)
             {
                 case MazeTypes.OriginalMaze:
                     return new OriginalMaze(
-                        numberOfStates,
+                        rows,
+                        columns,
                         startPosition,
                         goalPosition,
-                        gamma,
-                        learnRate,
+                        discountRate,
+                        learningRate,
                         maxEpochs);
                 case MazeTypes.CustomMaze1:
                     return new CustomMaze1(
-                        numberOfStates,
+                        rows,
+                        columns,
                         startPosition,
                         goalPosition,
-                        gamma,
-                        learnRate,
+                        discountRate,
+                        learningRate,
+                        maxEpochs);
+                case MazeTypes.UserDefined:
+                    return new UserDefinedMaze(
+                        rows,
+                        columns,
+                        startPosition,
+                        goalPosition,
+                        discountRate,
+                        learningRate,
                         maxEpochs);
                 default:
                     throw new ArgumentOutOfRangeException("MazeType");

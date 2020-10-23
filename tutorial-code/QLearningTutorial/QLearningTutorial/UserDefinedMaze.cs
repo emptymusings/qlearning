@@ -4,17 +4,17 @@ using System.Text;
 
 namespace QLearningTutorial
 {
-    class OriginalMaze : MazeBase, IMaze
+    class UserDefinedMaze : MazeBase, IMaze
     {
-        public OriginalMaze(
+        public UserDefinedMaze(
             int rows,
             int columns,
             int startPosition,
             int goalPosition,
             double discountRate,
             double learningRate,
-            int maxEpochs) 
-        : base (
+            int maxEpochs)
+        : base(
             rows,
             columns,
             startPosition,
@@ -24,16 +24,6 @@ namespace QLearningTutorial
             maxEpochs)
         {
 
-        }
-
-        protected override void CreateMazeStates()
-        {
-            base.CreateMazeStates();
-            AddWall(0, 1);
-            AddWall(1, 2);
-            AddWall(4, 5);
-            AddWall(6, 10);
-            AddWall(10, 11);
         }
     }
 }

@@ -11,37 +11,39 @@ namespace QLearningTutorial
     public class CustomMaze1 : MazeBase, IMaze
     {
         public CustomMaze1(
-            int numberOfStates,
+            int rows,
+            int columns,
             int startPosition,
             int goalPosition,
-            double gamma,
-            double learnRate,
+            double discountRate,
+            double learningRate,
             int maxEpochs)
         : base(
-            numberOfStates,
+            rows,
+            columns,
             startPosition,
             goalPosition,
-            gamma,
-            learnRate,
+            discountRate,
+            learningRate,
             maxEpochs)
         {
 
         }
 
-        protected override void CreateMaze()
+        protected override void CreateMazeStates()
         {
-            base.CreateMaze();
-            MazeStates[5][6] = MazeStates[6][5] = 0;
-            MazeStates[10][11] = MazeStates[11][10] = 1;
-            
+            base.CreateMazeStates();
+            AddWall(0, 1);            
+            AddWall(4, 5);
+            AddWall(9, 10);
+            AddWall(5, 6);
+            AddWall(2, 3);
+            AddWall(6, 10);
         }
 
         protected override void CreateRewards()
         {
             base.CreateRewards();
-            Rewards[5][6] = MazeStates[6][5] = 0;
-            Rewards[7][11] = Rewards[11][10] = -0.1;
-            Rewards[10][11] = 10.0;
         }
     }
 }
