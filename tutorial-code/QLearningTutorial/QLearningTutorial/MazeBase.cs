@@ -110,7 +110,7 @@ namespace QLearningTutorial
                     {
                         if (j == GoalPosition)
                         {
-                            reward[i][j] = 10.0;
+                            reward[i][j] = 10;
                         }
                         else
                         {
@@ -121,6 +121,7 @@ namespace QLearningTutorial
             }
 
             Rewards = reward;
+            PrintRewards();
             _rewardsInitialized = true;
         }
 
@@ -146,13 +147,10 @@ namespace QLearningTutorial
             if (!_mazeInitialized)
                 CreateMazeStates();
 
-            if (!_rewardsInitialized)
-                CreateRewards();
-
             MazeStates[betweenSpace][andSpace] = 0;
             MazeStates[andSpace][betweenSpace] = 0;
-            Rewards[betweenSpace][andSpace] = 0;
-            Rewards[andSpace][betweenSpace] = 0;
+
+            CreateRewards();
         }
 
         public virtual void RemoveWall(int betweenSpace, int andSpace)
@@ -235,7 +233,18 @@ namespace QLearningTutorial
             while (curr != GoalPosition)
             {
                 next = ArgMax(Quality[curr]);
+
+                if (MazeStates[curr][next] != 1)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("I guess I didn't learn very  well, I just tried an illegal move.  Check the learning rate and discount rate and try again");
+                    return;
+                }
+
                 Console.Write(next + "->");
+                if (next == curr)
+                    Console.ReadLine();
                 curr = next;
             }
 
@@ -257,10 +266,25 @@ namespace QLearningTutorial
             return idx;
         }
 
+        protected virtual void PrintRewards()
+        {
+            int ns = Rewards.Length;
+            Console.WriteLine($"Rewards [0] [1] . . [{NumberOfStates - 1}]");
+
+            for (int i = 0; i < ns; ++i)
+            {
+                for (int j = 0; j < ns; ++j)
+                {
+                    Console.Write(Rewards[i][j].ToString("F2") + " ");
+                }
+                Console.WriteLine();
+            }
+
+        }
         public virtual void PrintQuality()
         {
             int ns = Quality.Length;
-            Console.WriteLine($"[0] [1] . . [{NumberOfStates - 1}]");
+            Console.WriteLine($"Quality [0] [1] . . [{NumberOfStates - 1}]");
             for (int i = 0; i < ns; ++i)
             {
                 for (int j = 0; j < ns; ++j)
