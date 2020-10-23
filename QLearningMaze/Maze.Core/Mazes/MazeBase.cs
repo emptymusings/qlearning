@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace QLearningMaze.Core.Mazes
 {
-    public abstract class MazeBase : IMaze
+    public abstract partial class MazeBase : IMaze
     {
         private Random _random = new Random();
         protected bool _mazeInitialized = false;
@@ -56,6 +55,8 @@ namespace QLearningMaze.Core.Mazes
         public double[][] Quality { get; set; }
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
 
+        
+
         /// <summary>
         /// Creates the maze matrix.  Anything with a value of 1 indicates the ability of free movement between 2 spaces (needs to be assigned bi-directionally).  A value of 0 (zero)
         /// indicates a blocked path (also bi-directional)
@@ -64,6 +65,8 @@ namespace QLearningMaze.Core.Mazes
         {
             if (_mazeInitialized)
                 return;
+
+            OnMazeCreatingEventHandler();
 
             Console.WriteLine("Creating Maze States (Observation Space)");
 
@@ -89,6 +92,8 @@ namespace QLearningMaze.Core.Mazes
                     }
                 }
             }
+
+            OnMazeCreatedEventhHandler();
             
             MazeStates = mazeNextStates;
             _mazeInitialized = true;
@@ -124,6 +129,7 @@ namespace QLearningMaze.Core.Mazes
 
             Rewards = reward;
             PrintRewards();
+            OnRewardsCreated();
             _rewardsInitialized = true;
         }
 
@@ -142,6 +148,7 @@ namespace QLearningMaze.Core.Mazes
             }
             
             Quality = quality;
+            OnQualityCreated();
         }
 
         public virtual void AddWall(int betweenSpace, int andSpace)
@@ -157,11 +164,14 @@ namespace QLearningMaze.Core.Mazes
 
             if (maze == null)
             {
-                Obstructions.Add(new MazeObstruction
+                var obstruction = new MazeObstruction
                 {
                     BetweenSpace = betweenSpace,
                     AndSpace = andSpace
-                });
+                };
+
+                Obstructions.Add(obstruction);
+                OnObstructionAdded(obstruction);
             }                
 
             CreateRewards();
@@ -177,7 +187,10 @@ namespace QLearningMaze.Core.Mazes
             var wall = GetObstructionFromList(betweenSpace, andSpace);
 
             if (wall != null)
+            {
                 Obstructions.Remove(wall);
+                OnObstructionRemoved(wall);
+            }
         }
 
         private MazeObstruction GetObstructionFromList(int betweenSpace, int andSpace)
@@ -217,6 +230,8 @@ namespace QLearningMaze.Core.Mazes
             CreateQuality();
 
             Console.WriteLine("Please wait while I learn the maze");
+            
+            OnTrainingStatusChanged(true);
 
             for (int epoch = 0; epoch < MaxEpochs; ++epoch)
             {
@@ -238,12 +253,16 @@ namespace QLearningMaze.Core.Mazes
                     }
 
                     Quality[currState][nextState] = ((1 - LearningRate) * Quality[currState][nextState]) + (LearningRate * (Rewards[currState][nextState] + (DiscountRate * maxQ)));
+                    OnTrainingAgentStateChanging(nextState, currState);
                     currState = nextState;
 
                     if (currState == GoalPosition) break;
                 }
+
+                OnTrainingEpochCompleted(new TrainingEpochCompletedEventArgs { CurrentEpoch = epoch, TotalEpochs = MaxEpochs });
             }
 
+            OnTrainingStatusChanged(false);
             Console.WriteLine();
             Console.WriteLine("I'm done learning");
         }
@@ -270,6 +289,7 @@ namespace QLearningMaze.Core.Mazes
                 if (next == curr)
                     Console.ReadLine();
                 curr = next;
+                OnAgentStateChanged(curr);
             }
 
             Console.WriteLine("done");
