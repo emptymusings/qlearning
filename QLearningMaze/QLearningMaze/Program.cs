@@ -16,26 +16,8 @@
             if (maze == null)
                 Main(args);
 
-            Console.WriteLine($"Running maze from cell {maze.StartPosition} to {maze.GoalPosition}");
-            maze.RunMaze();
-            Console.WriteLine();
-
-            if (_promptSave)
-            {
-                Console.Write("Maze completed.  Do you want to save this maze (Y/N)? ");
-                response = Console.ReadLine();
-
-                if (response.ToLower() == "y")
-                {
-                    Console.Write("Enter a name for your maze: ");
-                    var name = Console.ReadLine();
-
-                    if (!name.EndsWith(".maze"))
-                        name += ".maze";
-
-                    MazeUtilities.SaveMaze(name, maze);
-                }
-            }
+            RunMaze(maze);
+            SaveMaze(maze);
 
             Console.Write("All done.  Do you want to restart (Y/N)? ");
             response = Console.ReadLine();
@@ -58,7 +40,6 @@
             {
                 maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
                 SetupMaze(maze);
-                TrainMaze(maze);
             }
             else if (response.ToLower() == "l")
             {
@@ -67,19 +48,6 @@
                 if (maze == null)
                 {
                     return null;
-                }
-
-                Console.Write("Do you want to make modifications to the maze (Y/N)? ");
-                response = Console.ReadLine();
-
-                if (response.ToLower() == "y")
-                {
-                    SetupMaze(maze);
-                    TrainMaze(maze);
-                }
-                else
-                {
-                    _promptSave = false;
                 }
             }
 
@@ -97,6 +65,8 @@
             maze.MaxEpochs = PromptEpochs(maze.MaxEpochs);
 
             PromptWalls(maze);
+
+            TrainMaze(maze);
         }
 
         static IMaze LoadMaze()
@@ -113,17 +83,33 @@
             }
             else
             {
-                return MazeUtilities.LoadMaze(mazeName);
+                IMaze maze = MazeUtilities.LoadMaze(mazeName);
+                string response;
+
+                Console.Write("Do you want to make modifications to the maze (Y/N)? ");
+                response = Console.ReadLine();
+
+                if (response.ToLower() == "y")
+                {
+                    SetupMaze(maze);
+                }
+                else
+                {
+                    _promptSave = false;
+                }
+
+                return maze;
             }
         }
 
         static void TrainMaze(IMaze maze)
         {
             maze.Train();
-
             Console.WriteLine();
+
             Console.WriteLine("Quality matrix: ");
             maze.PrintQuality();
+
             Console.WriteLine();
             Console.WriteLine();
         }
@@ -285,5 +271,35 @@
 
             return result;
         }
-    } // Program
-} // ns
+
+        static void RunMaze(IMaze maze)
+        {
+            Console.WriteLine($"Running maze from cell {maze.StartPosition} to {maze.GoalPosition}");
+            maze.RunMaze();
+            Console.WriteLine();
+
+        }
+
+        static void SaveMaze(IMaze maze)
+        {
+            string response;
+
+            if (_promptSave)
+            {
+                Console.Write("Maze completed.  Do you want to save this maze (Y/N)? ");
+                response = Console.ReadLine();
+
+                if (response.ToLower() == "y")
+                {
+                    Console.Write("Enter a name for your maze: ");
+                    var name = Console.ReadLine();
+
+                    if (!name.EndsWith(".maze"))
+                        name += ".maze";
+
+                    MazeUtilities.SaveMaze(name, maze);
+                }
+            }
+        }
+    }
+}
