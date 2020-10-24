@@ -103,7 +103,6 @@
             this.leftWall.TabIndex = 3;
             this.leftWall.TabStop = false;
             this.leftWall.Visible = false;
-            this.leftWall.MouseUp += new System.Windows.Forms.MouseEventHandler(this.leftWall_MouseUp);
             // 
             // rightWall
             // 
@@ -116,7 +115,6 @@
             this.rightWall.TabIndex = 3;
             this.rightWall.TabStop = false;
             this.rightWall.Visible = false;
-            this.rightWall.MouseUp += new System.Windows.Forms.MouseEventHandler(this.rightWall_MouseUp);
             // 
             // topWall
             // 
@@ -129,7 +127,6 @@
             this.topWall.TabIndex = 4;
             this.topWall.TabStop = false;
             this.topWall.Visible = false;
-            this.topWall.MouseUp += new System.Windows.Forms.MouseEventHandler(this.topWall_MouseUp);
             // 
             // bottomWall
             // 
@@ -142,7 +139,6 @@
             this.bottomWall.TabIndex = 4;
             this.bottomWall.TabStop = false;
             this.bottomWall.Visible = false;
-            this.bottomWall.MouseUp += new System.Windows.Forms.MouseEventHandler(this.bottomWall_MouseUp);
             // 
             // ObservationSpace
             // 

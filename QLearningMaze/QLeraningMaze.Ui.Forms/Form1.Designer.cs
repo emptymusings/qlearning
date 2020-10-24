@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.clearObstructionsButton = new System.Windows.Forms.Button();
             this.removeObstructionButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.addObstructionButton = new System.Windows.Forms.Button();
@@ -59,7 +60,6 @@
             this.mazeSpace = new QLearningMaze.Ui.Forms.MazeSpace();
             this.panel3 = new System.Windows.Forms.Panel();
             this.trainMazeButton = new System.Windows.Forms.Button();
-            this.respawnButton = new System.Windows.Forms.Button();
             this.runMazeButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,6 +75,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.clearObstructionsButton);
             this.panel1.Controls.Add(this.removeObstructionButton);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.obstructionsList);
@@ -99,6 +100,18 @@
             this.panel1.Size = new System.Drawing.Size(1776, 278);
             this.panel1.TabIndex = 0;
             // 
+            // clearObstructionsButton
+            // 
+            this.clearObstructionsButton.Location = new System.Drawing.Point(1186, 211);
+            this.clearObstructionsButton.Name = "clearObstructionsButton";
+            this.clearObstructionsButton.Size = new System.Drawing.Size(150, 46);
+            this.clearObstructionsButton.TabIndex = 11;
+            this.clearObstructionsButton.TabStop = false;
+            this.clearObstructionsButton.Text = "Clear All";
+            this.clearObstructionsButton.UseVisualStyleBackColor = true;
+            this.clearObstructionsButton.Visible = false;
+            this.clearObstructionsButton.Click += new System.EventHandler(this.clearObstructionsButton_Click);
+            // 
             // removeObstructionButton
             // 
             this.removeObstructionButton.Location = new System.Drawing.Point(1186, 159);
@@ -108,6 +121,7 @@
             this.removeObstructionButton.TabStop = false;
             this.removeObstructionButton.Text = "Remove";
             this.removeObstructionButton.UseVisualStyleBackColor = true;
+            this.removeObstructionButton.Visible = false;
             this.removeObstructionButton.Click += new System.EventHandler(this.removeObstructionButton_Click);
             // 
             // groupBox1
@@ -123,6 +137,7 @@
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Add Obstruction";
+            this.groupBox1.Visible = false;
             // 
             // addObstructionButton
             // 
@@ -185,6 +200,7 @@
             this.obstructionsList.TabStop = false;
             this.obstructionsList.UseCompatibleStateImageBehavior = false;
             this.obstructionsList.View = System.Windows.Forms.View.Details;
+            this.obstructionsList.Visible = false;
             // 
             // columnHeader1
             // 
@@ -205,6 +221,7 @@
             this.label8.Size = new System.Drawing.Size(149, 32);
             this.label8.TabIndex = 2;
             this.label8.Text = "Obstructions";
+            this.label8.Visible = false;
             // 
             // label7
             // 
@@ -222,7 +239,7 @@
             this.trainingEpochsText.Size = new System.Drawing.Size(97, 39);
             this.trainingEpochsText.TabIndex = 6;
             this.trainingEpochsText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.trainingEpochsText.TextChanged += new System.EventHandler(this.trainingEpochsText_TextChanged);
+            this.trainingEpochsText.Leave += new System.EventHandler(this.trainingEpochsText_Leave);
             // 
             // label6
             // 
@@ -240,7 +257,7 @@
             this.discountRateText.Size = new System.Drawing.Size(58, 39);
             this.discountRateText.TabIndex = 4;
             this.discountRateText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.discountRateText.TextChanged += new System.EventHandler(this.discountRateText_TextChanged);
+            this.discountRateText.Leave += new System.EventHandler(this.discountRateText_Leave);
             // 
             // label5
             // 
@@ -258,7 +275,7 @@
             this.learningRateText.Size = new System.Drawing.Size(58, 39);
             this.learningRateText.TabIndex = 5;
             this.learningRateText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.learningRateText.TextChanged += new System.EventHandler(this.learningRateText_TextChanged);
+            this.learningRateText.Leave += new System.EventHandler(this.learningRateText_Leave);
             // 
             // label4
             // 
@@ -276,7 +293,7 @@
             this.startPositionText.Size = new System.Drawing.Size(58, 39);
             this.startPositionText.TabIndex = 2;
             this.startPositionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.startPositionText.TextChanged += new System.EventHandler(this.startPositionText_TextChanged);
+            this.startPositionText.Leave += new System.EventHandler(this.startPositionText_Leave);
             // 
             // label3
             // 
@@ -294,7 +311,7 @@
             this.goalPositionText.Size = new System.Drawing.Size(58, 39);
             this.goalPositionText.TabIndex = 3;
             this.goalPositionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.goalPositionText.TextChanged += new System.EventHandler(this.goalPositionText_TextChanged);
+            this.goalPositionText.Leave += new System.EventHandler(this.goalPositionText_Leave);
             // 
             // columnsText
             // 
@@ -303,7 +320,7 @@
             this.columnsText.Size = new System.Drawing.Size(58, 39);
             this.columnsText.TabIndex = 1;
             this.columnsText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnsText.TextChanged += new System.EventHandler(this.columnsText_TextChanged);
+            this.columnsText.Leave += new System.EventHandler(this.columnsText_Leave);
             // 
             // label2
             // 
@@ -321,7 +338,7 @@
             this.rowsText.Size = new System.Drawing.Size(58, 39);
             this.rowsText.TabIndex = 0;
             this.rowsText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.rowsText.TextChanged += new System.EventHandler(this.rowsText_TextChanged);
+            this.rowsText.Leave += new System.EventHandler(this.rowsText_Leave);
             // 
             // label1
             // 
@@ -356,7 +373,6 @@
             // panel3
             // 
             this.panel3.Controls.Add(this.trainMazeButton);
-            this.panel3.Controls.Add(this.respawnButton);
             this.panel3.Controls.Add(this.runMazeButton);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
@@ -366,27 +382,17 @@
             // 
             // trainMazeButton
             // 
-            this.trainMazeButton.Location = new System.Drawing.Point(234, 11);
+            this.trainMazeButton.Location = new System.Drawing.Point(12, 10);
             this.trainMazeButton.Name = "trainMazeButton";
-            this.trainMazeButton.Size = new System.Drawing.Size(196, 46);
-            this.trainMazeButton.TabIndex = 14;
-            this.trainMazeButton.Text = "Train Maze";
+            this.trainMazeButton.Size = new System.Drawing.Size(150, 46);
+            this.trainMazeButton.TabIndex = 15;
+            this.trainMazeButton.Text = "Train";
             this.trainMazeButton.UseVisualStyleBackColor = true;
             this.trainMazeButton.Click += new System.EventHandler(this.trainMazeButton_Click);
             // 
-            // respawnButton
-            // 
-            this.respawnButton.Location = new System.Drawing.Point(22, 10);
-            this.respawnButton.Name = "respawnButton";
-            this.respawnButton.Size = new System.Drawing.Size(196, 46);
-            this.respawnButton.TabIndex = 13;
-            this.respawnButton.Text = "Respawn Maze";
-            this.respawnButton.UseVisualStyleBackColor = true;
-            this.respawnButton.Click += new System.EventHandler(this.respawnButton_Click);
-            // 
             // runMazeButton
             // 
-            this.runMazeButton.Location = new System.Drawing.Point(446, 10);
+            this.runMazeButton.Location = new System.Drawing.Point(181, 10);
             this.runMazeButton.Name = "runMazeButton";
             this.runMazeButton.Size = new System.Drawing.Size(150, 46);
             this.runMazeButton.TabIndex = 15;
@@ -492,12 +498,12 @@
         private System.Windows.Forms.TextBox goalPositionText;
         private System.Windows.Forms.Button removeObstructionButton;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.Button trainMazeButton;
-        private System.Windows.Forms.Button respawnButton;
         private System.Windows.Forms.ToolStripMenuItem fileMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
+        private System.Windows.Forms.Button trainMazeButton;
+        private System.Windows.Forms.Button clearObstructionsButton;
     }
 }
 

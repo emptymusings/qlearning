@@ -1,0 +1,152 @@
+﻿<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Drawing.Common" name="System.Drawing.Common, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
+  <data name="activeImage.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk0OCQAAAAAAAHYAAAAoAAAASQAAADcAAAABAAQAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAA/wAA
+        gP8AgAD/AICA/4AAAP+AAID/gIAA/4CAgP/AwMD/AAD//wD/AP8A/////wAA//8A/////wD/////////
+        //////////////////////////////////////////////AAAAD/////////////////////////////
+        ///////////////////wAAAA////////////////////////////////////////////////8AAAAP//
+        //////////////////////////////////////////////AAAAD/////////////////////////////
+        ///////////////////wAAAA///////////////////2ZmZmZmZmb///////////////////8AAAAP//
+        //////////////ZmZmZmZmZmZmZmb/////////////////AAAAD///////////////ZmZmZmZmZmZmZm
+        ZmZv///////////////wAAAA//////////////ZmZmZmZmZmZmZmZmZmZm//////////////8AAAAP//
+        //////////9mZmZmZmZmZmZmZmZmZmZm//////////////AAAAD////////////2ZmZmZmZmZmZmZmZm
+        ZmZmZm/////////////wAAAA///////////2ZmZmZmZmZmZmZmZmZmZmZmZmb///////////8AAAAP//
+        ////////ZmZmZmZmZmZmZmZmZmZmZmZmZmb///////////AAAAD/////////9mZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmb//////////wAAAA//////////ZmZmZmZmZmZmZmZmZmZmZmZmZmZmb/////////8AAAAP//
+        //////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZm//////////AAAAD////////2ZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZm/////////wAAAA////////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm////////8AAAAP//
+        /////2ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZv////////AAAAD///////ZmZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZmZv///////wAAAA///////2ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmb///////8AAAAP//
+        ////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm////////AAAAD//////2ZmZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZmZm///////wAAAA//////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZv//////8AAAAP//
+        ////ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmb///////AAAAD//////2ZmZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZmZm///////wAAAA//////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZv//////8AAAAP//
+        ////ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmb///////AAAAD//////2ZmZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZmZm///////wAAAA//////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZv//////8AAAAP//
+        ////ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmb///////AAAAD//////2ZmZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZmZm///////wAAAA//////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZv//////8AAAAP//
+        ////ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmb///////AAAAD//////2ZmZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZmZm///////wAAAA///////2ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmb///////8AAAAP//
+        ////9mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm////////AAAAD///////ZmZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZmZv///////wAAAA////////ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZm////////8AAAAP//
+        //////ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmb/////////AAAAD////////2ZmZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmZm/////////wAAAA/////////2ZmZmZmZmZmZmZmZmZmZmZmZmZmZmb/////////8AAAAP//
+        ///////2ZmZmZmZmZmZmZmZmZmZmZmZmZmZm//////////AAAAD//////////2ZmZmZmZmZmZmZmZmZm
+        ZmZmZmZmb//////////wAAAA//////////9mZmZmZmZmZmZmZmZmZmZmZmZmZv//////////8AAAAP//
+        ////////9mZmZmZmZmZmZmZmZmZmZmZmZm////////////AAAAD////////////2ZmZmZmZmZmZmZmZm
+        ZmZmZm/////////////wAAAA/////////////2ZmZmZmZmZmZmZmZmZmZmb/////////////8AAAAP//
+        ///////////2ZmZmZmZmZmZmZmZmZmZv//////////////AAAAD///////////////ZmZmZmZmZmZmZm
+        ZmZv///////////////wAAAA////////////////9mZmZmZmZmZmZmZv////////////////8AAAAP//
+        ////////////////9mZmZmZmZm////////////////////AAAAD/////////////////////////////
+        ///////////////////wAAAA////////////////////////////////////////////////8AAAAP//
+        //////////////////////////////////////////////AAAAA=
+</value>
+  </data>
+  <data name="leftWall.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk3WAQAAAAAAAHYAAAAoAAAABwAAAFgAAAABAAQAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAA/wAA
+        gP8AgAD/AICA/4AAAP+AAID/gIAA/4CAgP/AwMD/AAD//wD/AP8A/////wAA//8A/////wD//////3d3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3A=
+</value>
+  </data>
+  <data name="rightWall.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk3WAQAAAAAAAHYAAAAoAAAABwAAAFgAAAABAAQAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAA/wAA
+        gP8AgAD/AICA/4AAAP+AAID/gIAA/4CAgP/AwMD/AAD//wD/AP8A/////wAA//8A/////wD//////3d3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3
+        d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3B3d3dwd3d3cHd3d3A=
+</value>
+  </data>
+  <data name="topWall.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk2qAQAAAAAAAHYAAAAoAAAAWAAAAAcAAAABAAQAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAA/wAA
+        gP8AgAD/AICA/4AAAP+AAID/gIAA/4CAgP/AwMD/AAD//wD/AP8A/////wAA//8A/////wD//////3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3
+</value>
+  </data>
+  <data name="bottomWall.Image" type="System.Drawing.Bitmap, System.Drawing.Common" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk2qAQAAAAAAAHYAAAAoAAAAWAAAAAcAAAABAAQAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAA/wAA
+        gP8AgAD/AICA/4AAAP+AAID/gIAA/4CAgP/AwMD/AAD//wD/AP8A/////wAA//8A/////wD//////3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3
+        d3d3d3d3
+</value>
+  </data>
+</root>

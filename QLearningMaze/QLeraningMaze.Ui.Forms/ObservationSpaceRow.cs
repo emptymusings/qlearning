@@ -17,6 +17,7 @@ namespace QLearningMaze.Ui.Forms
         public void SetRowNumber(int rowNumber)
         {
             rowLabel.Text = $"Row: {rowNumber}";
+            this.RowNumber = rowNumber;
         }
 
         public void AddSpace(ObservationSpace observationSpace)
