@@ -50,46 +50,55 @@
         {
             int fudgeRoom = 5;
 
-            var height = this.Height;
-            var width = this.Width;
-            var position = this.Location;
-
-
-            var rowClientPosition = this.Parent.PointToClient(new Point(e.X, e.Y));
-            var spaceClientPosition = this.PointToClient(new Point(e.X, e.Y));
-            var spaceClientPositionEmpty = this.PointToClient(Point.Empty);
-            var rowPointToScreen = this.Parent.PointToScreen(new Point(e.X, e.Y));
-            var spacePointToScreen = this.PointToScreen(new Point(e.X, e.Y));
-            var spacePointToScreenEmpty = this.PointToScreen(Point.Empty);
-
-            var topWallClientPosition = topWall.PointToClient(new Point(e.X, e.Y));
-            var topWallClientEmpty = topWall.PointToClient(Point.Empty);
-            var topWallScreenPosition = topWall.PointToScreen(new Point(e.X, e.Y));
-            var topWallScreenEmpty = topWall.PointToScreen(Point.Empty);
-
-            var fromWeb = this.PointToClient(this.Parent.PointToScreen(Point.Empty));
-
             if (e.Button != MouseButtons.Left) return;
 
             if (e.Y <= topWall.Height + fudgeRoom)
-                OnWallMouseUp(new WallMouseUpEventArgs(topWall, Position));
+                OnWallMouseUp(new WallMouseUpEventArgs(topWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
             else if (e.Y >= this.Height - bottomWall.Height - fudgeRoom)
-                OnWallMouseUp(new WallMouseUpEventArgs(bottomWall, Position));
+                OnWallMouseUp(new WallMouseUpEventArgs(bottomWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
             else if (e.X <= leftWall.Width + fudgeRoom)
-                OnWallMouseUp(new WallMouseUpEventArgs(leftWall, Position));
+                OnWallMouseUp(new WallMouseUpEventArgs(leftWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
             else if (e.X >= rightWall.Left - fudgeRoom)
-                OnWallMouseUp(new WallMouseUpEventArgs(rightWall, Position));
+                OnWallMouseUp(new WallMouseUpEventArgs(rightWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
+        }
 
+        private void topWall_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) return;
+            
+            OnWallMouseUp(new WallMouseUpEventArgs(topWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
+        }
+
+        private void leftWall_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) return;
+
+            OnWallMouseUp(new WallMouseUpEventArgs(leftWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
+        }
+
+        private void bottomWall_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) return;
+
+            OnWallMouseUp(new WallMouseUpEventArgs(bottomWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
+        }
+
+        private void rightWall_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) return;
+
+            OnWallMouseUp(new WallMouseUpEventArgs(rightWall, Position, ((ObservationSpaceRow)this.Parent).RowNumber));
         }
     }
 
     public class WallMouseUpEventArgs : EventArgs
     {
-        public WallMouseUpEventArgs(PictureBox wallPictureBox, int spacePosition)
+        public WallMouseUpEventArgs(PictureBox wallPictureBox, int spacePosition, int rowNumber)
         {
             this.WallPictureBox = wallPictureBox;
             this.WallName = wallPictureBox.Name;
             this.SpacePosition = spacePosition;
+            this.RowNumber = rowNumber;
         }
 
         public PictureBox WallPictureBox { get; set; }

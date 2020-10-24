@@ -109,6 +109,7 @@
             this.clearObstructionsButton.TabStop = false;
             this.clearObstructionsButton.Text = "Clear All";
             this.clearObstructionsButton.UseVisualStyleBackColor = true;
+            this.clearObstructionsButton.Visible = false;
             this.clearObstructionsButton.Click += new System.EventHandler(this.clearObstructionsButton_Click);
             // 
             // removeObstructionButton
@@ -120,6 +121,7 @@
             this.removeObstructionButton.TabStop = false;
             this.removeObstructionButton.Text = "Remove";
             this.removeObstructionButton.UseVisualStyleBackColor = true;
+            this.removeObstructionButton.Visible = false;
             this.removeObstructionButton.Click += new System.EventHandler(this.removeObstructionButton_Click);
             // 
             // groupBox1
@@ -135,6 +137,7 @@
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Add Obstruction";
+            this.groupBox1.Visible = false;
             // 
             // addObstructionButton
             // 
@@ -197,6 +200,7 @@
             this.obstructionsList.TabStop = false;
             this.obstructionsList.UseCompatibleStateImageBehavior = false;
             this.obstructionsList.View = System.Windows.Forms.View.Details;
+            this.obstructionsList.Visible = false;
             // 
             // columnHeader1
             // 
@@ -217,6 +221,7 @@
             this.label8.Size = new System.Drawing.Size(149, 32);
             this.label8.TabIndex = 2;
             this.label8.Text = "Obstructions";
+            this.label8.Visible = false;
             // 
             // label7
             // 
