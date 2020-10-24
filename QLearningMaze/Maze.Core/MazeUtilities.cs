@@ -3,6 +3,7 @@
     using Newtonsoft.Json;
     using System.IO;
     using Mazes;
+    using System.Linq;
 
     public class MazeUtilities
     {
@@ -16,7 +17,7 @@
         {
             UserDefinedMaze loaded = JsonConvert.DeserializeObject<UserDefinedMaze>(File.ReadAllText(loadFromPath));
 
-            AddObstructions(loaded);
+            //AddObstructions(loaded);
 
             return loaded;
         }

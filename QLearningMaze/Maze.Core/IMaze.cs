@@ -3,8 +3,30 @@ using System.Collections.Generic;
 
 namespace QLearningMaze.Core
 {
+    using System;
+
     public interface IMaze
     {
+        event EventHandler MazeCreatingEventHandler;
+
+        event EventHandler MazeCreatedEventHandler;
+
+        event EventHandler RewardsCreatedEventHandler;
+
+        event EventHandler QualityCreatedEventHandler;
+
+        event EventHandler<ObstructionEventArgs> ObstructionAddedEventHandler;
+
+        event EventHandler<ObstructionEventArgs> ObstructionRemovedEventHandler;
+
+        event EventHandler<int> AgentStateChangedEventHandler;
+
+        event EventHandler<(int newState, int previousState)> TrainingAgentStateChangingEventHandler;
+
+        event EventHandler<bool> TrainingStatusChangedEventHandler;
+
+        event EventHandler<TrainingEpochCompletedEventArgs> TrainingEpochCompletedEventHandler;
+
         int NumberOfStates { get; }
         int Rows { get; set; }
         int Columns { get; set; }

@@ -220,7 +220,10 @@ namespace QLearningMaze.Core.Mazes
             int count = possibleNextStates.Count;
             int index = _random.Next(0, count);
 
-            return possibleNextStates[index];
+            if (possibleNextStates.Count > 0)
+                return possibleNextStates[index];
+            else
+                return -1;
         }
 
         public virtual void Train()
@@ -242,6 +245,13 @@ namespace QLearningMaze.Core.Mazes
                 while (true)
                 {
                     int nextState = GetRandomNextState(currState, MazeStates);
+
+                    if (nextState < 0)
+                    {
+                        currState = _random.Next(9, Rewards.Length);
+                        continue;
+                    }
+
                     List<int> possNextNextStates = GetPossibleNextStates(nextState, MazeStates);
                     double maxQ = double.MinValue;
 
