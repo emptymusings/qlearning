@@ -73,7 +73,7 @@
 
             if (e.Y <= topWall.Height + fudgeRoom)
                 OnWallMouseUp(new WallMouseUpEventArgs(topWall, Position));
-            else if (e.Y >= this.Height - bottomWall.Height - fudgeRoom)
+            else if (e.Y >= bottomWall.Top - fudgeRoom)
                 OnWallMouseUp(new WallMouseUpEventArgs(bottomWall, Position));
             else if (e.X <= leftWall.Width + fudgeRoom)
                 OnWallMouseUp(new WallMouseUpEventArgs(leftWall, Position));

@@ -19,15 +19,27 @@ namespace QLearningMaze.Ui.Forms
 
         public void CreateMazeControls(IMaze maze)
         {
+            this.SuspendLayout();
+            Rows.Clear();
             var rowControls = CreateRowControls(maze);
-
+            List<ObservationSpaceRow> rows = new List<ObservationSpaceRow>();
             foreach(var row in rowControls)
             {
-                this.Controls.Add(row);
+                rows.Add(row);
                 Rows.Add(row);
                 row.Dock = DockStyle.Top;
-                row.BringToFront();
             }
+
+            this.Controls.Clear();
+            
+            this.Controls.AddRange(rows.ToArray());
+
+            for (int i = rows.Count - 1; i >= 0; i--)
+            {
+                rows[i].SendToBack();
+            }
+
+            this.ResumeLayout();
         }
 
         private List<ObservationSpaceRow> CreateRowControls(IMaze maze)

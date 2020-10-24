@@ -195,7 +195,7 @@ namespace QLearningMaze.Core.Mazes
 
         private MazeObstruction GetObstructionFromList(int betweenSpace, int andSpace)
         {
-            return Obstructions.Where(x => (x.BetweenSpace == betweenSpace && x.AndSpace == andSpace) | (x.AndSpace == betweenSpace && x.BetweenSpace == andSpace)).FirstOrDefault();
+            return Obstructions.Where(x => (x.BetweenSpace == betweenSpace && x.AndSpace == andSpace) || (x.AndSpace == betweenSpace && x.BetweenSpace == andSpace)).FirstOrDefault();
         }
 
         protected virtual List<int> GetPossibleNextStates(int currentState, int[][] mazeNextStates)

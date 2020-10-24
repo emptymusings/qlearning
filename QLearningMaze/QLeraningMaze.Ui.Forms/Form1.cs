@@ -2,16 +2,21 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace QLearningMaze.Ui.Forms
 {
     using Core;
+    using Microsoft.VisualBasic;
+    using QLearningMaze.Core.Mazes;
 
     public partial class Form1 : Form
     {
         private IMaze _maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
         private int _movementPause = 150;
         private bool _overrideRespawn = false;
+        private bool _needsRetrain = false;
 
         public Form1()
         {
@@ -19,7 +24,8 @@ namespace QLearningMaze.Ui.Forms
             saveMenuItem.Click += SaveMenuItem_Click;
             openMenuItem.Click += OpenMenuItem_Click;
             exitMenuItem.Click += ExitMenuItem_Click;
-            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
+            _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+
         }
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
@@ -35,7 +41,7 @@ namespace QLearningMaze.Ui.Forms
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 _maze = MazeUtilities.LoadMaze(dlg.FileName);
-                _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
+                _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
                 SetFormValuesFromMaze();
             }
         }
@@ -62,14 +68,31 @@ namespace QLearningMaze.Ui.Forms
         private void RespawnMaze()
         {
             var newSpace = new MazeSpace();
-            mazeSpace.Controls.Clear();
-            mazeSpace.Rows.Clear();
             SetMazeValuesFromForm();
             mazeSpace.CreateMazeControls(_maze);
-            mazeSpace.Refresh();
+
+            foreach(var row in mazeSpace.Rows)
+            {
+                foreach(var space in row.Spaces)
+                {
+                    space.topWall.MouseUp += Wall_MouseUp;
+                    space.bottomWall.MouseUp += Wall_MouseUp;
+                    space.leftWall.MouseUp += Wall_MouseUp;
+                    space.rightWall.MouseUp += Wall_MouseUp;
+
+                    space.WallMouseUpEvent += Space_WallMouseUpEvent;
+                    
+                }
+            }
         }
 
-        private void _maze_AgentStateChangedEventHandler(object sender, int e)
+        private void Space_WallMouseUpEvent(object sender, WallMouseUpEventArgs e)
+        {
+            if (!e.WallPictureBox.Visible)
+                AddWallFromClick((ObservationSpace)sender, e.WallPictureBox);
+        }
+
+        private void Maze_AgentStateChangedEventHandler(object sender, int e)
         {
             var newSpace = GetSpaceByPosition(e);
 
@@ -97,13 +120,24 @@ namespace QLearningMaze.Ui.Forms
                 MazeSpace.ActiveSpace.SetInactive();                
             }
 
+            Cursor = Cursors.WaitCursor;
+            this.Enabled = false;
+            if (_needsRetrain)
+            {
+                _maze.Train();
+                _needsRetrain = false;
+            }
+
             var startSpace = GetSpaceByPosition(_maze.StartPosition);
             startSpace.SetActive();
             MazeSpace.ActiveSpace = startSpace;
             startSpace.Refresh();
+
             System.Threading.Thread.Sleep(_movementPause);
 
             _maze.RunMaze();
+            this.Enabled = true;
+            Cursor = Cursors.Default;
         }
 
         private ObservationSpace GetSpaceByPosition(int position)
@@ -140,17 +174,22 @@ namespace QLearningMaze.Ui.Forms
 
         private void SetMazeValuesFromForm()
         {
-            _maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
-            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
-            _maze.Rows = Convert.ToInt32(rowsText.Text);
-            _maze.Columns = Convert.ToInt32(columnsText.Text);
-            _maze.StartPosition = Convert.ToInt32(startPositionText.Text);
-            _maze.GoalPosition = Convert.ToInt32(goalPositionText.Text);
-            _maze.DiscountRate = Convert.ToDouble(discountRateText.Text);
-            _maze.LearningRate = Convert.ToDouble(learningRateText.Text);
-            _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
-
-            _maze.Train();
+            try
+            {
+                _maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
+                _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+                _maze.Rows = Convert.ToInt32(rowsText.Text);
+                _maze.Columns = Convert.ToInt32(columnsText.Text);
+                _maze.StartPosition = Convert.ToInt32(startPositionText.Text);
+                _maze.GoalPosition = Convert.ToInt32(goalPositionText.Text);
+                _maze.DiscountRate = Convert.ToDouble(discountRateText.Text);
+                _maze.LearningRate = Convert.ToDouble(learningRateText.Text);
+                _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
+            }
+            catch
+            {
+                return;
+            }
 
             for (int i = _maze.Obstructions.Count - 1; i >= 0; i--)
             {
@@ -184,8 +223,13 @@ namespace QLearningMaze.Ui.Forms
                 return;
             }
 
-            var lvi = new ListViewItem(betweenText.Text);
-            lvi.SubItems.Add(andText.Text);
+            AddObstruction(between, and);
+        }
+
+        private void AddObstruction(int between, int and)
+        {
+            var lvi = new ListViewItem(between.ToString());
+            lvi.SubItems.Add(and.ToString());
 
             obstructionsList.Items.Add(lvi);
             _maze.AddWall(between, and);
@@ -193,6 +237,7 @@ namespace QLearningMaze.Ui.Forms
             andText.Text = null;
 
             RespawnMaze();
+            _needsRetrain = true;
         }
 
         private void removeObstructionButton_Click(object sender, EventArgs e)
@@ -204,9 +249,23 @@ namespace QLearningMaze.Ui.Forms
             int and = Convert.ToInt32(obstructionsList.SelectedItems[0].SubItems[0].Text);
 
             obstructionsList.Items.Remove(obstructionsList.SelectedItems[0]);
+            RemoveObstruction(between, and);
+        }
+
+        private void RemoveObstruction(int between, int and)
+        {
             _maze.RemoveWall(between, and);
 
             RespawnMaze();
+            _needsRetrain = true;
+        }
+
+        private void clearObstructionsButton_Click(object sender, EventArgs e)
+        {
+            obstructionsList.Items.Clear();
+            _maze.Obstructions.Clear();
+            RespawnMaze();
+            _needsRetrain = true;
         }
 
         private void respawnButton_Click(object sender, EventArgs e)
@@ -216,8 +275,17 @@ namespace QLearningMaze.Ui.Forms
 
         private void trainMazeButton_Click(object sender, EventArgs e)
         {
+            if (Convert.ToInt32(trainingEpochsText.Text) != _maze.MaxEpochs)
+            {
+                _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
+            }
+
+            this.Cursor = Cursors.WaitCursor;
+            this.Enabled = false;
             _maze.Train();
-            MessageBox.Show("Training Complete");
+            _needsRetrain = false;
+            this.Enabled = true;
+            this.Cursor = Cursors.Default;
         }
 
         private void MazeTextChanged(TextBox textbox)
@@ -235,41 +303,138 @@ namespace QLearningMaze.Ui.Forms
             }
 
             RespawnMaze();
+            _needsRetrain = true;
         }
 
-        private void rowsText_TextChanged(object sender, EventArgs e)
+        private void rowsText_Leave(object sender, EventArgs e)
         {
             MazeTextChanged(rowsText);
         }
 
-        private void columnsText_TextChanged(object sender, EventArgs e)
+        private void columnsText_Leave(object sender, EventArgs e)
         {
             MazeTextChanged(columnsText);
         }
 
-        private void startPositionText_TextChanged(object sender, EventArgs e)
+        private void startPositionText_Leave(object sender, EventArgs e)
         {
             MazeTextChanged(startPositionText);
         }
 
-        private void goalPositionText_TextChanged(object sender, EventArgs e)
+        private void goalPositionText_Leave(object sender, EventArgs e)
         {
             MazeTextChanged(goalPositionText);
         }
 
-        private void discountRateText_TextChanged(object sender, EventArgs e)
+        private void discountRateText_Leave(object sender, EventArgs e)
         {
-            MazeTextChanged(discountRateText);
+            //MazeTextChanged(discountRateText);
+            _needsRetrain = true;
         }
 
-        private void learningRateText_TextChanged(object sender, EventArgs e)
+        private void learningRateText_Leave(object sender, EventArgs e)
         {
-            MazeTextChanged(learningRateText);
+            //MazeTextChanged(learningRateText);
+            _needsRetrain = true;
         }
 
-        private void trainingEpochsText_TextChanged(object sender, EventArgs e)
+        private void trainingEpochsText_Leave(object sender, EventArgs e)
         {
-            MazeTextChanged(trainingEpochsText);
+            //MazeTextChanged(trainingEpochsText);
+            _needsRetrain = true;
+        }
+
+        private void Wall_MouseUp(object sender, MouseEventArgs e)
+        {
+            var wallBox = sender as PictureBox;
+
+            if (wallBox == null)
+            {
+                return;
+            }
+
+            if (wallBox.Visible)
+            {
+                RemoveWallFromClick(wallBox);
+            }
+        }
+
+        private void AddWallFromClick(ObservationSpace space, PictureBox wallBox)
+        {            
+            ObservationSpaceRow row = space.Parent as ObservationSpaceRow;
+
+            switch (wallBox.Name)
+            {
+                case "topWall":
+                    if (row.RowNumber == 0) return;
+                    AddObstruction(space.Position, space.Position - _maze.Columns);                    
+                    break;
+                case "bottomWall":
+                    if (row.RowNumber == _maze.Rows - 1) return;
+                    AddObstruction(space.Position, space.Position + _maze.Columns);
+                    break;
+                case "leftWall":
+                    var prev = row.Spaces.Where(x => x.Position == space.Position - 1);
+                    if (prev == null) return;
+                    AddObstruction(space.Position, space.Position - 1);
+                    break;
+                case "rightWall":
+                    var next = row.Spaces.Where(x => x.Position == space.Position + 1);
+                    if (next == null) return;
+                    AddObstruction(space.Position, space.Position + 1);
+                    break;
+                default:
+                    return;
+            }
+
+            _needsRetrain = true;
+        }
+
+        private void RemoveWallFromClick(PictureBox wallBox)
+        {
+            int between, and;
+            ObservationSpace space = wallBox.Parent as ObservationSpace;
+
+            if (space == null) return;
+
+            ObservationSpaceRow row = space.Parent as ObservationSpaceRow;
+
+            if (row == null || row.RowNumber == _maze.Rows - 1) return;
+
+            between = space.Position;
+
+            switch (wallBox.Name)
+            {
+                case "topWall":
+                    and = between - _maze.Columns;
+                    break;
+                case "bottomWall":
+                    and = between + _maze.Columns;
+                    break;
+                case "leftWall":
+                    and = between - 1;
+                    break;
+                case "rightWall":
+                    and = between + 1;
+                    break;
+                default:
+                    return;
+            }
+
+            RemoveObstructionsFromList(between, and);
+            RemoveObstruction(between, and);
+        }
+
+        private void RemoveObstructionsFromList(int between, int and)
+        {
+            foreach(ListViewItem item in obstructionsList.Items)
+            {
+                if ((item.Text == between.ToString() && item.SubItems[1].Text == and.ToString()) ||
+                    (item.Text == and.ToString() && item.SubItems[1].Text == between.ToString()))
+                {
+                    obstructionsList.Items.Remove(item);
+                }
+            }
         }
     }
 }
