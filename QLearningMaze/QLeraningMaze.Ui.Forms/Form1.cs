@@ -14,9 +14,10 @@ namespace QLearningMaze.Ui.Forms
     public partial class Form1 : Form
     {
         private IMaze _maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
-        private int _movementPause = 150;
+        private int _movementPause = 500;
         private bool _overrideRespawn = false;
         private bool _needsRetrain = false;
+        private List<AdditionalReward> _additionalRewards = new List<AdditionalReward>();
 
         public Form1()
         {
@@ -24,8 +25,35 @@ namespace QLearningMaze.Ui.Forms
             saveMenuItem.Click += SaveMenuItem_Click;
             openMenuItem.Click += OpenMenuItem_Click;
             exitMenuItem.Click += ExitMenuItem_Click;
+            qualityMenuItem.Click += QualityMenuItem_Click;
+            rewardsMenuItem.Click += RewardsMenuItem_Click;
             _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+            _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
 
+        }
+
+        private void Maze_TrainingAgentStateChangingEventHandler(object sender, (int newState, int previousState, double newQuality, double oldQuality) e)
+        {
+            int newState = e.newState;
+            int oldState = e.previousState;
+            double newQuality = e.newQuality;
+            double oldQuality = e.oldQuality;
+
+            string msg = "test";
+        }
+
+        private void RewardsMenuItem_Click(object sender, EventArgs e)
+        {
+            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.Rewards);
+            view.Show();
+        }
+
+        private void QualityMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_maze.Quality == null) trainMazeButton_Click(sender, e);
+
+            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.Quality);
+            view.Show();
         }
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
@@ -42,7 +70,15 @@ namespace QLearningMaze.Ui.Forms
             {
                 _maze = MazeUtilities.LoadMaze(dlg.FileName);
                 _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+                _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
                 SetFormValuesFromMaze();
+
+                /*
+                _additionalRewards.Add(new AdditionalReward { Position = 27, Value = 5 });
+                _additionalRewards.Add(new AdditionalReward { Position = 21, Value = 10 });
+                _additionalRewards.Add(new AdditionalReward { Position = 14, Value = 15 });
+                _additionalRewards.Add(new AdditionalReward { Position = 17, Value = 10 });                
+                */
             }
         }
 
@@ -107,6 +143,8 @@ namespace QLearningMaze.Ui.Forms
                 mazeSpace.Invalidate();
                 newSpace.Refresh();
                 System.Threading.Thread.Sleep(_movementPause);
+                rewardsLabel.Text = _maze.TotalRewards.ToString();
+                Application.DoEvents();
             }
         }
 
@@ -118,7 +156,7 @@ namespace QLearningMaze.Ui.Forms
             }
 
             Cursor = Cursors.WaitCursor;
-            this.Enabled = false;
+            entryPanel.Enabled = false;
             if (_needsRetrain)
             {
                 _maze.Train();
@@ -133,8 +171,9 @@ namespace QLearningMaze.Ui.Forms
             System.Threading.Thread.Sleep(_movementPause);
 
             _maze.RunMaze();
-            this.Enabled = true;
+            entryPanel.Enabled = true;
             Cursor = Cursors.Default;
+
         }
 
         private ObservationSpace GetSpaceByPosition(int position)
@@ -175,6 +214,7 @@ namespace QLearningMaze.Ui.Forms
             {                
                 _maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
                 _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+                _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
                 _maze.Rows = Convert.ToInt32(rowsText.Text);
                 _maze.Columns = Convert.ToInt32(columnsText.Text);
                 _maze.StartPosition = Convert.ToInt32(startPositionText.Text);
@@ -182,6 +222,8 @@ namespace QLearningMaze.Ui.Forms
                 _maze.DiscountRate = Convert.ToDouble(discountRateText.Text);
                 _maze.LearningRate = Convert.ToDouble(learningRateText.Text);
                 _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
+
+                _maze.AdditionalRewards = _additionalRewards;
             }
             catch
             {

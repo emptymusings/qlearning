@@ -20,7 +20,7 @@ namespace QLearningMaze.Core.Mazes
 
         public event EventHandler<int> AgentStateChangedEventHandler;
 
-        public event EventHandler<(int newState, int previousState)> TrainingAgentStateChangingEventHandler;
+        public event EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
 
         public event EventHandler<bool> TrainingStatusChangedEventHandler;
 
@@ -68,10 +68,10 @@ namespace QLearningMaze.Core.Mazes
             handler?.Invoke(this, newState);
         }
 
-        protected virtual void OnTrainingAgentStateChanging(int newState, int previousState)
+        protected virtual void OnTrainingAgentStateChanging(int newState, int previousState, double newQuality, double oldQuality)
         {
-            EventHandler<(int newState, int previousState)> handler = TrainingAgentStateChangingEventHandler;
-            handler?.Invoke(this, (newState, previousState));
+            EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> handler = TrainingAgentStateChangingEventHandler;
+            handler?.Invoke(this, (newState, previousState, newQuality, oldQuality));
         }
 
         protected virtual void OnTrainingStatusChanged(bool isTraining)

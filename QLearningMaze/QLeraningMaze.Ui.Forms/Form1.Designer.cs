@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.entryPanel = new System.Windows.Forms.Panel();
             this.clearObstructionsButton = new System.Windows.Forms.Button();
             this.removeObstructionButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -59,6 +59,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.mazeSpace = new QLearningMaze.Ui.Forms.MazeSpace();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.rewardsLabel = new System.Windows.Forms.Label();
             this.trainMazeButton = new System.Windows.Forms.Button();
             this.runMazeButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -66,39 +67,42 @@
             this.saveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1.SuspendLayout();
+            this.viewStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.qualityMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rewardsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.entryPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // entryPanel
             // 
-            this.panel1.Controls.Add(this.clearObstructionsButton);
-            this.panel1.Controls.Add(this.removeObstructionButton);
-            this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.obstructionsList);
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.trainingEpochsText);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.discountRateText);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.learningRateText);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.startPositionText);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.goalPositionText);
-            this.panel1.Controls.Add(this.columnsText);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.rowsText);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 40);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1776, 278);
-            this.panel1.TabIndex = 0;
+            this.entryPanel.Controls.Add(this.clearObstructionsButton);
+            this.entryPanel.Controls.Add(this.removeObstructionButton);
+            this.entryPanel.Controls.Add(this.groupBox1);
+            this.entryPanel.Controls.Add(this.obstructionsList);
+            this.entryPanel.Controls.Add(this.label8);
+            this.entryPanel.Controls.Add(this.label7);
+            this.entryPanel.Controls.Add(this.trainingEpochsText);
+            this.entryPanel.Controls.Add(this.label6);
+            this.entryPanel.Controls.Add(this.discountRateText);
+            this.entryPanel.Controls.Add(this.label5);
+            this.entryPanel.Controls.Add(this.learningRateText);
+            this.entryPanel.Controls.Add(this.label4);
+            this.entryPanel.Controls.Add(this.startPositionText);
+            this.entryPanel.Controls.Add(this.label3);
+            this.entryPanel.Controls.Add(this.goalPositionText);
+            this.entryPanel.Controls.Add(this.columnsText);
+            this.entryPanel.Controls.Add(this.label2);
+            this.entryPanel.Controls.Add(this.rowsText);
+            this.entryPanel.Controls.Add(this.label1);
+            this.entryPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.entryPanel.Location = new System.Drawing.Point(0, 40);
+            this.entryPanel.Name = "entryPanel";
+            this.entryPanel.Size = new System.Drawing.Size(1776, 278);
+            this.entryPanel.TabIndex = 0;
             // 
             // clearObstructionsButton
             // 
@@ -372,6 +376,7 @@
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.rewardsLabel);
             this.panel3.Controls.Add(this.trainMazeButton);
             this.panel3.Controls.Add(this.runMazeButton);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
@@ -379,6 +384,15 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1776, 66);
             this.panel3.TabIndex = 12;
+            // 
+            // rewardsLabel
+            // 
+            this.rewardsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rewardsLabel.AutoSize = true;
+            this.rewardsLabel.Location = new System.Drawing.Point(1641, 17);
+            this.rewardsLabel.Name = "rewardsLabel";
+            this.rewardsLabel.Size = new System.Drawing.Size(0, 32);
+            this.rewardsLabel.TabIndex = 16;
             // 
             // trainMazeButton
             // 
@@ -404,7 +418,8 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileMenuItem});
+            this.fileMenuItem,
+            this.viewStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1776, 40);
@@ -439,25 +454,47 @@
             this.exitMenuItem.Size = new System.Drawing.Size(206, 44);
             this.exitMenuItem.Text = "E&xit";
             // 
+            // viewStripMenuItem
+            // 
+            this.viewStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.qualityMenuItem,
+            this.rewardsMenuItem});
+            this.viewStripMenuItem.Name = "viewStripMenuItem";
+            this.viewStripMenuItem.Size = new System.Drawing.Size(85, 36);
+            this.viewStripMenuItem.Text = "&View";
+            // 
+            // qualityMenuItem
+            // 
+            this.qualityMenuItem.Name = "qualityMenuItem";
+            this.qualityMenuItem.Size = new System.Drawing.Size(296, 44);
+            this.qualityMenuItem.Text = "Quality Table";
+            // 
+            // rewardsMenuItem
+            // 
+            this.rewardsMenuItem.Name = "rewardsMenuItem";
+            this.rewardsMenuItem.Size = new System.Drawing.Size(296, 44);
+            this.rewardsMenuItem.Text = "Rewards Table";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1776, 938);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.entryPanel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Shown += new System.EventHandler(this.Form1_Shown);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.entryPanel.ResumeLayout(false);
+            this.entryPanel.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -467,7 +504,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel entryPanel;
         private System.Windows.Forms.Panel panel2;
         private MazeSpace mazeSpace;
         private System.Windows.Forms.Panel panel3;
@@ -504,6 +541,10 @@
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
         private System.Windows.Forms.Button trainMazeButton;
         private System.Windows.Forms.Button clearObstructionsButton;
+        private System.Windows.Forms.ToolStripMenuItem viewStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem qualityMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rewardsMenuItem;
+        private System.Windows.Forms.Label rewardsLabel;
     }
 }
 
