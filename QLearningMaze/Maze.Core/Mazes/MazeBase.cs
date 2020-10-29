@@ -7,7 +7,7 @@ namespace QLearningMaze.Core.Mazes
     public abstract partial class MazeBase : IMaze
     {
         private Random _random = new Random();
-        protected int _goalValue = 30;
+        protected int _goalValue = 50;
         protected int _movementValue = -1;
         protected double _start_decay = 1;
         protected double _end_decay;
@@ -244,12 +244,13 @@ namespace QLearningMaze.Core.Mazes
 
         public virtual void Train()
         {
+            double[][] tempQuality;
             int moves;
             bool isBackTrack = false;
             CreateMazeStates();
             CreateRewards();
             CreateQuality();
-
+            
             double epsilon = 1;
             _end_decay = (int)MaxEpochs / 2;
             _epsilon_decay_value = epsilon / (_end_decay - _start_decay);
@@ -260,6 +261,7 @@ namespace QLearningMaze.Core.Mazes
             
             for (int epoch = 0; epoch < MaxEpochs; ++epoch)
             {
+                tempQuality = Quality;
                 moves = 0;
                 TotalRewards = 0;
                 Console.Write($"Runnging through epoch {(epoch + 1).ToString("#,##0")} of {MaxEpochs.ToString("#,##0")}\r");
@@ -318,10 +320,10 @@ namespace QLearningMaze.Core.Mazes
                     {
                         int nnumberOfStates = possNextNextStates[j];  // short alias
 
-                        double quality = Quality[nextState][nnumberOfStates];
-                        if (quality > maxQ) 
+                        double futureQuality = tempQuality[nextState][nnumberOfStates];
+                        if (futureQuality > maxQ) 
                         {
-                            maxQ = quality;
+                            maxQ = futureQuality;
                         }
 
                         if (currState == nnumberOfStates)
@@ -329,15 +331,21 @@ namespace QLearningMaze.Core.Mazes
                     }
 
 
-                    double oldQuality = Quality[currState][nextState];
+                    double oldtempQuality = tempQuality[currState][nextState];
                     TotalRewards = Rewards[currState][nextState] + (isBackTrack ? -2 : 0);
-                    Quality[currState][nextState] = ((1 - LearningRate) * Quality[currState][nextState]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
-                    OnTrainingAgentStateChanging(nextState, currState, oldQuality, Quality[currState][nextState]);
+                    tempQuality[currState][nextState] = ((1 - LearningRate) * tempQuality[currState][nextState]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
+                    OnTrainingAgentStateChanging(nextState, currState, oldtempQuality, tempQuality[currState][nextState]);
                     currState = nextState;
 
-                    done = (currState == GoalPosition);
-
-                    if (done) Quality = Quality;
+                    if (currState == GoalPosition)
+                    {
+                        done = true;
+                        Quality = tempQuality;
+                    }
+                    else if (moves > 100000)
+                    {
+                        done = true;
+                    }
                 }
 
                 if (_end_decay >= epoch &&

@@ -60,13 +60,13 @@ namespace QLearningMaze.Ui.Forms
 
                     if (position == maze.StartPosition)
                     {
-                        space.SetStart();
+                        space.SetStart(true);
                         space.SetActive();
                         space.Invalidate();
                     }
 
                     if (position == maze.GoalPosition)
-                        space.SetGoal();
+                        space.SetGoal(true);
 
                     DrawWalls(maze, position, space);
 
