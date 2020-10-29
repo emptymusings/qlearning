@@ -24,6 +24,7 @@ namespace QLearningMaze.Ui.Forms
             dataGridView1.DataSource = dt;
             
             dataGridView1.Show();
+            dataGridView1.Columns[0].Frozen = true;
         }
 
 

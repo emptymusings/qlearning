@@ -19,7 +19,7 @@ namespace QLearningMaze.Core
 
         event EventHandler<ObstructionEventArgs> ObstructionRemovedEventHandler;
 
-        event EventHandler<int> AgentStateChangedEventHandler;
+        event EventHandler<AgentStateChangedEventArgs> AgentStateChangedEventHandler;
 
         event EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
 
@@ -39,11 +39,14 @@ namespace QLearningMaze.Core
         double[][] Rewards { get; set; }
         double[][] Quality { get; set; }
         List<MazeObstruction> Obstructions { get; set; }    
-        List<AdditionalReward> AdditionalRewards { get; set; }
+        //List<AdditionalReward> AdditionalRewards { get; set; }
         double TotalRewards { get; set; }
 
         void AddWall(int betweenSpace, int andSpace);
         void RemoveWall(int betweenSpace, int andSpace);
+        void AddCustomReward(int position, double reward);
+        void RemoveCustomReward(int position);
+        IEnumerable<AdditionalReward> GetAdditionalRewards();
         void Train();
         void RunMaze();
         void PrintRewards();

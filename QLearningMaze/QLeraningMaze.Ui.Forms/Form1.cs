@@ -39,7 +39,6 @@ namespace QLearningMaze.Ui.Forms
             double newQuality = e.newQuality;
             double oldQuality = e.oldQuality;
 
-            string msg = "test";
         }
 
         private void RewardsMenuItem_Click(object sender, EventArgs e)
@@ -72,8 +71,6 @@ namespace QLearningMaze.Ui.Forms
                 _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
                 _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
                 SetFormValuesFromMaze();
-
-                _additionalRewards.Add(new AdditionalReward { Position = 27, Value = 30 }); 
             }
         }
 
@@ -99,6 +96,7 @@ namespace QLearningMaze.Ui.Forms
         private void RespawnMaze()
         {
             var newSpace = new MazeSpace();
+
             SetMazeValuesFromForm();
             mazeSpace.CreateMazeControls(_maze);
 
@@ -120,9 +118,9 @@ namespace QLearningMaze.Ui.Forms
                 RemoveWallFromClick((ObservationSpace)sender, e.WallPictureBox, e.RowNumber);
         }
 
-        private void Maze_AgentStateChangedEventHandler(object sender, int e)
+        private void Maze_AgentStateChangedEventHandler(object sender, AgentStateChangedEventArgs e)
         {
-            var newSpace = GetSpaceByPosition(e);
+            var newSpace = GetSpaceByPosition(e.NewPosition);
 
             if (newSpace != null)
             {
@@ -138,7 +136,7 @@ namespace QLearningMaze.Ui.Forms
                 mazeSpace.Invalidate();
                 newSpace.Refresh();
                 System.Threading.Thread.Sleep(_movementPause);
-                rewardsLabel.Text = _maze.TotalRewards.ToString();
+                rewardsLabel.Text = $"Moves: {e.MovesMade} Reward: {e.RewardsEarned}";
                 Application.DoEvents();
             }
         }
@@ -215,7 +213,19 @@ namespace QLearningMaze.Ui.Forms
         {
             try
             {  
-                _maze.AdditionalRewards = _additionalRewards;
+                if (_additionalRewards == null ||
+                    _additionalRewards.Count == 0)
+                {
+                    _additionalRewards = new List<AdditionalReward>();
+                    _additionalRewards.Add(new AdditionalReward { Position = 26, Value = 30 });
+                    _additionalRewards.Add(new AdditionalReward { Position = 27, Value = 30 });
+                    _additionalRewards.Add(new AdditionalReward { Position = 15, Value = 30 });
+                }
+
+                foreach(var reward in _additionalRewards)
+                {
+                    _maze.AddCustomReward(reward.Position, reward.Value);
+                }
             }
             catch
             {
