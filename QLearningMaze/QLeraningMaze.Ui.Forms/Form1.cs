@@ -73,12 +73,7 @@ namespace QLearningMaze.Ui.Forms
                 _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
                 SetFormValuesFromMaze();
 
-                /*
-                _additionalRewards.Add(new AdditionalReward { Position = 27, Value = 5 });
-                _additionalRewards.Add(new AdditionalReward { Position = 21, Value = 10 });
-                _additionalRewards.Add(new AdditionalReward { Position = 14, Value = 15 });
-                _additionalRewards.Add(new AdditionalReward { Position = 17, Value = 10 });                
-                */
+                _additionalRewards.Add(new AdditionalReward { Position = 27, Value = 20 }); 
             }
         }
 
@@ -170,7 +165,15 @@ namespace QLearningMaze.Ui.Forms
 
             System.Threading.Thread.Sleep(_movementPause);
 
-            _maze.RunMaze();
+            try
+            {
+                _maze.RunMaze();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             entryPanel.Enabled = true;
             Cursor = Cursors.Default;
 
@@ -211,18 +214,7 @@ namespace QLearningMaze.Ui.Forms
         private void SetMazeValuesFromForm()
         {
             try
-            {                
-                _maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
-                _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
-                _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
-                _maze.Rows = Convert.ToInt32(rowsText.Text);
-                _maze.Columns = Convert.ToInt32(columnsText.Text);
-                _maze.StartPosition = Convert.ToInt32(startPositionText.Text);
-                _maze.GoalPosition = Convert.ToInt32(goalPositionText.Text);
-                _maze.DiscountRate = Convert.ToDouble(discountRateText.Text);
-                _maze.LearningRate = Convert.ToDouble(learningRateText.Text);
-                _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
-
+            {  
                 _maze.AdditionalRewards = _additionalRewards;
             }
             catch
@@ -321,17 +313,18 @@ namespace QLearningMaze.Ui.Forms
 
             this.Cursor = Cursors.WaitCursor;
             this.Enabled = false;
-            _maze.Train();
+
+            var dlg = new TrainingProgress(_maze);
+            dlg.ShowDialog();
+
             _needsRetrain = false;
             this.Enabled = true;
             this.Cursor = Cursors.Default;
         }
 
-        private void MazeTextChanged(TextBox textbox)
+        private bool MazeTextChanged(TextBox textbox)
         {
             double value;
-
-            if (_overrideRespawn) return;
 
             if (string.IsNullOrWhiteSpace(textbox.Text) ||
                 !double.TryParse(textbox.Text, out value))
@@ -339,48 +332,96 @@ namespace QLearningMaze.Ui.Forms
                 MessageBox.Show("Invalid entry");
                 textbox.Focus();
                 textbox.SelectAll();
+                return false;
             }
 
-            RespawnMaze();
             _needsRetrain = true;
+            return true;
         }
 
         private void rowsText_Leave(object sender, EventArgs e)
         {
-            MazeTextChanged(rowsText);
+            if (_maze.Rows.ToString() != rowsText.Text &&
+                MazeTextChanged(rowsText))
+            {
+                _maze.Rows = Convert.ToInt32(rowsText.Text);
+                _needsRetrain = true;
+                RespawnMaze();
+            }
+            
         }
 
         private void columnsText_Leave(object sender, EventArgs e)
         {
-            MazeTextChanged(columnsText);
+            if (_maze.Columns.ToString() != columnsText.Text &&
+                MazeTextChanged(columnsText))
+            {
+                _maze.Columns = Convert.ToInt32(columnsText.Text);
+                _needsRetrain = true;
+                RespawnMaze();
+            }
         }
 
         private void startPositionText_Leave(object sender, EventArgs e)
         {
-            MazeTextChanged(startPositionText);
+            if (_maze.StartPosition.ToString() != startPositionText.Text &&
+                MazeTextChanged(startPositionText))
+            {
+                _maze.StartPosition = Convert.ToInt32(startPositionText);
+                RespawnMaze();
+            }
         }
 
         private void goalPositionText_Leave(object sender, EventArgs e)
         {
-            MazeTextChanged(goalPositionText);
+            if (_maze.GoalPosition.ToString() != goalPositionText.Text &&
+                MazeTextChanged(goalPositionText))
+            {
+                _maze.GoalPosition = Convert.ToInt32(goalPositionText.Text);
+                RespawnMaze();
+            }            
         }
 
         private void discountRateText_Leave(object sender, EventArgs e)
         {
-            //MazeTextChanged(discountRateText);
-            _needsRetrain = true;
+            _overrideRespawn = true;
+
+            if (_maze.DiscountRate.ToString() != discountRateText.Text &&
+                MazeTextChanged(discountRateText))
+            {
+                _maze.DiscountRate = Convert.ToDouble(discountRateText.Text);
+                _needsRetrain = true;
+            }
+
+            _overrideRespawn = false;
         }
 
         private void learningRateText_Leave(object sender, EventArgs e)
         {
-            //MazeTextChanged(learningRateText);
-            _needsRetrain = true;
+            _overrideRespawn = true;
+
+            if (_maze.LearningRate.ToString() != learningRateText.Text &&
+                MazeTextChanged(learningRateText))
+            {
+                _maze.LearningRate = Convert.ToDouble(learningRateText.Text);
+                _needsRetrain = true;
+            }
+
+            _overrideRespawn = false;
         }
 
         private void trainingEpochsText_Leave(object sender, EventArgs e)
         {
-            //MazeTextChanged(trainingEpochsText);
-            _needsRetrain = true;
+            _overrideRespawn = true;
+
+            if (_maze.MaxEpochs.ToString() != trainingEpochsText.Text &&
+                MazeTextChanged(trainingEpochsText))
+            {
+                _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
+                _needsRetrain = true;
+            }
+
+            _overrideRespawn = false;
         }
 
         private void AddWallFromClick(ObservationSpace space, PictureBox wallBox, int rowNumber)

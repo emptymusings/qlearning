@@ -8,11 +8,12 @@ namespace QLearningMaze.Core.Mazes
     {
         private Random _random = new Random();
         protected int _goalValue = 30;
-        protected double _epsilon = 1;
+        protected int _movementValue = -1;
         protected double _start_decay = 1;
         protected double _end_decay;
         protected double _epsilon_decay_value;
         protected bool _mazeInitialized = false;
+        protected int _numberOfActions = 5;
                 
         public MazeBase(
             int rows,
@@ -68,9 +69,6 @@ namespace QLearningMaze.Core.Mazes
         /// </summary>
         protected virtual void CreateMazeStates()
         {
-            if (_mazeInitialized)
-                return;
-
             OnMazeCreatingEventHandler();
 
             Console.WriteLine("Creating Maze States (Observation Space)");
@@ -83,7 +81,12 @@ namespace QLearningMaze.Core.Mazes
 
                 for (int j = 0; j < NumberOfStates; ++j)
                 {
-                    if (i != GoalPosition && // Don't map a way out of the goal position, we're already there
+                    var count = Obstructions.Where(x => (x.BetweenSpace == i && x.AndSpace == j) ||
+                            (x.AndSpace == i && x.BetweenSpace == j)).Count();
+
+                    if (count != 0) continue;
+
+                    if (i != GoalPosition &&
                         ((i + 1 == j && j % Columns != 0) || // i and j are sequential, and j is not on the next row
                         (i - 1 == j && i % Columns != 0) || // i and j are sequential, and i is not on the previous row
                         i + Columns == j || // j is directly below i
@@ -115,7 +118,7 @@ namespace QLearningMaze.Core.Mazes
 
                 for (int j = 0; j < NumberOfStates; ++j)
                 {
-                    if (MazeStates[i][j] == 1)
+                    if (MazeStates[i][j] > 0)
                     {
                         if (j == GoalPosition)
                         {
@@ -131,7 +134,7 @@ namespace QLearningMaze.Core.Mazes
                             }
                             else
                             {
-                                reward[i][j] = -0.1;
+                                reward[i][j] = _movementValue;
                             }
                         }
                     }
@@ -189,10 +192,13 @@ namespace QLearningMaze.Core.Mazes
 
         public virtual void RemoveWall(int betweenSpace, int andSpace)
         {
+            if (!_mazeInitialized)
+                CreateMazeStates();
+
             MazeStates[betweenSpace][andSpace] = 1;
             MazeStates[andSpace][betweenSpace] = 1;
-            Rewards[betweenSpace][andSpace] = -0.1;
-            Rewards[andSpace][betweenSpace] = -0.1;
+            Rewards[betweenSpace][andSpace] = _movementValue;
+            Rewards[andSpace][betweenSpace] = _movementValue;
 
             var wall = GetObstructionFromList(betweenSpace, andSpace);
 
@@ -214,7 +220,7 @@ namespace QLearningMaze.Core.Mazes
 
             for (int j = 0; j < mazeNextStates.Length; ++j)
             {
-                if (mazeNextStates[currentState][j] == 1)
+                if (mazeNextStates[currentState][j] > 0)
                 {
                     result.Add(j);
                 }
@@ -238,13 +244,15 @@ namespace QLearningMaze.Core.Mazes
 
         public virtual void Train()
         {
+            int moves;
+            bool isBackTrack = false;
             CreateMazeStates();
             CreateRewards();
             CreateQuality();
 
-
+            double epsilon = 1;
             _end_decay = (int)MaxEpochs / 2;
-            _epsilon_decay_value = _epsilon / (_end_decay - _start_decay);
+            _epsilon_decay_value = epsilon / (_end_decay - _start_decay);
 
             Console.WriteLine("Please wait while I learn the maze");
             
@@ -252,44 +260,93 @@ namespace QLearningMaze.Core.Mazes
             
             for (int epoch = 0; epoch < MaxEpochs; ++epoch)
             {
-
+                moves = 0;
+                TotalRewards = 0;
                 Console.Write($"Runnging through epoch {(epoch + 1).ToString("#,##0")} of {MaxEpochs.ToString("#,##0")}\r");
 
                 int currState = _random.Next(0, Rewards.Length);
+                bool done = false;
 
-                while (currState != GoalPosition)
+                while (!done)
                 {
-                    int nextState = GetRandomNextState(currState, MazeStates);
+                    moves++;
+
+                    int nextState;
+                    nextState = GetRandomNextState(currState, MazeStates);
+                    isBackTrack = false;
+                    double randRand = _random.NextDouble();
+
+                    if (randRand > epsilon)
+                    {
+                        int preferredNext = -1;
+                        double max = 0;
+
+                        for (int i = 0; i < Quality[currState].Length; ++i)
+                        {
+                            if (Quality[currState][i] > max)
+                            {
+                                max = Quality[currState][i];
+                                preferredNext = i;
+                            }
+                        }
+
+                        if (preferredNext >= 0)
+                        {
+                            nextState = preferredNext;
+                        }
+                        else
+                        {
+                            //nextState = GetRandomNextState(currState, MazeStates);
+                        }
+                    }
+                    //else
+                    //{
+                    //    nextState = GetRandomNextState(currState, MazeStates);
+                    //}
+
 
                     if (nextState < 0)
                     {
-                        currState = _random.Next(9, Rewards.Length);
+                        currState = _random.Next(0, Rewards.Length);
                         continue;
                     }
 
                     List<int> possNextNextStates = GetPossibleNextStates(nextState, MazeStates);
                     double maxQ = double.MinValue;
-
+                    
                     for (int j = 0; j < possNextNextStates.Count; ++j)
                     {
                         int nnumberOfStates = possNextNextStates[j];  // short alias
+
                         double quality = Quality[nextState][nnumberOfStates];
-                        if (quality > maxQ) maxQ = quality;
+                        if (quality > maxQ) 
+                        {
+                            maxQ = quality;
+                        }
+
+                        if (currState == nnumberOfStates)
+                            isBackTrack = true;
                     }
 
+
                     double oldQuality = Quality[currState][nextState];
-                    Quality[currState][nextState] = ((1 - LearningRate) * Quality[currState][nextState]) + (LearningRate * (Rewards[currState][nextState] + (DiscountRate * maxQ)));
+                    TotalRewards = Rewards[currState][nextState] + (isBackTrack ? -2 : 0);
+                    Quality[currState][nextState] = ((1 - LearningRate) * Quality[currState][nextState]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
                     OnTrainingAgentStateChanging(nextState, currState, oldQuality, Quality[currState][nextState]);
                     currState = nextState;
 
-                    if (epoch >= _start_decay &&
-                        _end_decay >= epoch)
-                    {
-                        _epsilon -= _epsilon_decay_value;
-                    }
+                    done = (currState == GoalPosition);
+
+                    if (done) Quality = Quality;
                 }
 
-                OnTrainingEpochCompleted(new TrainingEpochCompletedEventArgs { CurrentEpoch = epoch, TotalEpochs = MaxEpochs });
+                if (_end_decay >= epoch &&
+                    epoch >= _start_decay)
+                {
+                    epsilon -= _epsilon_decay_value;
+                }
+
+                OnTrainingEpochCompleted(new TrainingEpochCompletedEventArgs(epoch + 1, MaxEpochs, moves, TotalRewards, currState == GoalPosition));
             }
 
             OnTrainingStatusChanged(false);
@@ -308,7 +365,7 @@ namespace QLearningMaze.Core.Mazes
             {
                 next = ArgMax(Quality[curr]);
 
-                if (MazeStates[curr][next] != 1)
+                if (MazeStates[curr][next] < 1)
                 {
                     string message = "I guess I didn't learn very  well, I just tried an illegal move.  Check the learning rate and discount rate and try again";
                     Console.WriteLine();
@@ -330,13 +387,15 @@ namespace QLearningMaze.Core.Mazes
 
         protected virtual int ArgMax(double[] vector)
         {
-            double maxVal = vector[0]; int idx = 0;
+            double maxVal = vector[0]; 
+            int idx = 0;
 
             for (int i = 0; i < vector.Length; ++i)
             {
-                if (vector[i] > maxVal)
+                if (vector[i] > maxVal && vector[i] != 0)
                 {
-                    maxVal = vector[i]; idx = i;
+                    maxVal = vector[i]; 
+                    idx = i;
                 }
             }
 
