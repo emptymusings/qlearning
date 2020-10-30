@@ -525,7 +525,7 @@ namespace QLearningMaze.Core.Mazes
                 }                
             }            
 
-            TotalRewards = Rewards[currentState][action] + (isBackTrack ? (GetAdditionalRewards().Max(x => x.Value)) - _backtrackPunishment : 0);
+            TotalRewards = Rewards[currentState][action] + (isBackTrack ? (_additionalRewards.Count > 0 ? GetAdditionalRewards().Max(x => x.Value) : 0) - _backtrackPunishment : 0);
 
             Quality[currentState][action] = ((1 - LearningRate) * Quality[currentState][action]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
 
@@ -563,33 +563,16 @@ namespace QLearningMaze.Core.Mazes
             int nextState;
             int moves = 0;
             int previousPosition = -1;
-            int _backtrackTimes = 0;
+            int backtrackTimes = 0;
             TotalRewards = 0;
             Console.Write(curr + "->");
 
             while (curr != GoalPosition)
             {
                 if (Quality == null)
-                    Train();                
-                
-                action = GetMaxQ(Quality[curr]);
+                    Train();
 
-                if (GetNextState(curr, action) == previousPosition)
-                {
-                    if (_backtrackTimes > 1)
-                    {
-                        action = GetMaxQ(Quality[curr], action);
-                        _backtrackTimes = 0;
-                    }
-                    else
-                    {
-                        _backtrackTimes++;
-                    }
-                }
-                else
-                {
-                    _backtrackTimes = 0;
-                }
+                action = GetBestAction(curr, previousPosition, ref backtrackTimes);
 
                 if (MazeStates[curr][action] < 1)
                 {
@@ -605,10 +588,10 @@ namespace QLearningMaze.Core.Mazes
                 Console.Write(action + "->");
                 nextState = GetNextState(curr, action);
 
-                if (nextState == curr ||
-                    nextState == previousPosition)
-                {
-                    _backtrackTimes++;
+                if ((nextState == curr ||
+                    nextState == previousPosition) &&
+                    backtrackTimes > 3) // This condition should never happen, but sometimes I make bugs
+                    {
 
                     string message = "I'm a greedy idiot, and am backtracking to get more rewards.  Try adjusting the Discount and/or Learning Rate to stop me from doing this.";
                     throw new InvalidOperationException(message);
@@ -622,14 +605,42 @@ namespace QLearningMaze.Core.Mazes
             Console.WriteLine("done");
         }
 
-        protected virtual int GetMaxQ(double[] vector, int excludeAction = -1)
+        protected virtual int GetBestAction(int currentState, int previousState, ref int backtrackTimes)
+        {
+            int action = GetArgMax(Quality[currentState]);
+
+            if (GetNextState(currentState, action) == previousState)
+            {
+                // We'll allow a singular backtrack, but anything more will cause the agent to select
+                // a different action to prevent infinitely going back and forth
+                if (backtrackTimes > 1)
+                {
+                    action = GetArgMax(Quality[currentState], action);
+                    backtrackTimes = 0;
+                }
+                else
+                {
+                    backtrackTimes++;
+                }
+            }
+            else
+            {
+                // We've moved to a new state, so reset the backtrack counter
+                backtrackTimes = 0;
+            }
+
+            return action;
+        }
+
+        protected virtual int GetArgMax(double[] vector, int excludeAction = -1)
         {
             double maxVal = double.MinValue; 
             int idx = 0;
 
             for (int i = 0; i < vector.Length; ++i)
             {
-                if (i == excludeAction) continue;
+                if (i == excludeAction) 
+                    continue;
 
                 if (vector[i] != 0 && vector[i] > maxVal)
                 {
