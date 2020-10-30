@@ -520,7 +520,7 @@ namespace QLearningMaze.Ui.Forms
         {
             int between, and;
             ObservationSpace andSpace;
-            if (rowNumber == _maze.Rows - 1) return;
+            //if (rowNumber == _maze.Rows - 1) return;
 
             between = space.Position;
 

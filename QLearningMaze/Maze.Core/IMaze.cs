@@ -47,16 +47,18 @@ namespace QLearningMaze.Core
         /// </summary>
         int StartPosition { get; set; }
         /// <summary>
-        /// Decimal value between 0 and 1 that determines how much long term reward is weighted vs immediate.  Higher values reflect more regard to long term rewards
+        /// Decimal value between 0 and 1 that determines how much long term reward is weighted vs immediate.  Higher values reflect more regard to long term rewards.
+        /// Represents Gamma in the Q Learning formula
         /// </summary>
         double DiscountRate { get; set; }
         /// <summary>
         /// Determines to what extent newly acquired information overrides old information. A factor of 0 makes the agent learn nothing (exclusively exploiting prior knowledge),
         /// while a factor of 1 makes the agent consider only the most recent information (ignoring prior knowledge to explore possibilities).
+        /// Represents Alpha in the Q-Learning formula
         /// </summary
         double LearningRate { get; set; }
         /// <summary>
-        /// Gets or Sets the total number of epochs (or episodes) to train for
+        /// Gets or Sets the total number of epochs (or episodes) to train for.
         /// </summary>
         int MaxEpochs { get; set; }
         /// <summary>
@@ -79,6 +81,8 @@ namespace QLearningMaze.Core
         //List<AdditionalReward> AdditionalRewards { get; set; }
         double TotalRewards { get; set; }
 
+        int GetNextState(int currentState, int action);
+        int GetNextState(int currentState, Actions action);
         void AddWall(int betweenSpace, int andSpace);
         void RemoveWall(int betweenSpace, int andSpace);
         void AddCustomReward(int position, double reward);
