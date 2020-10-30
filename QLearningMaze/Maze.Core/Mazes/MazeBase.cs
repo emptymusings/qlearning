@@ -117,7 +117,7 @@ namespace QLearningMaze.Core.Mazes
 
             for (int i = 0; i < NumberOfStates; ++i)
             {
-                mazeStatesActions[i] = new int[5];
+                mazeStatesActions[i] = new int[Enum.GetNames(typeof(Actions)).Length];
 
                 if (i >= Columns)
                 {
@@ -153,27 +153,6 @@ namespace QLearningMaze.Core.Mazes
                     mazeStatesActions[i][3] = 0;
                     mazeStatesActions[i][4] = 0;
                 }
-
-                //for (int j = 0; j < 5; ++j)
-                //{
-                //    var count = Obstructions.Where(x => (x.BetweenSpace == i && x.AndSpace == j) ||
-                //            (x.AndSpace == i && x.BetweenSpace == j)).Count();
-
-                //    if (count != 0) continue;
-
-                //    if (i != GoalPosition &&
-                //        ((i + 1 == j && j % Columns != 0) || // i and j are sequential, and j is not on the next row
-                //        (i - 1 == j && i % Columns != 0) || // i and j are sequential, and i is not on the previous row
-                //        i + Columns == j || // j is directly below i
-                //        i - Columns == j)) // j is directly above i)
-                //    {
-                //        mazeStatesActions[i][j] = 1;
-                //    }
-                //    else if (i == GoalPosition && j == GoalPosition)
-                //    {
-                //        mazeStatesActions[i][j] = 1;
-                //    }
-                //}
             }
 
             OnMazeCreatedEventhHandler();
@@ -345,7 +324,6 @@ namespace QLearningMaze.Core.Mazes
                 CreateRewards();
             }
 
-            int differential = betweenSpace - andSpace;
             var actions = GetActionBetweenSpaces(betweenSpace, andSpace);
             var action = actions.action;
             var reverseAction = actions.reverseAction;
