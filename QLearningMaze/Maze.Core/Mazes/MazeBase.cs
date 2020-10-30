@@ -299,7 +299,6 @@ namespace QLearningMaze.Core.Mazes
         public virtual void Train()
         {            
             int moves;
-            bool isBackTrack = false;
             CreateMazeStates();
             CreateRewards();
             CreateQuality();
@@ -318,7 +317,7 @@ namespace QLearningMaze.Core.Mazes
                 TotalRewards = 0;
                 Console.Write($"Runnging through epoch {(epoch + 1).ToString("#,##0")} of {MaxEpochs.ToString("#,##0")}\r");
 
-                int currState = _random.Next(0, Rewards.Length);
+                int currentState = _random.Next(0, Rewards.Length);
                 //int currState = StartPosition;
                 bool done = false;
 
@@ -326,72 +325,20 @@ namespace QLearningMaze.Core.Mazes
                 {
                     moves++;
 
-                    int nextState;
-                    nextState = GetRandomNextState(currState, MazeStates);
-                    isBackTrack = false;
-                    double randRand = _random.NextDouble();
-
-                    if (randRand > epsilon)
-                    {
-                        int preferredNext = -1;
-                        double max = 0;
-
-                        for (int i = 0; i < this.Quality[currState].Length; ++i)
-                        {
-                            if (this.Quality[currState][i] > max)
-                            {
-                                max = this.Quality[currState][i];
-                                preferredNext = i;
-                            }
-                        }
-
-                        if (preferredNext >= 0)
-                        {
-                            nextState = preferredNext;
-                        }
-                    }
-
+                    int nextState = TrainingDetermineNextState(currentState, epsilon);   
 
                     if (nextState < 0)
                     {
-                        currState = _random.Next(0, Rewards.Length);
+                        // Something went wrong and an invalid next state was returned, start over with a new random current state
+                        currentState = _random.Next(0, Rewards.Length);
                         continue;
                     }
 
-                    List<int> possNextNextStates = GetPossibleNextStates(nextState, MazeStates);
-                    double maxQ = double.MinValue;
-                    
-                    for (int j = 0; j < possNextNextStates.Count; ++j)
-                    {
-                        int futureNextState = possNextNextStates[j];  // short alias
+                    CalculateQValue(currentState, nextState);
 
-                        double futureQuality = Quality[nextState][futureNextState];
-                        double immediateRewards = Rewards[currState][nextState];
-                        double futureRewards = Rewards[nextState][futureNextState];
-                        if (futureQuality > maxQ) 
-                        {
-                            maxQ = futureQuality;
-                            Quality[nextState][currState] -= 1;
-                        }
+                    currentState = nextState;
 
-                        if (currState == futureNextState)
-                            isBackTrack = true;
-                    }
-
-
-                    double oldtempQuality = Quality[currState][nextState];
-                    
-                    TotalRewards = Rewards[currState][nextState] + (isBackTrack ? (GetAdditionalRewards().Max(x => x.Value) + 5)-_backtrackPunishment : 0);
-
-                    var qLearn = Quality[currState][nextState];
-                    var temporalDiff = TotalRewards + (DiscountRate * maxQ) - Quality[currState][nextState];
-                    var newQ = qLearn + (LearningRate * temporalDiff);
-
-                    Quality[currState][nextState] = ((1 - LearningRate) * Quality[currState][nextState]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
-                    OnTrainingAgentStateChanging(nextState, currState, oldtempQuality, Quality[currState][nextState]);
-                    currState = nextState;
-
-                    if (currState == GoalPosition ||
+                    if (currentState == GoalPosition ||
                         moves > 10000)
                     {
                         done = true;
@@ -404,7 +351,7 @@ namespace QLearningMaze.Core.Mazes
                     epsilon -= _epsilon_decay_value;
                 }
 
-                OnTrainingEpochCompleted(new TrainingEpochCompletedEventArgs(epoch + 1, MaxEpochs, moves, TotalRewards, currState == GoalPosition));
+                OnTrainingEpochCompleted(new TrainingEpochCompletedEventArgs(epoch + 1, MaxEpochs, moves, TotalRewards, currentState == GoalPosition));
             }
 
             OnTrainingStatusChanged(false);
@@ -412,6 +359,63 @@ namespace QLearningMaze.Core.Mazes
             Console.WriteLine("I'm done learning");
         }
 
+        protected virtual int TrainingDetermineNextState(int currentState, double epsilon)
+        {
+            double randRand = _random.NextDouble();
+            int nextState = GetRandomNextState(currentState, MazeStates);
+
+            if (randRand > epsilon)
+            {
+                int preferredNext = -1;
+                double max = 0;
+
+                for (int i = 0; i < this.Quality[currentState].Length; ++i)
+                {
+                    if (this.Quality[currentState][i] > max)
+                    {
+                        max = this.Quality[currentState][i];
+                        preferredNext = i;
+                    }
+                }
+
+                if (preferredNext >= 0)
+                {
+                    nextState = preferredNext;
+                }
+            }
+
+            return nextState;
+        }
+
+        protected virtual void CalculateQValue(int currentState, int nextState)
+        {
+            double maxQ = double.MinValue;
+            bool isBackTrack = false; 
+            List<int> possNextNextStates = GetPossibleNextStates(nextState, MazeStates);
+            double oldtempQuality = Quality[currentState][nextState];
+
+            for (int j = 0; j < possNextNextStates.Count; ++j)
+            {
+                int futureNextState = possNextNextStates[j];  // short alias
+
+                double futureQuality = Quality[nextState][futureNextState];
+
+                if (futureQuality > maxQ)
+                {
+                    maxQ = futureQuality;
+                    Quality[nextState][currentState] -= 1;
+                }
+
+                if (currentState == futureNextState)
+                    isBackTrack = true;
+            }            
+
+            TotalRewards = Rewards[currentState][nextState] + (isBackTrack ? (GetAdditionalRewards().Max(x => x.Value)) - _backtrackPunishment : 0);
+
+            Quality[currentState][nextState] = ((1 - LearningRate) * Quality[currentState][nextState]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
+
+            OnTrainingAgentStateChanging(nextState, currentState, oldtempQuality, Quality[currentState][nextState]);
+        }
 
         public virtual void RunMaze()
         {
