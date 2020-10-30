@@ -316,7 +316,13 @@ namespace QLearningMaze.Ui.Forms
         private void clearObstructionsButton_Click(object sender, EventArgs e)
         {
             obstructionsList.Items.Clear();
-            _maze.Obstructions.Clear();
+            
+            for (int i = _maze.Obstructions.Count - 1; i >= 0; --i)
+            {
+                var wall = _maze.Obstructions[i];
+                _maze.RemoveWall(wall.BetweenSpace, wall.AndSpace);
+            }
+
             RespawnMaze();
             _needsRetrain = true;
         }
@@ -368,6 +374,7 @@ namespace QLearningMaze.Ui.Forms
             if (_maze.Rows.ToString() != rowsText.Text &&
                 MazeTextChanged(rowsText))
             {
+                clearObstructionsButton_Click(sender, e);
                 _maze.Rows = Convert.ToInt32(rowsText.Text);
                 _needsRetrain = true;
                 RespawnMaze();
@@ -380,6 +387,7 @@ namespace QLearningMaze.Ui.Forms
             if (_maze.Columns.ToString() != columnsText.Text &&
                 MazeTextChanged(columnsText))
             {
+                clearObstructionsButton_Click(sender, e);
                 _maze.Columns = Convert.ToInt32(columnsText.Text);
                 _needsRetrain = true;
                 RespawnMaze();

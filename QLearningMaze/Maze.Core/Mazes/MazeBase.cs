@@ -8,13 +8,13 @@ namespace QLearningMaze.Core.Mazes
     {
         private Random _random = new Random();
         protected int _goalValue = 50;
-        protected double _movementValue = -0.5;
+        protected double _movementValue = -1;
         protected double _start_decay = 1;
         protected double _end_decay;
         protected double _epsilon_decay_value;
         protected bool _mazeInitialized = false;
         protected int _numberOfActions = 5;
-        private int _backtrackPunishment = 40;
+        private int _backtrackPunishment = 400;
         protected List<AdditionalReward> _additionalRewards = new List<AdditionalReward>();
 
         public MazeBase(
@@ -34,7 +34,9 @@ namespace QLearningMaze.Core.Mazes
             this.LearningRate = learningRate;
             this.MaxEpochs = maxEpochs;
         }
-
+        /// <summary>
+        /// Gets the total number of states for the Q-Table (for the maze, this is the area)
+        /// </summary>
         public int NumberOfStates 
         { 
             get
@@ -42,9 +44,21 @@ namespace QLearningMaze.Core.Mazes
                 return Rows * Columns;
             }
         }
+        /// <summary>
+        /// Gets or Sets the number of rows in the maze
+        /// </summary>
         public int Rows { get; set; } = 4;
+        /// <summary>
+        /// Gets or Sets the number of columns in the maze 
+        /// </summary>
         public int Columns { get; set; } = 4;
+        /// <summary>
+        /// Gets or Sets the Exit/Goal of the Maze (win condition)
+        /// </summary>
         public int GoalPosition { get; set; } = 0;
+        /// <summary>
+        /// Gets or Sets the Agent's start position
+        /// </summary>
         public int StartPosition { get; set; } = 0;
         /// <summary>
         /// Decimal value between 0 and 1 that determines how much long term reward is weighted vs immediate.  Higher values reflect more regard to long term rewards
@@ -55,12 +69,28 @@ namespace QLearningMaze.Core.Mazes
         /// while a factor of 1 makes the agent consider only the most recent information (ignoring prior knowledge to explore possibilities).
         /// </summary>
         public double LearningRate { get; set; } = 0.5;
+        /// <summary>
+        /// Gets or Sets the total number of epochs (or episodes) to train for
+        /// </summary>
         public int MaxEpochs { get; set; } = 1000;
-
+        /// <summary>
+        /// Maze states, where the first dimension is state, the second is movement to the next state (action), 
+        /// and the value is binary (0 or 1) to determine if the action is allowed
+        /// </summary>
         public int[][] MazeStates { get; set; }
+        /// <summary>
+        /// Rewards table, where the first dimension is state, the second is movement to the next state (action), and the value is the reward
+        /// </summary>
         public double[][] Rewards { get; set; }
+        /// <summary>
+        /// The Q-Table, where the first dimesion is state, the second is movement to the next state (action), and the value is the result of the quality algorithm
+        /// </summary>
         public double[][] Quality { get; set; }
+        /// <summary>
+        /// Gets or Sets a list of obstructions (walls) to avoid 
+        /// </summary>
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
+
         public double TotalRewards { get; set; }
 
 
@@ -112,6 +142,11 @@ namespace QLearningMaze.Core.Mazes
         {
             Console.WriteLine("Creating Reward States");
             double[][] reward = new double[NumberOfStates][];
+
+            if (NumberOfStates != MazeStates.Length)
+            {
+                CreateMazeStates();
+            }
 
             for (int i = 0; i < NumberOfStates; ++i)
             {
@@ -221,7 +256,10 @@ namespace QLearningMaze.Core.Mazes
         public virtual void AddWall(int betweenSpace, int andSpace)
         {
             if (!_mazeInitialized)
+            {
                 CreateMazeStates();
+                CreateRewards();
+            }
 
             MazeStates[betweenSpace][andSpace] = 0;
             MazeStates[andSpace][betweenSpace] = 0;
@@ -247,7 +285,10 @@ namespace QLearningMaze.Core.Mazes
         public virtual void RemoveWall(int betweenSpace, int andSpace)
         {
             if (!_mazeInitialized)
+            {
                 CreateMazeStates();
+                CreateRewards();
+            }
 
             MazeStates[betweenSpace][andSpace] = 1;
             MazeStates[andSpace][betweenSpace] = 1;
@@ -399,6 +440,9 @@ namespace QLearningMaze.Core.Mazes
                 int futureNextState = possNextNextStates[j];  // short alias
 
                 double futureQuality = Quality[nextState][futureNextState];
+                
+                if (currentState == futureNextState)
+                    isBackTrack = true;
 
                 if (futureQuality > maxQ)
                 {
@@ -406,8 +450,7 @@ namespace QLearningMaze.Core.Mazes
                     Quality[nextState][currentState] -= 1;
                 }
 
-                if (currentState == futureNextState)
-                    isBackTrack = true;
+                
             }            
 
             TotalRewards = Rewards[currentState][nextState] + (isBackTrack ? (GetAdditionalRewards().Max(x => x.Value)) - _backtrackPunishment : 0);
@@ -448,7 +491,7 @@ namespace QLearningMaze.Core.Mazes
                 if (next == curr ||
                     next == previousPosition)
                 {
-                    string message = "I'm a greedy idiot, and am backtracking to get more rewards.  Try increasing the Discount Rate to stop me from doing this.";
+                    string message = "I'm a greedy idiot, and am backtracking to get more rewards.  Try adjusting the Discount and/or Learning Rate to stop me from doing this.";
                     throw new InvalidOperationException(message);
                 }
 
