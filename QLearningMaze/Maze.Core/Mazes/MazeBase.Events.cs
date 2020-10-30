@@ -18,9 +18,9 @@ namespace QLearningMaze.Core.Mazes
 
         public event EventHandler<ObstructionEventArgs> ObstructionRemovedEventHandler;
 
-        public event EventHandler<int> AgentStateChangedEventHandler;
+        public event EventHandler<AgentStateChangedEventArgs> AgentStateChangedEventHandler;
 
-        public event EventHandler<(int newState, int previousState)> TrainingAgentStateChangingEventHandler;
+        public event EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
 
         public event EventHandler<bool> TrainingStatusChangedEventHandler;
 
@@ -62,16 +62,16 @@ namespace QLearningMaze.Core.Mazes
             handler?.Invoke(this, new ObstructionEventArgs { Obstruction = obstruction });
         }
 
-        protected virtual void OnAgentStateChanged(int newState)
+        protected virtual void OnAgentStateChanged(int newPosition, double totalRewards, int totalMoves)
         {
-            EventHandler<int> handler = AgentStateChangedEventHandler;
-            handler?.Invoke(this, newState);
+            EventHandler<AgentStateChangedEventArgs> handler = AgentStateChangedEventHandler;
+            handler?.Invoke(this, new AgentStateChangedEventArgs(newPosition, totalMoves, totalRewards));
         }
 
-        protected virtual void OnTrainingAgentStateChanging(int newState, int previousState)
+        protected virtual void OnTrainingAgentStateChanging(int newState, int previousState, double newQuality, double oldQuality)
         {
-            EventHandler<(int newState, int previousState)> handler = TrainingAgentStateChangingEventHandler;
-            handler?.Invoke(this, (newState, previousState));
+            EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> handler = TrainingAgentStateChangingEventHandler;
+            handler?.Invoke(this, (newState, previousState, newQuality, oldQuality));
         }
 
         protected virtual void OnTrainingStatusChanged(bool isTraining)

@@ -60,14 +60,21 @@ namespace QLearningMaze.Ui.Forms
 
                     if (position == maze.StartPosition)
                     {
-                        space.SetStart();
+                        space.SetStart(true);
                         space.SetActive();
                         space.Invalidate();
                     }
 
                     if (position == maze.GoalPosition)
-                        space.SetGoal();
+                        space.SetGoal(true);
 
+                    var customReward = maze.GetAdditionalRewards().Where(x => x.Position == position).FirstOrDefault();
+
+                    if (customReward != null)
+                    {
+                        space.SetReward(true, customReward.Value);
+                    }
+                    
                     DrawWalls(maze, position, space);
 
                     row.AddSpace(space);

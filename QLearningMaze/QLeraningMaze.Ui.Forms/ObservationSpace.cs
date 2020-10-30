@@ -25,14 +25,21 @@
             activeImage.Visible = false;
         }
 
-        public void SetGoal()
+        public void SetGoal(bool isGoal)
         {
-            goalLabel.Visible = true;
+            goalLabel.Visible = isGoal;
         }
 
-        public void SetStart()
+        public void SetStart(bool isStart)
         {
-            startLabel.Visible = true;
+            startLabel.Visible = isStart;
+            activeImage.Visible = isStart;
+        }
+
+        public void SetReward(bool isReward, double value = 0)
+        {
+            rewardLabel.Visible = isReward;
+            rewardLabel.Text = $"Reward: {value}";
         }
 
         public void SetPosition(int position)

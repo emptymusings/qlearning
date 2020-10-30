@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLearningMaze.Core.Mazes
+namespace QLearningMaze.Core
 {
     public class MazeObstruction
     {
