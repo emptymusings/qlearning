@@ -4,6 +4,15 @@ using System.Linq;
 
 namespace QLearningMaze.Core.Mazes
 {
+    public enum Actions
+    {
+        Stay = 0,
+        MoveNorth = 1,
+        MoveEast = 2,
+        MoveSouth = 3,
+        MoveWest = 4
+    }
+
     public abstract partial class MazeBase : IMaze
     {
         private Random _random = new Random();
@@ -104,38 +113,78 @@ namespace QLearningMaze.Core.Mazes
 
             Console.WriteLine("Creating Maze States (Observation Space)");
 
-            int[][] mazeNextStates = new int[NumberOfStates][];
+            int[][] mazeStatesActions = new int[NumberOfStates][];
 
             for (int i = 0; i < NumberOfStates; ++i)
             {
-                mazeNextStates[i] = new int[NumberOfStates];
+                mazeStatesActions[i] = new int[5];
 
-                for (int j = 0; j < NumberOfStates; ++j)
+                if (i >= Columns)
                 {
-                    var count = Obstructions.Where(x => (x.BetweenSpace == i && x.AndSpace == j) ||
-                            (x.AndSpace == i && x.BetweenSpace == j)).Count();
+                    mazeStatesActions[i][(int)Actions.MoveNorth] = 1;
 
-                    if (count != 0) continue;
-
-                    if (i != GoalPosition &&
-                        ((i + 1 == j && j % Columns != 0) || // i and j are sequential, and j is not on the next row
-                        (i - 1 == j && i % Columns != 0) || // i and j are sequential, and i is not on the previous row
-                        i + Columns == j || // j is directly below i
-                        i - Columns == j)) // j is directly above i)
+                    if (i < NumberOfStates - Columns)
                     {
-                        mazeNextStates[i][j] = 1;
-                    }
-                    else if (i == GoalPosition && j == GoalPosition)
-                    {
-                        mazeNextStates[i][j] = 1;
+                        mazeStatesActions[i][(int)Actions.MoveSouth] = 1;
                     }
                 }
+                else
+                {
+                    mazeStatesActions[i][(int)Actions.MoveSouth] = 1;
+                }
+
+                if (i < NumberOfStates - 1 &&
+                    (i + 1) % Columns != 0)
+                {
+                    mazeStatesActions[i][(int)Actions.MoveEast] = 1;
+                }
+
+                if (i > 0 &&
+                    i % Columns != 0)
+                {
+                    mazeStatesActions[i][(int)Actions.MoveWest] = 1;
+                }
+
+                if (i == GoalPosition)
+                {
+                    mazeStatesActions[i][0] = 1;
+                    mazeStatesActions[i][1] = 0;
+                    mazeStatesActions[i][2] = 0;
+                    mazeStatesActions[i][3] = 0;
+                    mazeStatesActions[i][4] = 0;
+                }
+
+                //for (int j = 0; j < 5; ++j)
+                //{
+                //    var count = Obstructions.Where(x => (x.BetweenSpace == i && x.AndSpace == j) ||
+                //            (x.AndSpace == i && x.BetweenSpace == j)).Count();
+
+                //    if (count != 0) continue;
+
+                //    if (i != GoalPosition &&
+                //        ((i + 1 == j && j % Columns != 0) || // i and j are sequential, and j is not on the next row
+                //        (i - 1 == j && i % Columns != 0) || // i and j are sequential, and i is not on the previous row
+                //        i + Columns == j || // j is directly below i
+                //        i - Columns == j)) // j is directly above i)
+                //    {
+                //        mazeStatesActions[i][j] = 1;
+                //    }
+                //    else if (i == GoalPosition && j == GoalPosition)
+                //    {
+                //        mazeStatesActions[i][j] = 1;
+                //    }
+                //}
             }
 
             OnMazeCreatedEventhHandler();
             
-            MazeStates = mazeNextStates;
+            MazeStates = mazeStatesActions;
             _mazeInitialized = true;
+
+            foreach (var wall in Obstructions)
+            {
+                AddWall(wall.BetweenSpace, wall.AndSpace);
+            }
         }
 
         protected virtual void CreateRewards()
@@ -150,9 +199,9 @@ namespace QLearningMaze.Core.Mazes
 
             for (int i = 0; i < NumberOfStates; ++i)
             {
-                reward[i] = new double[NumberOfStates];
+                reward[i] = new double[MazeStates[i].Length];
 
-                for (int j = 0; j < NumberOfStates; ++j)
+                for (int j = 0; j < MazeStates[i].Length; ++j)
                 {
                     if (MazeStates[i][j] > 0)
                     {
@@ -246,7 +295,7 @@ namespace QLearningMaze.Core.Mazes
 
             for (int i = 0; i < NumberOfStates; ++i)
             {
-                quality[i] = new double[NumberOfStates];
+                quality[i] = new double[MazeStates[i].Length];
             }
             
             Quality = quality;
@@ -261,13 +310,19 @@ namespace QLearningMaze.Core.Mazes
                 CreateRewards();
             }
 
-            MazeStates[betweenSpace][andSpace] = 0;
-            MazeStates[andSpace][betweenSpace] = 0;
+
+            int differential = betweenSpace - andSpace;
+            var actions = GetActionBetweenSpaces(betweenSpace, andSpace);
+            var action = actions.action;
+            var reverseAction = actions.reverseAction;
+
+            MazeStates[betweenSpace][action] = 0;
+            MazeStates[andSpace][reverseAction] = 0;
 
 
-            var maze = GetObstructionFromList(betweenSpace, andSpace);
+            var wall = GetObstructionFromList(betweenSpace, andSpace);
 
-            if (maze == null)
+            if (wall == null)
             {
                 var obstruction = new MazeObstruction
                 {
@@ -290,10 +345,15 @@ namespace QLearningMaze.Core.Mazes
                 CreateRewards();
             }
 
-            MazeStates[betweenSpace][andSpace] = 1;
-            MazeStates[andSpace][betweenSpace] = 1;
-            Rewards[betweenSpace][andSpace] = _movementValue;
-            Rewards[andSpace][betweenSpace] = _movementValue;
+            int differential = betweenSpace - andSpace;
+            var actions = GetActionBetweenSpaces(betweenSpace, andSpace);
+            var action = actions.action;
+            var reverseAction = actions.reverseAction;
+
+            MazeStates[betweenSpace][action] = 1;
+            MazeStates[andSpace][reverseAction] = 1;
+            Rewards[betweenSpace][action] = _movementValue;
+            Rewards[andSpace][reverseAction] = _movementValue;
 
             var wall = GetObstructionFromList(betweenSpace, andSpace);
 
@@ -304,29 +364,62 @@ namespace QLearningMaze.Core.Mazes
             }
         }
 
-        private MazeObstruction GetObstructionFromList(int betweenSpace, int andSpace)
+        protected virtual (int action, int reverseAction) GetActionBetweenSpaces(int betweenSpace, int andSpace)
+        {
+            int differential = betweenSpace - andSpace;
+            int action = 0;
+            int reverseAction = 0;
+
+            if (differential == 1)
+            {
+                action = (int)Actions.MoveWest;
+                reverseAction = (int)Actions.MoveEast;
+            }
+
+            if (differential == -1)
+            {
+                action = (int)Actions.MoveEast;
+                reverseAction = (int)Actions.MoveWest;
+            }
+
+            if (differential == Columns * -1)
+            {
+                action = (int)Actions.MoveSouth;
+                reverseAction = (int)Actions.MoveNorth;
+            }
+
+            if (differential == Columns)
+            {
+                action = (int)Actions.MoveNorth;
+                reverseAction = (int)Actions.MoveSouth;
+            }
+
+            return (action, reverseAction);
+        }
+
+        protected virtual MazeObstruction GetObstructionFromList(int betweenSpace, int andSpace)
         {
             return Obstructions.Where(x => (x.BetweenSpace == betweenSpace && x.AndSpace == andSpace) || (x.AndSpace == betweenSpace && x.BetweenSpace == andSpace)).FirstOrDefault();
         }
 
-        protected virtual List<int> GetPossibleNextStates(int currentState, int[][] mazeNextStates)
+        protected virtual List<int> GetPossibleNextActions(int currentState, int[][] mazeNextStates)
         {
             List<int> result = new List<int>();
 
-            for (int j = 0; j < mazeNextStates.Length; ++j)
+            for (int i = 0; i < mazeNextStates[0].Length; ++i)
             {
-                if (mazeNextStates[currentState][j] > 0)
+                if (mazeNextStates[currentState][i] > 0)
                 {
-                    result.Add(j);
+                    result.Add(i);
                 }
             }
 
             return result;
         }
 
-        protected virtual int GetRandomNextState(int currentState, int[][] mazeNextStates)
+        protected virtual int GetRandomNextAction(int currentState, int[][] mazeNextStates)
         {
-            List<int> possibleNextStates = GetPossibleNextStates(currentState, mazeNextStates);
+            List<int> possibleNextStates = GetPossibleNextActions(currentState, mazeNextStates);
 
             int count = possibleNextStates.Count;
             int index = _random.Next(0, count);
@@ -366,18 +459,18 @@ namespace QLearningMaze.Core.Mazes
                 {
                     moves++;
 
-                    int nextState = TrainingDetermineNextState(currentState, epsilon);   
+                    int nextAction = TrainingDetermineNextAction(currentState, epsilon);   
 
-                    if (nextState < 0)
+                    if (nextAction < 0)
                     {
                         // Something went wrong and an invalid next state was returned, start over with a new random current state
                         currentState = _random.Next(0, Rewards.Length);
                         continue;
                     }
 
-                    CalculateQValue(currentState, nextState);
+                    CalculateQValue(currentState, nextAction);
 
-                    currentState = nextState;
+                    currentState = GetNextState(currentState, nextAction);
 
                     if (currentState == GoalPosition ||
                         moves > 10000)
@@ -400,10 +493,10 @@ namespace QLearningMaze.Core.Mazes
             Console.WriteLine("I'm done learning");
         }
 
-        protected virtual int TrainingDetermineNextState(int currentState, double epsilon)
+        protected virtual int TrainingDetermineNextAction(int currentState, double epsilon)
         {
             double randRand = _random.NextDouble();
-            int nextState = GetRandomNextState(currentState, MazeStates);
+            int nextAction = GetRandomNextAction(currentState, MazeStates);
 
             if (randRand > epsilon)
             {
@@ -421,49 +514,73 @@ namespace QLearningMaze.Core.Mazes
 
                 if (preferredNext >= 0)
                 {
-                    nextState = preferredNext;
+                    nextAction = preferredNext;
                 }
             }
 
-            return nextState;
+            return nextAction;
         }
 
-        protected virtual void CalculateQValue(int currentState, int nextState)
+        protected virtual void CalculateQValue(int currentState, int action)
         {
             double maxQ = double.MinValue;
-            bool isBackTrack = false; 
-            List<int> possNextNextStates = GetPossibleNextStates(nextState, MazeStates);
-            double oldtempQuality = Quality[currentState][nextState];
+            bool isBackTrack = false;
+            int nextState = GetNextState(currentState, action);
+            List<int> possNextNextActions = GetPossibleNextActions(nextState, MazeStates);
+            double oldtempQuality = Quality[currentState][action];
 
-            for (int j = 0; j < possNextNextStates.Count; ++j)
+            for (int j = 0; j < possNextNextActions.Count; ++j)
             {
-                int futureNextState = possNextNextStates[j];  // short alias
+                int futureNextAction = possNextNextActions[j];  // short alias
 
-                double futureQuality = Quality[nextState][futureNextState];
+                double futureQuality = Quality[nextState][futureNextAction];
                 
-                if (currentState == futureNextState)
+                if (currentState == GetNextState(nextState, futureNextAction))
                     isBackTrack = true;
 
                 if (futureQuality > maxQ)
                 {
                     maxQ = futureQuality;
-                    Quality[nextState][currentState] -= 1;
-                }
-
-                
+                    //Quality[action][currentState] -= 1;
+                }                
             }            
 
-            TotalRewards = Rewards[currentState][nextState] + (isBackTrack ? (GetAdditionalRewards().Max(x => x.Value)) - _backtrackPunishment : 0);
+            TotalRewards = Rewards[currentState][action] + (isBackTrack ? (GetAdditionalRewards().Max(x => x.Value)) - _backtrackPunishment : 0);
 
-            Quality[currentState][nextState] = ((1 - LearningRate) * Quality[currentState][nextState]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
+            Quality[currentState][action] = ((1 - LearningRate) * Quality[currentState][action]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
 
-            OnTrainingAgentStateChanging(nextState, currentState, oldtempQuality, Quality[currentState][nextState]);
+            OnTrainingAgentStateChanging(action, currentState, oldtempQuality, Quality[currentState][action]);
+        }
+
+        public virtual int GetNextState(int currentState, int action)
+        {
+            return GetNextState(currentState, (Actions)action);
+        }
+
+        public virtual int GetNextState(int currentState, Actions action)
+        {
+            switch(action)
+            {
+                case Actions.MoveNorth:
+                    return currentState - Columns;
+                case Actions.MoveEast:
+                    return currentState + 1;
+                case Actions.MoveSouth:
+                    return currentState + Columns;
+                case Actions.MoveWest:
+                    return currentState - 1;
+                case Actions.Stay:
+                    return currentState;
+                default:
+                    return -1;
+            }
         }
 
         public virtual void RunMaze()
         {
             int curr = StartPosition; 
-            int next; 
+            int action;
+            int nextState;
             int moves = 0;
             int previousPosition = -1;
             TotalRewards = 0;
@@ -474,9 +591,9 @@ namespace QLearningMaze.Core.Mazes
                 if (Quality == null)
                     Train();                
                 
-                next = ArgMax(Quality[curr]);
+                action = ArgMax(Quality[curr]);
 
-                if (MazeStates[curr][next] < 1)
+                if (MazeStates[curr][action] < 1)
                 {
                     string message = "I guess I didn't learn very  well, I just tried an illegal move.  Check the learning rate and discount rate and try again";
                     Console.WriteLine();
@@ -485,18 +602,20 @@ namespace QLearningMaze.Core.Mazes
                     throw new InvalidOperationException(message);
                 }
 
-                TotalRewards += Rewards[curr][next];
+                TotalRewards += Rewards[curr][action];
                 moves++;
-                Console.Write(next + "->");
-                if (next == curr ||
-                    next == previousPosition)
+                Console.Write(action + "->");
+                nextState = GetNextState(curr, action);
+
+                if (nextState == curr ||
+                    nextState == previousPosition)
                 {
                     string message = "I'm a greedy idiot, and am backtracking to get more rewards.  Try adjusting the Discount and/or Learning Rate to stop me from doing this.";
                     throw new InvalidOperationException(message);
                 }
 
                 previousPosition = curr;
-                curr = next;
+                curr = nextState;
                 OnAgentStateChanged(curr, TotalRewards, moves);
             }
 
@@ -527,7 +646,7 @@ namespace QLearningMaze.Core.Mazes
 
             for (int i = 0; i < ns; ++i)
             {
-                for (int j = 0; j < ns; ++j)
+                for (int j = 0; j < MazeStates[i].Length; ++j)
                 {
                     Console.Write(Rewards[i][j].ToString("F2") + " ");
                 }
@@ -541,7 +660,7 @@ namespace QLearningMaze.Core.Mazes
             Console.WriteLine($"Quality [0] [1] . . [{NumberOfStates - 1}]");
             for (int i = 0; i < ns; ++i)
             {
-                for (int j = 0; j < ns; ++j)
+                for (int j = 0; j < MazeStates[i].Length; ++j)
                 {
                     Console.Write(Quality[i][j].ToString("F2") + " ");
                 }

@@ -31,7 +31,7 @@ namespace QLearningMaze.Ui.Forms
         private void PopulateTable(DataTable dt, int numberOfStates, double[][] values)
         {
 
-            for (int i = 0; i < numberOfStates; ++i)
+            for (int i = 0; i < values[i].Length; ++i)
             {
                 dt.Columns.Add(i.ToString());
             }
@@ -46,7 +46,7 @@ namespace QLearningMaze.Ui.Forms
                 var dr = dt.NewRow();
                 dr[0] = i;
 
-                for (int j = 0; j < numberOfStates; ++j)
+                for (int j = 0; j < values[i].Length; ++j)
                 {
                     dr[j + 1] = values[i][j];
                 }

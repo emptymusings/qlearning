@@ -50,10 +50,10 @@
             this.positionLabel.AutoSize = true;
             this.positionLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.positionLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.positionLabel.Location = new System.Drawing.Point(6, 83);
-            this.positionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.positionLabel.Location = new System.Drawing.Point(11, 177);
+            this.positionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.positionLabel.Name = "positionLabel";
-            this.positionLabel.Size = new System.Drawing.Size(14, 15);
+            this.positionLabel.Size = new System.Drawing.Size(28, 32);
             this.positionLabel.TabIndex = 0;
             this.positionLabel.Text = "0";
             // 
@@ -62,10 +62,10 @@
             this.startLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.startLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.startLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.startLabel.Location = new System.Drawing.Point(6, 63);
-            this.startLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.startLabel.Location = new System.Drawing.Point(11, 134);
+            this.startLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.startLabel.Name = "startLabel";
-            this.startLabel.Size = new System.Drawing.Size(135, 20);
+            this.startLabel.Size = new System.Drawing.Size(251, 43);
             this.startLabel.TabIndex = 1;
             this.startLabel.Text = "Start";
             this.startLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -76,10 +76,10 @@
             this.goalLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.goalLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.goalLabel.ForeColor = System.Drawing.Color.LimeGreen;
-            this.goalLabel.Location = new System.Drawing.Point(6, 43);
-            this.goalLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.goalLabel.Location = new System.Drawing.Point(11, 91);
+            this.goalLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.goalLabel.Name = "goalLabel";
-            this.goalLabel.Size = new System.Drawing.Size(135, 20);
+            this.goalLabel.Size = new System.Drawing.Size(251, 43);
             this.goalLabel.TabIndex = 1;
             this.goalLabel.Text = "Goal";
             this.goalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -88,10 +88,10 @@
             // activeImage
             // 
             this.activeImage.Image = ((System.Drawing.Image)(resources.GetObject("activeImage.Image")));
-            this.activeImage.Location = new System.Drawing.Point(53, 40);
-            this.activeImage.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.activeImage.Location = new System.Drawing.Point(98, 85);
+            this.activeImage.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.activeImage.Name = "activeImage";
-            this.activeImage.Size = new System.Drawing.Size(40, 26);
+            this.activeImage.Size = new System.Drawing.Size(74, 55);
             this.activeImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.activeImage.TabIndex = 2;
             this.activeImage.TabStop = false;
@@ -101,10 +101,10 @@
             // 
             this.leftWall.Dock = System.Windows.Forms.DockStyle.Left;
             this.leftWall.Image = ((System.Drawing.Image)(resources.GetObject("leftWall.Image")));
-            this.leftWall.Location = new System.Drawing.Point(0, 7);
-            this.leftWall.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.leftWall.Location = new System.Drawing.Point(0, 15);
+            this.leftWall.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.leftWall.Name = "leftWall";
-            this.leftWall.Size = new System.Drawing.Size(6, 91);
+            this.leftWall.Size = new System.Drawing.Size(11, 194);
             this.leftWall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.leftWall.TabIndex = 3;
             this.leftWall.TabStop = false;
@@ -115,10 +115,10 @@
             // 
             this.rightWall.Dock = System.Windows.Forms.DockStyle.Right;
             this.rightWall.Image = ((System.Drawing.Image)(resources.GetObject("rightWall.Image")));
-            this.rightWall.Location = new System.Drawing.Point(141, 7);
-            this.rightWall.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.rightWall.Location = new System.Drawing.Point(262, 15);
+            this.rightWall.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.rightWall.Name = "rightWall";
-            this.rightWall.Size = new System.Drawing.Size(6, 91);
+            this.rightWall.Size = new System.Drawing.Size(11, 194);
             this.rightWall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.rightWall.TabIndex = 3;
             this.rightWall.TabStop = false;
@@ -130,9 +130,9 @@
             this.topWall.Dock = System.Windows.Forms.DockStyle.Top;
             this.topWall.Image = ((System.Drawing.Image)(resources.GetObject("topWall.Image")));
             this.topWall.Location = new System.Drawing.Point(0, 0);
-            this.topWall.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.topWall.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.topWall.Name = "topWall";
-            this.topWall.Size = new System.Drawing.Size(147, 7);
+            this.topWall.Size = new System.Drawing.Size(273, 15);
             this.topWall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.topWall.TabIndex = 4;
             this.topWall.TabStop = false;
@@ -143,10 +143,10 @@
             // 
             this.bottomWall.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bottomWall.Image = ((System.Drawing.Image)(resources.GetObject("bottomWall.Image")));
-            this.bottomWall.Location = new System.Drawing.Point(0, 98);
-            this.bottomWall.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.bottomWall.Location = new System.Drawing.Point(0, 209);
+            this.bottomWall.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.bottomWall.Name = "bottomWall";
-            this.bottomWall.Size = new System.Drawing.Size(147, 7);
+            this.bottomWall.Size = new System.Drawing.Size(273, 15);
             this.bottomWall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.bottomWall.TabIndex = 4;
             this.bottomWall.TabStop = false;
@@ -158,10 +158,10 @@
             this.rewardLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.rewardLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.rewardLabel.ForeColor = System.Drawing.Color.BlueViolet;
-            this.rewardLabel.Location = new System.Drawing.Point(6, 23);
-            this.rewardLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.rewardLabel.Location = new System.Drawing.Point(11, 48);
+            this.rewardLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.rewardLabel.Name = "rewardLabel";
-            this.rewardLabel.Size = new System.Drawing.Size(135, 20);
+            this.rewardLabel.Size = new System.Drawing.Size(251, 43);
             this.rewardLabel.TabIndex = 1;
             this.rewardLabel.Text = "Reward";
             this.rewardLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -169,7 +169,7 @@
             // 
             // ObservationSpace
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Ivory;
             this.Controls.Add(this.activeImage);
@@ -181,9 +181,9 @@
             this.Controls.Add(this.rightWall);
             this.Controls.Add(this.topWall);
             this.Controls.Add(this.bottomWall);
-            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.Name = "ObservationSpace";
-            this.Size = new System.Drawing.Size(147, 105);
+            this.Size = new System.Drawing.Size(273, 224);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ObservationSpace_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.activeImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.leftWall)).EndInit();
