@@ -15,7 +15,7 @@ namespace QLearningMaze.Core.Mazes
 
     public abstract partial class MazeBase : IMaze
     {
-        private Random _random = new Random();
+        protected Random _random = new Random();
         protected int _goalValue = 50;
         protected double _movementValue = -1;
         protected double _start_decay = 1;
@@ -23,7 +23,7 @@ namespace QLearningMaze.Core.Mazes
         protected double _epsilon_decay_value;
         protected bool _mazeInitialized = false;
         protected int _numberOfActions = 5;
-        private int _backtrackPunishment = 400;
+        protected int _backtrackPunishment = 400;
         protected List<AdditionalReward> _additionalRewards = new List<AdditionalReward>();
 
         public MazeBase(
@@ -441,7 +441,7 @@ namespace QLearningMaze.Core.Mazes
 
                     if (nextAction < 0)
                     {
-                        // Something went wrong and an invalid next state was returned, start over with a new random current state
+                        // Something went wrong, or the agent can't move (walled in), and an invalid next state was returned, start over with a new random current state
                         currentState = _random.Next(0, Rewards.Length);
                         continue;
                     }
@@ -512,9 +512,11 @@ namespace QLearningMaze.Core.Mazes
                 int futureNextAction = possNextNextActions[j];  // short alias
 
                 double futureQuality = Quality[nextState][futureNextAction];
-                
+
                 if (currentState == GetNextState(nextState, futureNextAction))
+                {
                     isBackTrack = true;
+                }
 
                 if (futureQuality > maxQ)
                 {
@@ -561,6 +563,7 @@ namespace QLearningMaze.Core.Mazes
             int nextState;
             int moves = 0;
             int previousPosition = -1;
+            int _backtrackTimes = 0;
             TotalRewards = 0;
             Console.Write(curr + "->");
 
@@ -569,7 +572,24 @@ namespace QLearningMaze.Core.Mazes
                 if (Quality == null)
                     Train();                
                 
-                action = ArgMax(Quality[curr]);
+                action = GetMaxQ(Quality[curr]);
+
+                if (GetNextState(curr, action) == previousPosition)
+                {
+                    if (_backtrackTimes > 1)
+                    {
+                        action = GetMaxQ(Quality[curr], action);
+                        _backtrackTimes = 0;
+                    }
+                    else
+                    {
+                        _backtrackTimes++;
+                    }
+                }
+                else
+                {
+                    _backtrackTimes = 0;
+                }
 
                 if (MazeStates[curr][action] < 1)
                 {
@@ -588,6 +608,8 @@ namespace QLearningMaze.Core.Mazes
                 if (nextState == curr ||
                     nextState == previousPosition)
                 {
+                    _backtrackTimes++;
+
                     string message = "I'm a greedy idiot, and am backtracking to get more rewards.  Try adjusting the Discount and/or Learning Rate to stop me from doing this.";
                     throw new InvalidOperationException(message);
                 }
@@ -600,13 +622,15 @@ namespace QLearningMaze.Core.Mazes
             Console.WriteLine("done");
         }
 
-        protected virtual int ArgMax(double[] vector)
+        protected virtual int GetMaxQ(double[] vector, int excludeAction = -1)
         {
             double maxVal = double.MinValue; 
             int idx = 0;
 
             for (int i = 0; i < vector.Length; ++i)
             {
+                if (i == excludeAction) continue;
+
                 if (vector[i] != 0 && vector[i] > maxVal)
                 {
                     maxVal = vector[i]; 

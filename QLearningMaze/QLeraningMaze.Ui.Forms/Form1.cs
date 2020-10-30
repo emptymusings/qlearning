@@ -217,10 +217,6 @@ namespace QLearningMaze.Ui.Forms
                     _additionalRewards.Count == 0)
                 {
                     _additionalRewards = new List<AdditionalReward>();
-                    _additionalRewards.Add(new AdditionalReward { Position = 26, Value = 30 });
-                    _additionalRewards.Add(new AdditionalReward { Position = 27, Value = 30 });
-                    _additionalRewards.Add(new AdditionalReward { Position = 15, Value = 30 });
-                    _additionalRewards.Add(new AdditionalReward { Position = 7, Value = 30 });
                 }
 
                 foreach(var reward in _additionalRewards)
