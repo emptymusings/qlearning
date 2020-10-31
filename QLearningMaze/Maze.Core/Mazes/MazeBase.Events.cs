@@ -6,9 +6,9 @@ namespace QLearningMaze.Core.Mazes
 {
     public abstract partial class MazeBase : IMaze
     {
-        public event EventHandler MazeCreatingEventHandler;
+        public event EventHandler ObservationSpaceCreatingEventHandler;
 
-        public event EventHandler MazeCreatedEventHandler;
+        public event EventHandler ObservationSpaceCreatedEventHandler;
 
         public event EventHandler RewardsCreatedEventHandler;
 
@@ -26,15 +26,15 @@ namespace QLearningMaze.Core.Mazes
 
         public event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompletedEventHandler;
 
-        protected virtual void OnMazeCreatingEventHandler()
+        protected virtual void OnObservationSpaceCreatingEventHandler()
         {
-            EventHandler handler = MazeCreatingEventHandler;
+            EventHandler handler = ObservationSpaceCreatingEventHandler;
             handler?.Invoke(this, new EventArgs());
         }
 
-        protected virtual void OnMazeCreatedEventhHandler()
+        protected virtual void OnObservationSpaceCreatedEventhHandler()
         {
-            EventHandler handler = MazeCreatedEventHandler;
+            EventHandler handler = ObservationSpaceCreatedEventHandler;
             handler?.Invoke(this, new EventArgs());
         }
 
