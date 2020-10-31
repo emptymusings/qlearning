@@ -22,9 +22,9 @@
 
         }
 
-        protected override void CreateMazeStates()
+        protected override void CreateObservationSpace()
         {
-            base.CreateMazeStates();
+            base.CreateObservationSpace();
             AddWall(0, 1);
             AddWall(1, 2);
             AddWall(4, 5);

@@ -7,9 +7,9 @@ namespace QLearningMaze.Core
 
     public interface IMaze
     {
-        event EventHandler MazeCreatingEventHandler;
+        event EventHandler ObservationSpaceCreatingEventHandler;
 
-        event EventHandler MazeCreatedEventHandler;
+        event EventHandler ObservationSpaceCreatedEventHandler;
 
         event EventHandler RewardsCreatedEventHandler;
 
@@ -65,7 +65,7 @@ namespace QLearningMaze.Core
         /// Maze states, where the first dimension is state, the second is movement to the next state (action), 
         /// and the value is binary (0 or 1) to determine if the action is allowed
         /// </summary>
-        int[][] MazeStates { get; set; }
+        int[][] ObservationSpace { get; set; }
         /// <summary>
         /// Rewards table, where the first dimension is state, the second is movement to the next state (action), and the value is the reward
         /// </summary>
