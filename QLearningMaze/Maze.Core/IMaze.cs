@@ -21,15 +21,19 @@ namespace QLearningMaze.Core
 
         event EventHandler<AgentStateChangedEventArgs> AgentStateChangedEventHandler;
 
-        event EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
+        event EventHandler<(int action, int state, int position, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
 
         event EventHandler<bool> TrainingStatusChangedEventHandler;
 
         event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompletedEventHandler;
         /// <summary>
-        /// Gets or Sets the number of rows in the maze
+        /// Gets the number of rows in the maze
         /// </summary>
         int NumberOfStates { get; }
+        /// <summary>
+        /// Gets the square spaces of the maze (Rows * Columns)
+        /// </summary>
+        int TotalSpaces { get; }
         /// <summary>
         /// Gets or Sets the number of columns in the maze 
         /// </summary>
