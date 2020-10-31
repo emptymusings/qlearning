@@ -20,7 +20,7 @@ namespace QLearningMaze.Core.Mazes
 
         public event EventHandler<AgentStateChangedEventArgs> AgentStateChangedEventHandler;
 
-        public event EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
+        public event EventHandler<(int action, int state, int position, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
 
         public event EventHandler<bool> TrainingStatusChangedEventHandler;
 
@@ -62,16 +62,16 @@ namespace QLearningMaze.Core.Mazes
             handler?.Invoke(this, new ObstructionEventArgs { Obstruction = obstruction });
         }
 
-        protected virtual void OnAgentStateChanged(int newPosition, double totalRewards, int totalMoves)
+        protected virtual void OnAgentStateChanged(int newPosition, int newState, double totalRewards, int totalMoves)
         {
             EventHandler<AgentStateChangedEventArgs> handler = AgentStateChangedEventHandler;
-            handler?.Invoke(this, new AgentStateChangedEventArgs(newPosition, totalMoves, totalRewards));
+            handler?.Invoke(this, new AgentStateChangedEventArgs(newPosition, newState, totalMoves, totalRewards));
         }
 
-        protected virtual void OnTrainingAgentStateChanging(int newState, int previousState, double newQuality, double oldQuality)
+        protected virtual void OnTrainingAgentStateChanging(int action, int state, int position, double newQuality, double oldQuality)
         {
-            EventHandler<(int newState, int previousState, double newQuality, double oldQuality)> handler = TrainingAgentStateChangingEventHandler;
-            handler?.Invoke(this, (newState, previousState, newQuality, oldQuality));
+            EventHandler<(int action, int state, int position, double newQuality, double oldQuality)> handler = TrainingAgentStateChangingEventHandler;
+            handler?.Invoke(this, (action, state, position, newQuality, oldQuality));
         }
 
         protected virtual void OnTrainingStatusChanged(bool isTraining)

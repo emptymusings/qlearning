@@ -29,7 +29,7 @@
 
     public class AgentStateChangedEventArgs : EventArgs
     {
-        public AgentStateChangedEventArgs(int newPosition, int movesMade, double rewardsEarned)
+        public AgentStateChangedEventArgs(int newPosition, int newState, int movesMade, double rewardsEarned)
         {
             this.NewPosition = newPosition;
             this. RewardsEarned = rewardsEarned;
@@ -37,7 +37,9 @@
         }
 
         public int NewPosition { get; set; }
+        public int NewState { get; set; }
         public double RewardsEarned { get; set; }
         public int MovesMade { get; set; }
+        
     }
 }
