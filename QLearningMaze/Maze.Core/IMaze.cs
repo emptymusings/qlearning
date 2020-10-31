@@ -25,7 +25,7 @@ namespace QLearningMaze.Core
 
         event EventHandler<bool> TrainingStatusChangedEventHandler;
 
-        event EventHandler<TrainingEpochCompletedEventArgs> TrainingEpochCompletedEventHandler;
+        event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompletedEventHandler;
         /// <summary>
         /// Gets or Sets the number of rows in the maze
         /// </summary>
@@ -58,9 +58,9 @@ namespace QLearningMaze.Core
         /// </summary
         double LearningRate { get; set; }
         /// <summary>
-        /// Gets or Sets the total number of epochs (or episodes) to train for.
+        /// Gets or Sets the total number of episodes (or episodes) to train for.
         /// </summary>
-        int MaxEpochs { get; set; }
+        int MaxEpisodes { get; set; }
         /// <summary>
         /// Maze states, where the first dimension is state, the second is movement to the next state (action), 
         /// and the value is binary (0 or 1) to determine if the action is allowed

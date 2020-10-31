@@ -62,7 +62,7 @@
             maze.GoalPosition = PromptPosition(maze.Rows * maze.Columns, "goal", maze.GoalPosition);
             maze.DiscountRate = PromptRate(maze.DiscountRate, "discount");
             maze.LearningRate = PromptRate(maze.LearningRate, "learning");
-            maze.MaxEpochs = PromptEpochs(maze.MaxEpochs);
+            maze.MaxEpisodes = PromptEpisodes(maze.MaxEpisodes);
 
             PromptWalls(maze);
 
@@ -176,7 +176,7 @@
             return result;
         }
 
-        static int PromptEpochs(int defaultValue)
+        static int PromptEpisodes(int defaultValue)
         {
             bool invalidEntry = false;
             int result = defaultValue;
@@ -199,7 +199,7 @@
             if (invalidEntry)
             {
                 Console.WriteLine($"'{entry}' is not a valid entry");
-                return PromptEpochs(defaultValue);
+                return PromptEpisodes(defaultValue);
             }
 
             return result;

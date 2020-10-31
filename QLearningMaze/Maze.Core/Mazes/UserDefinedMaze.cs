@@ -9,7 +9,7 @@
             int goalPosition = 0,
             double discountRate = 0.5,
             double learningRate = 0.5,
-            int maxEpochs = 1000)
+            int maxEpisodes = 1000)
         : base(
             rows,
             columns,
@@ -17,7 +17,7 @@
             goalPosition,
             discountRate,
             learningRate,
-            maxEpochs)
+            maxEpisodes)
         {
 
         }
