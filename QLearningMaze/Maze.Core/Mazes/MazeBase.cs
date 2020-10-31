@@ -7,10 +7,10 @@ namespace QLearningMaze.Core.Mazes
     public enum Actions
     {
         Stay = 0,
-        MoveNorth = 1,
-        MoveEast = 2,
-        MoveSouth = 3,
-        MoveWest = 4
+        MoveUp = 1,
+        MoveRight = 2,
+        MoveDown = 3,
+        MoveLeft = 4
     }
 
     public abstract partial class MazeBase : IMaze
@@ -33,7 +33,7 @@ namespace QLearningMaze.Core.Mazes
             int goalPosition,
             double discountRate,
             double learningRate,
-            int maxEpochs)
+            int maxEpisodes)
         {
             this.Rows = rows;
             this.Columns = columns;
@@ -41,7 +41,7 @@ namespace QLearningMaze.Core.Mazes
             this.GoalPosition = goalPosition;
             this.DiscountRate = discountRate;
             this.LearningRate = learningRate;
-            this.MaxEpochs = maxEpochs;
+            this.MaxEpisodes = maxEpisodes;
         }
         /// <summary>
         /// Gets the total number of states for the Q-Table (for the maze, this is the area)
@@ -79,9 +79,9 @@ namespace QLearningMaze.Core.Mazes
         /// </summary>
         public double LearningRate { get; set; } = 0.5;
         /// <summary>
-        /// Gets or Sets the total number of epochs (or episodes) to train for
+        /// Gets or Sets the total number of episodes (or episodes) to train for
         /// </summary>
-        public int MaxEpochs { get; set; } = 1000;
+        public int MaxEpisodes { get; set; } = 1000;
         /// <summary>
         /// Maze states, where the first dimension is state, the second is movement to the next state (action), 
         /// and the value is binary (0 or 1) to determine if the action is allowed
@@ -121,28 +121,28 @@ namespace QLearningMaze.Core.Mazes
 
                 if (i >= Columns)
                 {
-                    mazeStatesActions[i][(int)Actions.MoveNorth] = 1;
+                    mazeStatesActions[i][(int)Actions.MoveUp] = 1;
 
                     if (i < NumberOfStates - Columns)
                     {
-                        mazeStatesActions[i][(int)Actions.MoveSouth] = 1;
+                        mazeStatesActions[i][(int)Actions.MoveDown] = 1;
                     }
                 }
                 else
                 {
-                    mazeStatesActions[i][(int)Actions.MoveSouth] = 1;
+                    mazeStatesActions[i][(int)Actions.MoveDown] = 1;
                 }
 
                 if (i < NumberOfStates - 1 &&
                     (i + 1) % Columns != 0)
                 {
-                    mazeStatesActions[i][(int)Actions.MoveEast] = 1;
+                    mazeStatesActions[i][(int)Actions.MoveRight] = 1;
                 }
 
                 if (i > 0 &&
                     i % Columns != 0)
                 {
-                    mazeStatesActions[i][(int)Actions.MoveWest] = 1;
+                    mazeStatesActions[i][(int)Actions.MoveLeft] = 1;
                 }
 
                 if (i == GoalPosition)
@@ -350,26 +350,26 @@ namespace QLearningMaze.Core.Mazes
 
             if (differential == 1)
             {
-                action = (int)Actions.MoveWest;
-                reverseAction = (int)Actions.MoveEast;
+                action = (int)Actions.MoveLeft;
+                reverseAction = (int)Actions.MoveRight;
             }
 
             if (differential == -1)
             {
-                action = (int)Actions.MoveEast;
-                reverseAction = (int)Actions.MoveWest;
+                action = (int)Actions.MoveRight;
+                reverseAction = (int)Actions.MoveLeft;
             }
 
             if (differential == Columns * -1)
             {
-                action = (int)Actions.MoveSouth;
-                reverseAction = (int)Actions.MoveNorth;
+                action = (int)Actions.MoveDown;
+                reverseAction = (int)Actions.MoveUp;
             }
 
             if (differential == Columns)
             {
-                action = (int)Actions.MoveNorth;
-                reverseAction = (int)Actions.MoveSouth;
+                action = (int)Actions.MoveUp;
+                reverseAction = (int)Actions.MoveDown;
             }
 
             return (action, reverseAction);
@@ -416,18 +416,18 @@ namespace QLearningMaze.Core.Mazes
             CreateQuality();
             
             double epsilon = 1;
-            _end_decay = (int)MaxEpochs / 2;
+            _end_decay = (int)MaxEpisodes / 2;
             _epsilon_decay_value = epsilon / (_end_decay - _start_decay);
 
             Console.WriteLine("Please wait while I learn the maze");
             
             OnTrainingStatusChanged(true);
             
-            for (int epoch = 0; epoch < MaxEpochs; ++epoch)
+            for (int episode = 0; episode < MaxEpisodes; ++episode)
             {
                 moves = 0;
                 TotalRewards = 0;
-                Console.Write($"Runnging through epoch {(epoch + 1).ToString("#,##0")} of {MaxEpochs.ToString("#,##0")}\r");
+                Console.Write($"Runnging through episode {(episode + 1).ToString("#,##0")} of {MaxEpisodes.ToString("#,##0")}\r");
 
                 int currentState = _random.Next(0, Rewards.Length);
                 //int currState = StartPosition;
@@ -457,13 +457,13 @@ namespace QLearningMaze.Core.Mazes
                     }
                 }
 
-                if (_end_decay >= epoch &&
-                    epoch >= _start_decay)
+                if (_end_decay >= episode &&
+                    episode >= _start_decay)
                 {
                     epsilon -= _epsilon_decay_value;
                 }
 
-                OnTrainingEpochCompleted(new TrainingEpochCompletedEventArgs(epoch + 1, MaxEpochs, moves, TotalRewards, currentState == GoalPosition));
+                OnTrainingEpisodeCompleted(new TrainingEpisodeCompletedEventArgs(episode + 1, MaxEpisodes, moves, TotalRewards, currentState == GoalPosition));
             }
 
             OnTrainingStatusChanged(false);
@@ -541,13 +541,13 @@ namespace QLearningMaze.Core.Mazes
         {
             switch(action)
             {
-                case Actions.MoveNorth:
+                case Actions.MoveUp:
                     return currentState - Columns;
-                case Actions.MoveEast:
+                case Actions.MoveRight:
                     return currentState + 1;
-                case Actions.MoveSouth:
+                case Actions.MoveDown:
                     return currentState + Columns;
-                case Actions.MoveWest:
+                case Actions.MoveLeft:
                     return currentState - 1;
                 case Actions.Stay:
                     return currentState;

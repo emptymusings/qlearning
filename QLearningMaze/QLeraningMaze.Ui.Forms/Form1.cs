@@ -192,7 +192,7 @@ namespace QLearningMaze.Ui.Forms
             goalPositionText.Text = _maze.GoalPosition.ToString();
             discountRateText.Text = _maze.DiscountRate.ToString("0.##");
             learningRateText.Text = _maze.LearningRate.ToString("0.##");
-            trainingEpochsText.Text = _maze.MaxEpochs.ToString();
+            trainingEpisodesText.Text = _maze.MaxEpisodes.ToString();
 
             foreach (var obstruction in _maze.Obstructions)
             {
@@ -220,6 +220,8 @@ namespace QLearningMaze.Ui.Forms
                 {
                     _maze.AddCustomReward(reward.Position, reward.Value);
                 }
+
+                _maze.AddCustomReward(27, 30);
             }
             catch
             {
@@ -327,9 +329,9 @@ namespace QLearningMaze.Ui.Forms
 
         private void trainMazeButton_Click(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(trainingEpochsText.Text) != _maze.MaxEpochs)
+            if (Convert.ToInt32(trainingEpisodesText.Text) != _maze.MaxEpisodes)
             {
-                _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
+                _maze.MaxEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
             }
 
             this.Cursor = Cursors.WaitCursor;
@@ -449,14 +451,14 @@ namespace QLearningMaze.Ui.Forms
             _overrideRespawn = false;
         }
 
-        private void trainingEpochsText_Leave(object sender, EventArgs e)
+        private void trainingEpisodesText_Leave(object sender, EventArgs e)
         {
             _overrideRespawn = true;
 
-            if (_maze.MaxEpochs.ToString() != trainingEpochsText.Text &&
-                MazeTextChanged(trainingEpochsText))
+            if (_maze.MaxEpisodes.ToString() != trainingEpisodesText.Text &&
+                MazeTextChanged(trainingEpisodesText))
             {
-                _maze.MaxEpochs = Convert.ToInt32(trainingEpochsText.Text);
+                _maze.MaxEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
                 _needsRetrain = true;
             }
 

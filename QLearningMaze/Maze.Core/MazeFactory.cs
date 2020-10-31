@@ -8,7 +8,6 @@ namespace QLearningMaze.Core
     {
         Undefined,
         OriginalMaze,
-        CustomMaze1,
         UserDefined
     }
     public class MazeFactory
@@ -21,7 +20,7 @@ namespace QLearningMaze.Core
             int goalPosition = 0,
             double discountRate = 0.5,
             double learningRate = 0.5,
-            int maxEpochs = 1000)
+            int maxEpisodes = 1000)
         {
             switch(mazeType)
             {
@@ -33,16 +32,7 @@ namespace QLearningMaze.Core
                         goalPosition,
                         discountRate,
                         learningRate,
-                        maxEpochs);
-                case MazeTypes.CustomMaze1:
-                    return new CustomMaze1(
-                        rows,
-                        columns,
-                        startPosition,
-                        goalPosition,
-                        discountRate,
-                        learningRate,
-                        maxEpochs);
+                        maxEpisodes);
                 case MazeTypes.UserDefined:
                     return new UserDefinedMaze(
                         rows,
@@ -51,7 +41,7 @@ namespace QLearningMaze.Core
                         goalPosition,
                         discountRate,
                         learningRate,
-                        maxEpochs);
+                        maxEpisodes);
                 default:
                     throw new ArgumentOutOfRangeException("MazeType");
             }

@@ -43,7 +43,7 @@
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.trainingEpochsText = new System.Windows.Forms.TextBox();
+            this.trainingEpisodesText = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.discountRateText = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -85,7 +85,7 @@
             this.entryPanel.Controls.Add(this.obstructionsList);
             this.entryPanel.Controls.Add(this.label8);
             this.entryPanel.Controls.Add(this.label7);
-            this.entryPanel.Controls.Add(this.trainingEpochsText);
+            this.entryPanel.Controls.Add(this.trainingEpisodesText);
             this.entryPanel.Controls.Add(this.label6);
             this.entryPanel.Controls.Add(this.discountRateText);
             this.entryPanel.Controls.Add(this.label5);
@@ -247,17 +247,17 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(181, 32);
             this.label7.TabIndex = 0;
-            this.label7.Text = "Training Epochs";
+            this.label7.Text = "Training Episodes";
             // 
-            // trainingEpochsText
+            // trainingEpisodesText
             // 
-            this.trainingEpochsText.Location = new System.Drawing.Point(500, 196);
-            this.trainingEpochsText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.trainingEpochsText.Name = "trainingEpochsText";
-            this.trainingEpochsText.Size = new System.Drawing.Size(97, 39);
-            this.trainingEpochsText.TabIndex = 6;
-            this.trainingEpochsText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.trainingEpochsText.Leave += new System.EventHandler(this.trainingEpochsText_Leave);
+            this.trainingEpisodesText.Location = new System.Drawing.Point(500, 196);
+            this.trainingEpisodesText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.trainingEpisodesText.Name = "trainingEpisodesText";
+            this.trainingEpisodesText.Size = new System.Drawing.Size(97, 39);
+            this.trainingEpisodesText.TabIndex = 6;
+            this.trainingEpisodesText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.trainingEpisodesText.Leave += new System.EventHandler(this.trainingEpisodesText_Leave);
             // 
             // label6
             // 
@@ -556,7 +556,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox trainingEpochsText;
+        private System.Windows.Forms.TextBox trainingEpisodesText;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox discountRateText;
         private System.Windows.Forms.Label label5;

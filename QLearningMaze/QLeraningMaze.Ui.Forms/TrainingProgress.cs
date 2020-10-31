@@ -26,13 +26,13 @@ namespace QLearningMaze.Ui.Forms
         {
             InitializeComponent();
             _maze = maze;
-            _maze.TrainingEpochCompletedEventHandler += _maze_TrainingEpochCompletedEventHandler;
+            _maze.TrainingEpisodeCompletedEventHandler += _maze_TrainingEpisodeCompletedEventHandler;
         }
 
-        private void _maze_TrainingEpochCompletedEventHandler(object sender, TrainingEpochCompletedEventArgs e)
+        private void _maze_TrainingEpisodeCompletedEventHandler(object sender, TrainingEpisodeCompletedEventArgs e)
         {
             if (!e.Success) return;
-            string message = $"Completed {e.CurrentEpoch.ToString("#,##0")} of {e.TotalEpochs.ToString("#,##0")} epochs in {e.TotalMoves.ToString("#,##0")} moves. Agent {(e.Success ? "Succeeded" : "Failed")}";
+            string message = $"Completed {e.CurrentEpisode.ToString("#,##0")} of {e.TotalEpisodes.ToString("#,##0")} episodes in {e.TotalMoves.ToString("#,##0")} moves. Agent {(e.Success ? "Succeeded" : "Failed")}";
 
             _runEpochs++;
 

@@ -24,7 +24,7 @@ namespace QLearningMaze.Core.Mazes
 
         public event EventHandler<bool> TrainingStatusChangedEventHandler;
 
-        public event EventHandler<TrainingEpochCompletedEventArgs> TrainingEpochCompletedEventHandler;
+        public event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompletedEventHandler;
 
         protected virtual void OnMazeCreatingEventHandler()
         {
@@ -80,9 +80,9 @@ namespace QLearningMaze.Core.Mazes
             handler?.Invoke(this, isTraining);
         }
 
-        protected virtual void OnTrainingEpochCompleted(TrainingEpochCompletedEventArgs e)
+        protected virtual void OnTrainingEpisodeCompleted(TrainingEpisodeCompletedEventArgs e)
         {
-            EventHandler<TrainingEpochCompletedEventArgs> handler = TrainingEpochCompletedEventHandler;
+            EventHandler<TrainingEpisodeCompletedEventArgs> handler = TrainingEpisodeCompletedEventHandler;
             handler?.Invoke(this, e);
         }
     }
