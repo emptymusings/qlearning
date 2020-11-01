@@ -465,7 +465,7 @@ namespace QLearningMaze.Core.Mazes
         {            
             int moves;
             CreateObservationSpace();
-            CreateRewards();
+            //CreateRewards();
             InitializeQualityTable();
             
             double epsilon = 1;
@@ -478,6 +478,7 @@ namespace QLearningMaze.Core.Mazes
             
             for (int episode = 0; episode < MaxEpisodes; ++episode)
             {
+                CreateRewards();
                 moves = 0;
                 TotalRewards = 0;
                 Console.Write($"Runnging through episode {(episode + 1).ToString("#,##0")} of {MaxEpisodes.ToString("#,##0")}\r");
