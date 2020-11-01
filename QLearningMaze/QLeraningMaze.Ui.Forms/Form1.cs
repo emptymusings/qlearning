@@ -234,6 +234,7 @@ namespace QLearningMaze.Ui.Forms
 
 
                 _maze.AddCustomReward(27, 30);
+                _maze.AddCustomReward(35, 30);
                 _additionalRewards = _maze.GetAdditionalRewards().ToList();
             }
             catch
