@@ -606,25 +606,30 @@ namespace QLearningMaze.Core.Mazes
                 case Actions.Stay:
                     return currentState;
                 case Actions.GetCustomReward:
-                    if (currentState + TotalSpaces > NumberOfStates)
-                        return currentState - TotalSpaces;
-                    else
-                    {
-                        int newState = currentState + TotalSpaces;
-                        int clearRewards = newState;
-
-                        while(clearRewards < NumberOfStates)
-                        {
-                            Rewards[clearRewards][(int)Actions.GetCustomReward] = _movementValue;
-                            ObservationSpace[clearRewards][(int)Actions.GetCustomReward] = 0;
-
-                            clearRewards += TotalSpaces;
-                        }
-
-                        return newState;
-                    }
+                    return GetRewardState(currentState);
                 default:
                     return -1;
+            }
+        }
+
+        private int GetRewardState(int currentState)
+        {
+            if (currentState + TotalSpaces > NumberOfStates)
+                return currentState - TotalSpaces;
+            else
+            {
+                int newState = currentState + TotalSpaces;
+                int clearRewards = newState;
+
+                while(clearRewards < NumberOfStates)
+                {
+                    Rewards[clearRewards][(int)Actions.GetCustomReward] = _movementValue;
+                    ObservationSpace[clearRewards][(int)Actions.GetCustomReward] = 0;
+
+                    clearRewards += TotalSpaces;
+                }
+
+                return newState;
             }
         }
 
