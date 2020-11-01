@@ -66,11 +66,13 @@ namespace QLearningMaze.Ui.Forms
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
+                mazeSpace.Enabled = false;
                 _maze = MazeUtilities.LoadMaze(dlg.FileName);
                 _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
                 _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
                 SetFormValuesFromMaze();
                 _needsRetrain = true;
+                mazeSpace.Enabled = true;
             }
         }
 
@@ -577,6 +579,19 @@ namespace QLearningMaze.Ui.Forms
                 {
                     obstructionsList.Items.Remove(item);
                 }
+            }
+        }
+
+        private void rewardsButton_Click(object sender, EventArgs e)
+        {
+            var dlg = new Rewards(_maze);
+            dlg.ShowDialog();
+            
+            if (dlg.RewardsChanged)
+            {
+                _additionalRewards = _maze.AdditionalRewards;
+                RespawnMaze();
+                _needsRetrain = true;
             }
         }
     }

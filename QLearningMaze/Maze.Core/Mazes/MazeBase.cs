@@ -54,7 +54,7 @@ namespace QLearningMaze.Core.Mazes
         { 
             get
             {
-                return Rows * Columns * (AdditionalRewards.Count + 1);
+                return Rows * Columns * (AdditionalRewards.Count > 0 ? 2 : 1);
             }
         }
 
@@ -281,6 +281,8 @@ namespace QLearningMaze.Core.Mazes
 
             if (exists == null) return;
 
+            AdditionalRewards.Remove(exists);
+
             CreateRewards();
         }
 
@@ -502,7 +504,7 @@ namespace QLearningMaze.Core.Mazes
                     currentState = GetNextState(currentState, nextAction);
 
                     if (GetPosition(currentState) == GoalPosition ||
-                        moves > 1000)
+                        moves > 10000)
                     {
                         done = true;
                     }

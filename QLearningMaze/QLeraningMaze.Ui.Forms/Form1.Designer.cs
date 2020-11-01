@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.entryPanel = new System.Windows.Forms.Panel();
+            this.rewardsButton = new System.Windows.Forms.Button();
             this.clearObstructionsButton = new System.Windows.Forms.Button();
             this.removeObstructionButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -79,6 +80,7 @@
             // 
             // entryPanel
             // 
+            this.entryPanel.Controls.Add(this.rewardsButton);
             this.entryPanel.Controls.Add(this.clearObstructionsButton);
             this.entryPanel.Controls.Add(this.removeObstructionButton);
             this.entryPanel.Controls.Add(this.groupBox1);
@@ -104,6 +106,17 @@
             this.entryPanel.Name = "entryPanel";
             this.entryPanel.Size = new System.Drawing.Size(1775, 277);
             this.entryPanel.TabIndex = 0;
+            // 
+            // rewardsButton
+            // 
+            this.rewardsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.rewardsButton.Location = new System.Drawing.Point(1601, 211);
+            this.rewardsButton.Name = "rewardsButton";
+            this.rewardsButton.Size = new System.Drawing.Size(150, 46);
+            this.rewardsButton.TabIndex = 12;
+            this.rewardsButton.Text = "Rewards";
+            this.rewardsButton.UseVisualStyleBackColor = true;
+            this.rewardsButton.Click += new System.EventHandler(this.rewardsButton_Click);
             // 
             // clearObstructionsButton
             // 
@@ -245,7 +258,7 @@
             this.label7.Location = new System.Drawing.Point(297, 196);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(181, 32);
+            this.label7.Size = new System.Drawing.Size(199, 32);
             this.label7.TabIndex = 0;
             this.label7.Text = "Training Episodes";
             // 
@@ -577,6 +590,7 @@
         private System.Windows.Forms.ToolStripMenuItem qualityMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rewardsMenuItem;
         private System.Windows.Forms.Label rewardsLabel;
+        private System.Windows.Forms.Button rewardsButton;
     }
 }
 
