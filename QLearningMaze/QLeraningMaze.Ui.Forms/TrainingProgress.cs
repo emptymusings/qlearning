@@ -47,10 +47,10 @@ namespace QLearningMaze.Ui.Forms
                 _averageMoves = _totalMoves / e.CurrentEpisode;
                 _averageScore = _totalScore / e.CurrentEpisode;
 
-                string message = $"Successful Runs: {_successfulRuns}/{e.TotalEpisodes} | " +
-                    $"{_percentComplete.ToString("0%")} Complete | " +
+                string message = $"Successful Runs: {_successfulRuns.ToString("#,##0")}/{e.CurrentEpisode.ToString("#,##0")} | " +
                     $"Avg Moves: {_averageMoves.ToString("#,##0")} | " +
-                    $"Avg Score: {_averageScore.ToString("#,##0")}";
+                    $"Avg Score: {_averageScore.ToString("#,##0")} | " +
+                    $"{_percentComplete.ToString("0%")} Complete";
 
                 UpdateLabel(message);
                 UpdateProgressBar();

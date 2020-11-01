@@ -25,7 +25,8 @@ namespace QLearningMaze.Core.Mazes
         protected bool _observationSpaceInitialized = false;
         protected int _numberOfActions = 5;
         protected int _backtrackPunishment = 400;
-        protected List<AdditionalReward> _additionalRewards = new List<AdditionalReward>();
+
+        
         protected int _additionalRewardsReceived = 0;
 
         public MazeBase(
@@ -45,6 +46,7 @@ namespace QLearningMaze.Core.Mazes
             this.LearningRate = learningRate;
             this.MaxEpisodes = maxEpisodes;
         }
+
         /// <summary>
         /// Gets the total number of states for the Q-Table (Rows * Columns * Additional Rewards + 1/custom reward for whether it's been picked up)
         /// </summary>
@@ -52,7 +54,7 @@ namespace QLearningMaze.Core.Mazes
         { 
             get
             {
-                return Rows * Columns * (_additionalRewards.Count + 1);
+                return Rows * Columns * (AdditionalRewards.Count + 1);
             }
         }
 
@@ -109,7 +111,7 @@ namespace QLearningMaze.Core.Mazes
         /// Gets or Sets a list of obstructions (walls) to avoid 
         /// </summary>
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
-
+        public virtual List<AdditionalReward> AdditionalRewards { get; set; } = new List<AdditionalReward>();
         public double TotalRewards { get; set; }
 
         protected virtual int GetActionsCount()
@@ -206,7 +208,7 @@ namespace QLearningMaze.Core.Mazes
                 for (int j = 0; j < ObservationSpace[i].Length; ++j)
                 {
 
-                    var customReward = _additionalRewards.Where(r => r.Position == i).FirstOrDefault();
+                    var customReward = AdditionalRewards.Where(r => r.Position == i).FirstOrDefault();
 
                     if (ObservationSpace[i][j] > 0 || customReward != null)
                     {
@@ -240,7 +242,7 @@ namespace QLearningMaze.Core.Mazes
         public virtual void AddCustomReward(int position, double reward)
         {
             // Determine if the reward already exists
-            var exists = _additionalRewards.Where(x => x.Position == GetPosition(position)).FirstOrDefault();
+            var exists = AdditionalRewards.Where(x => x.Position == GetPosition(position)).FirstOrDefault();
 
             if (exists != null)
             {
@@ -253,7 +255,7 @@ namespace QLearningMaze.Core.Mazes
             }
             else
             {
-                _additionalRewards.Add(new AdditionalReward {  Position = position, Value = reward });
+                AdditionalRewards.Add(new AdditionalReward {  Position = position, Value = reward });
 
                 // Since we've just changed the number of possible states, recreate the Observation Space and Rewards table
                 CreateObservationSpace();
@@ -275,7 +277,7 @@ namespace QLearningMaze.Core.Mazes
 
         public virtual void RemoveCustomReward(int position)
         {
-            var exists = _additionalRewards.Where(x => x.Position == GetPosition(position)).FirstOrDefault();
+            var exists = AdditionalRewards.Where(x => x.Position == GetPosition(position)).FirstOrDefault();
 
             if (exists == null) return;
 
@@ -284,7 +286,7 @@ namespace QLearningMaze.Core.Mazes
 
         public IEnumerable<AdditionalReward> GetAdditionalRewards()
         {
-            return this._additionalRewards;
+            return this.AdditionalRewards;
         }
 
         /// <summary>
@@ -575,7 +577,7 @@ namespace QLearningMaze.Core.Mazes
                 }                
             }            
 
-            TotalRewards = Rewards[currentState][action] + (isBackTrack ? (_additionalRewards.Count > 0 ? GetAdditionalRewards().Max(x => x.Value) : 0) - _backtrackPunishment : 0);
+            TotalRewards = Rewards[currentState][action] + (isBackTrack ? (AdditionalRewards.Count > 0 ? GetAdditionalRewards().Max(x => x.Value) : 0) - _backtrackPunishment : 0);
 
             Quality[currentState][action] = ((1 - LearningRate) * Quality[currentState][action]) + (LearningRate * (TotalRewards + (DiscountRate * maxQ)));
 

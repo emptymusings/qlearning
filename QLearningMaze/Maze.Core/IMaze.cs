@@ -82,7 +82,7 @@ namespace QLearningMaze.Core
         /// Gets or Sets a list of obstructions (walls) to avoid 
         /// </summary>SZ
         List<MazeObstruction> Obstructions { get; set; }    
-        //List<AdditionalReward> AdditionalRewards { get; set; }
+        List<AdditionalReward> AdditionalRewards { get; set; }
         double TotalRewards { get; set; }
 
         int GetNextState(int currentState, int action);

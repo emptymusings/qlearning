@@ -212,6 +212,8 @@ namespace QLearningMaze.Ui.Forms
                 obstructionsList.Items.Add(lvi);
             }
 
+            _additionalRewards = _maze.AdditionalRewards;
+
             _overrideRespawn = false;
 
             RespawnMaze();
@@ -233,7 +235,7 @@ namespace QLearningMaze.Ui.Forms
                 }
 
 
-                _maze.AddCustomReward(27, 30);
+                //_maze.AddCustomReward(9, 30);
                 _additionalRewards = _maze.GetAdditionalRewards().ToList();
             }
             catch
