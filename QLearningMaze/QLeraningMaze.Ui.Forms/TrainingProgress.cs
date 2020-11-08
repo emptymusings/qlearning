@@ -14,6 +14,10 @@ namespace QLearningMaze.Ui.Forms
     {
         private IMaze _maze;
         private bool _trainingInProgress = false;
+        private int _showEvery = 2500;
+        private MazeSpace _mazeSpace;
+        private int _movementPause = 250;
+        private int _runEpochs = 0;
 
         private delegate void EnableControlsHandler(bool value);
         private delegate void UpdateTextHandler(string withValue);
@@ -30,7 +34,55 @@ namespace QLearningMaze.Ui.Forms
             if (!e.Success) return;
             string message = $"Completed {e.CurrentEpoch.ToString("#,##0")} of {e.TotalEpochs.ToString("#,##0")} epochs in {e.TotalMoves.ToString("#,##0")} moves. Agent {(e.Success ? "Succeeded" : "Failed")}";
 
+            _runEpochs++;
+
+            if (_runEpochs % _showEvery == 0)
+            {
+                RenderTraining();
+            }
+
             UpdateText(message);
+        }
+
+        private void RenderTraining()
+        {
+            _mazeSpace = new MazeSpace();
+            _mazeSpace.CreateMazeControls(_maze);
+            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
+            Form frm = new Form();
+            frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);
+            frm.Controls.Add(_mazeSpace);
+            _mazeSpace.Dock = DockStyle.Fill;
+            frm.Controls.Add(_mazeSpace);
+            frm.Show();
+            frm.WindowState = FormWindowState.Maximized;
+            frm.FormBorderStyle = FormBorderStyle.None;
+
+            _maze.RunMaze();
+
+            frm.Close();
+            _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+        }
+
+        private void _maze_AgentStateChangedEventHandler(object sender, AgentStateChangedEventArgs e)
+        {
+            var newSpace = _mazeSpace.GetSpaceByPosition(e.NewPosition);
+
+            if (newSpace != null)
+            {
+                if (MazeSpace.ActiveSpace != null)
+                {
+                    MazeSpace.ActiveSpace.SetInactive();
+                    MazeSpace.ActiveSpace.Invalidate();
+                }
+
+                MazeSpace.ActiveSpace = newSpace;
+                newSpace.SetActive();
+                newSpace.Invalidate();
+                _mazeSpace.Invalidate();
+                newSpace.Refresh();
+                System.Threading.Thread.Sleep(_movementPause);
+            }
         }
 
         private void closeButton_Click(object sender, EventArgs e)

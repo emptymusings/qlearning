@@ -179,10 +179,7 @@ namespace QLearningMaze.Ui.Forms
 
         private ObservationSpace GetSpaceByPosition(int position)
         {
-            var row = mazeSpace.Rows.Where(row => row.Spaces.Any(s => s.Position == position)).FirstOrDefault();
-            var newSpace = row.Spaces.Where(s => s.Position == position).FirstOrDefault();
-
-            return newSpace;
+            return mazeSpace.GetSpaceByPosition(position);
         }
 
         private void SetFormValuesFromMaze()

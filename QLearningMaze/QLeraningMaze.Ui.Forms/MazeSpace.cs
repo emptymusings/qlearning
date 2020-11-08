@@ -128,5 +128,13 @@ namespace QLearningMaze.Ui.Forms
                 space.bottomWall.Visible = true;
             }
         }
+
+        public ObservationSpace GetSpaceByPosition(int position)
+        {
+            var row = Rows.Where(row => row.Spaces.Any(s => s.Position == position)).FirstOrDefault();
+            var newSpace = row.Spaces.Where(s => s.Position == position).FirstOrDefault();
+
+            return newSpace;
+        }
     }
 }
