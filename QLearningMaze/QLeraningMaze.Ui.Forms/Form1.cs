@@ -189,6 +189,10 @@ namespace QLearningMaze.Ui.Forms
 
         private ObservationSpace GetSpaceByPosition(int position)
         {
+            //var row = mazeSpace.Rows.Where(row => row.Spaces.Any(s => s.Position == position)).FirstOrDefault();
+            //var newSpace = row.Spaces.Where(s => s.Position == position).FirstOrDefault();
+
+            //return newSpace;
             return mazeSpace.GetSpaceByPosition(position);
         }
 
@@ -211,6 +215,8 @@ namespace QLearningMaze.Ui.Forms
                 obstructionsList.Items.Add(lvi);
             }
 
+            _additionalRewards = _maze.AdditionalRewards;
+
             _overrideRespawn = false;
 
             RespawnMaze();
@@ -232,8 +238,7 @@ namespace QLearningMaze.Ui.Forms
                 }
 
 
-                _maze.AddCustomReward(27, 30);
-                _maze.AddCustomReward(35, 30);
+                //_maze.AddCustomReward(9, 30);
                 _additionalRewards = _maze.GetAdditionalRewards().ToList();
             }
             catch
@@ -352,7 +357,7 @@ namespace QLearningMaze.Ui.Forms
 
             var dlg = new TrainingProgress(_maze);
             dlg.ShowDialog();
-
+            dlg.Dispose();
             _needsRetrain = false;
             this.Enabled = true;
             this.Cursor = Cursors.Default;

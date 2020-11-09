@@ -21,6 +21,11 @@ namespace QLearningMaze.Ui.Forms
         double _totalScore = 0;
         double _percentComplete = 0;
 
+        private int _showEvery = 2500;
+        private MazeSpace _mazeSpace;
+        private int _movementPause = 100;
+        private int _runEpochs = 0;
+
         private delegate void EnableControlsHandler(bool value);
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
@@ -40,6 +45,7 @@ namespace QLearningMaze.Ui.Forms
 
             _totalMoves += e.TotalMoves;
             _totalScore += e.TotalScore;
+            _runEpochs++;
 
             if (e.CurrentEpisode % trainingProgressBar.Step == 0)
             {
@@ -54,6 +60,60 @@ namespace QLearningMaze.Ui.Forms
 
                 UpdateLabel(message);
                 UpdateProgressBar();
+            }
+
+            if (_runEpochs % _showEvery == 0 && 
+                _runEpochs != _maze.MaxEpisodes &&
+                e.Success)
+            {
+                RenderTraining();
+            }
+        }
+
+
+        private void RenderTraining()
+        {
+            _mazeSpace = new MazeSpace();
+            _mazeSpace.CreateMazeControls(_maze);
+            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
+            Form frm = new Form();
+            frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);
+            frm.Controls.Add(_mazeSpace);
+            _mazeSpace.Dock = DockStyle.Fill;
+            frm.Controls.Add(_mazeSpace);
+            frm.Show();
+            frm.WindowState = FormWindowState.Maximized;
+            frm.FormBorderStyle = FormBorderStyle.None;
+
+            try
+            {
+                _maze.RunMaze();
+            }
+            catch { }
+
+            frm.Dispose();
+            
+            _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+        }
+
+        private void _maze_AgentStateChangedEventHandler(object sender, AgentStateChangedEventArgs e)
+        {
+            var newSpace = _mazeSpace.GetSpaceByPosition(e.NewPosition);
+
+            if (newSpace != null)
+            {
+                if (MazeSpace.ActiveSpace != null)
+                {
+                    MazeSpace.ActiveSpace.SetInactive();
+                    MazeSpace.ActiveSpace.Invalidate();
+                }
+
+                MazeSpace.ActiveSpace = newSpace;
+                newSpace.SetActive();
+                newSpace.Invalidate();
+                _mazeSpace.Invalidate();
+                newSpace.Refresh();
+                System.Threading.Thread.Sleep(_movementPause);
             }
         }
 
