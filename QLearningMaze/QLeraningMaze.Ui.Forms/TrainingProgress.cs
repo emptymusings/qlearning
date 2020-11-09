@@ -23,7 +23,7 @@ namespace QLearningMaze.Ui.Forms
 
         private int _showEvery = 2500;
         private MazeSpace _mazeSpace;
-        private int _movementPause = 100;
+        private int _movementPause = 250;
         private int _runEpochs = 0;
 
         private delegate void EnableControlsHandler(bool value);
@@ -75,7 +75,6 @@ namespace QLearningMaze.Ui.Forms
         {
             _mazeSpace = new MazeSpace();
             _mazeSpace.CreateMazeControls(_maze);
-            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
             Form frm = new Form();
             frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);
             frm.Controls.Add(_mazeSpace);
@@ -84,16 +83,19 @@ namespace QLearningMaze.Ui.Forms
             frm.Show();
             frm.WindowState = FormWindowState.Maximized;
             frm.FormBorderStyle = FormBorderStyle.None;
+            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
 
             try
-            {
+            {                
                 _maze.RunMaze();
             }
             catch { }
-
-            frm.Dispose();
-            
-            _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+            finally
+            {
+                frm.Dispose();
+                _mazeSpace.Dispose();
+                _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+            }
         }
 
         private void _maze_AgentStateChangedEventHandler(object sender, AgentStateChangedEventArgs e)
@@ -114,6 +116,7 @@ namespace QLearningMaze.Ui.Forms
                 _mazeSpace.Invalidate();
                 newSpace.Refresh();
                 System.Threading.Thread.Sleep(_movementPause);
+                Application.DoEvents();
             }
         }
 

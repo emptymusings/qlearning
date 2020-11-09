@@ -354,11 +354,12 @@ namespace QLearningMaze.Ui.Forms
 
             this.Cursor = Cursors.WaitCursor;
             this.Enabled = false;
-
+            _maze.AgentStateChangedEventHandler -= Maze_AgentStateChangedEventHandler;
             var dlg = new TrainingProgress(_maze);
             dlg.ShowDialog();
             dlg.Dispose();
             _needsRetrain = false;
+            _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
             this.Enabled = true;
             this.Cursor = Cursors.Default;
         }
