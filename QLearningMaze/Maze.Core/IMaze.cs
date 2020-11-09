@@ -85,8 +85,8 @@ namespace QLearningMaze.Core
         //List<AdditionalReward> AdditionalRewards { get; set; }
         double TotalRewards { get; set; }
 
-        int GetNextState(int currentState, int action);
-        int GetNextState(int currentState, Actions action);
+        int GetNextState(int currentState, int action, bool isTraining = true);
+        int GetNextState(int currentState, Actions action, bool isTraining);
         void AddWall(int betweenSpace, int andSpace);
         void RemoveWall(int betweenSpace, int andSpace);
         void AddCustomReward(int position, double reward);
