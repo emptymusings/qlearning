@@ -37,6 +37,8 @@ namespace QLearningMaze.Ui.Forms
             var lvi = new ListViewItem(positionText.Text);
             lvi.SubItems.Add(valueText.Text);
             rewardsList.Items.Add(lvi);
+            positionText.Text = null;
+            valueText.Text = null;
 
             RewardsChanged = true;
         }
