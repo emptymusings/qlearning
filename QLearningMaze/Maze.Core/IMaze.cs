@@ -21,11 +21,12 @@ namespace QLearningMaze.Core
 
         event EventHandler<AgentStateChangedEventArgs> AgentStateChangedEventHandler;
 
-        event EventHandler<(int action, int state, int position, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
+        event EventHandler<TrainingAgentStateChangedEventArgs> TrainingAgentStateChangingEventHandler;
 
         event EventHandler<bool> TrainingStatusChangedEventHandler;
 
         event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompletedEventHandler;
+        event EventHandler<AgentCompletedMazeEventArgs> AgentCompletedMazeEventHandler;
         /// <summary>
         /// Gets the number of rows in the maze
         /// </summary>
@@ -81,9 +82,20 @@ namespace QLearningMaze.Core
         /// <summary>
         /// Gets or Sets a list of obstructions (walls) to avoid 
         /// </summary>SZ
-        List<MazeObstruction> Obstructions { get; set; }    
-        //List<AdditionalReward> AdditionalRewards { get; set; }
+        List<MazeObstruction> Obstructions { get; set; }
+        /// <summary>
+        /// Gets or Sets any custom rewards
+        /// </summary>
+        List<AdditionalReward> AdditionalRewards { get; set; }
+        /// <summary>
+        /// Gets the total rewards received during a training or maze run session
+        /// </summary>
         double TotalRewards { get; set; }
+        /// <summary>
+        /// Gets or Sets the episode interval between saving quality and run information during training
+        /// </summary>
+        int SaveEpisodes { get; set; }
+
 
         int GetNextState(int currentState, int action, bool isTraining = true);
         int GetNextState(int currentState, Actions action, bool isTraining);
@@ -94,7 +106,5 @@ namespace QLearningMaze.Core
         IEnumerable<AdditionalReward> GetAdditionalRewards();
         void Train();
         void RunMaze();
-        void PrintRewards();
-        void PrintQuality();
     }
 }

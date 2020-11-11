@@ -51,11 +51,12 @@
             this.sesssionList.Location = new System.Drawing.Point(12, 12);
             this.sesssionList.MultiSelect = false;
             this.sesssionList.Name = "sesssionList";
-            this.sesssionList.Size = new System.Drawing.Size(389, 354);
+            this.sesssionList.Size = new System.Drawing.Size(571, 396);
             this.sesssionList.TabIndex = 0;
             this.sesssionList.UseCompatibleStateImageBehavior = false;
             this.sesssionList.View = System.Windows.Forms.View.Details;
             this.sesssionList.SelectedIndexChanged += new System.EventHandler(this.sesssionList_SelectedIndexChanged);
+            this.sesssionList.DoubleClick += new System.EventHandler(this.sesssionList_DoubleClick);
             // 
             // columnHeader1
             // 
@@ -76,7 +77,7 @@
             // 
             this.useSessionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.useSessionButton.Enabled = false;
-            this.useSessionButton.Location = new System.Drawing.Point(12, 400);
+            this.useSessionButton.Location = new System.Drawing.Point(261, 442);
             this.useSessionButton.Name = "useSessionButton";
             this.useSessionButton.Size = new System.Drawing.Size(150, 46);
             this.useSessionButton.TabIndex = 1;
@@ -88,7 +89,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.Enabled = false;
-            this.cancelButton.Location = new System.Drawing.Point(251, 400);
+            this.cancelButton.Location = new System.Drawing.Point(433, 442);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(150, 46);
             this.cancelButton.TabIndex = 1;
@@ -102,12 +103,17 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(427, 458);
+            this.ClientSize = new System.Drawing.Size(609, 500);
+            this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.useSessionButton);
             this.Controls.Add(this.sesssionList);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TrainingSessionSelector";
-            this.Text = "TrainingSessionSelector";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.Text = "Training Sessions";
             this.Load += new System.EventHandler(this.TrainingSessionSelector_Load);
             this.Shown += new System.EventHandler(this.TrainingSessionSelector_Shown);
             this.ResumeLayout(false);

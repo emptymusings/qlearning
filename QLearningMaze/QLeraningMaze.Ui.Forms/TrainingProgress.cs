@@ -60,7 +60,7 @@ namespace QLearningMaze.Ui.Forms
 
             if (e.CurrentEpisode % trainingProgressBar.Step == 0)
             {
-                string message = $"Successful Runs: {_successfulRuns.ToString("#,##0")}/{e.CurrentEpisode.ToString("#,##0")} | " +
+                string message = $"Episode: {e.CurrentEpisode.ToString("#,##0")} | " +
                     $"Avg Moves: {_averageMoves.ToString("#,##0")} | " +
                     $"Avg Score: {_averageScore.ToString("#,##0")} | " +
                     $"{_percentComplete.ToString("0%")} Complete";
@@ -72,7 +72,7 @@ namespace QLearningMaze.Ui.Forms
             if (_runEpochs % _showEvery == 0 && 
                 _runEpochs != _maze.MaxEpisodes)
             {
-                RenderTraining();
+                //RenderTraining();
             }
         }
 

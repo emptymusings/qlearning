@@ -71,6 +71,10 @@ namespace QLearningMaze.Ui.Forms
 
                 if (sesssionList.Items.Count > 0)
                     sesssionList.Items[0].Selected = true;
+
+                cancelButton.Enabled = true;
+                this.ControlBox = true;
+                Cursor = Cursors.Default;
             }
         }
 
@@ -109,7 +113,7 @@ namespace QLearningMaze.Ui.Forms
                 }
                 catch
                 {
-                    sessions.RemoveAt(i);
+                    //sessions.RemoveAt(i);
                     continue;
                 }
 
@@ -135,20 +139,29 @@ namespace QLearningMaze.Ui.Forms
             maze.StartPosition = _maze.StartPosition;
             maze.GoalPosition = _maze.GoalPosition;
 
-            maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+            maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
 
             return maze;
         }
 
-        private void Maze_AgentStateChangedEventHandler(object sender, AgentStateChangedEventArgs e)
+        private void Maze_AgentCompletedMazeEventHandler(object sender, AgentCompletedMazeEventArgs e)
         {
-            _moves += e.MovesMade;
-            _score += e.RewardsEarned;
+            _moves += e.Moves;
+            _score += e.Rewards;
         }
 
         private void TrainingSessionSelector_Shown(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             Task.Run(StartTestManager);
+        }
+
+        private void sesssionList_DoubleClick(object sender, EventArgs e)
+        {
+            if (sesssionList.SelectedItems.Count > 0)
+            {
+                useSessionButton_Click(sender, e);
+            }
         }
     }
 }
