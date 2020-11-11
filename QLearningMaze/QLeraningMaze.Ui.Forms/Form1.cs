@@ -50,11 +50,11 @@ namespace QLearningMaze.Ui.Forms
             Train();
         }
 
-        private void Maze_TrainingAgentStateChangingEventHandler(object sender, (int action, int state, int position, double newQuality, double oldQuality) e)
+        private void Maze_TrainingAgentStateChangingEventHandler(object sender, TrainingAgentStateChangedEventArgs e)
         {
-            int newState = e.state;
-            double newQuality = e.newQuality;
-            double oldQuality = e.oldQuality;
+            int newState = e.State;
+            double newQuality = e.NewQuality;
+            double oldQuality = e.OldQuality;
 
         }
 
