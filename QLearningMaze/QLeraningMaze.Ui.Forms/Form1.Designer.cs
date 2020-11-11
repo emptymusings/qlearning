@@ -71,6 +71,10 @@
             this.viewStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qualityMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rewardsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mazeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.trainStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runMazeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.qualityStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.entryPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -464,7 +468,8 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenuItem,
-            this.viewStripMenuItem});
+            this.viewStripMenuItem,
+            this.mazeStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1775, 40);
@@ -519,6 +524,34 @@
             this.rewardsMenuItem.Name = "rewardsMenuItem";
             this.rewardsMenuItem.Size = new System.Drawing.Size(296, 44);
             this.rewardsMenuItem.Text = "Rewards Table";
+            // 
+            // mazeStripMenuItem
+            // 
+            this.mazeStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.trainStripMenuItem,
+            this.runMazeStripMenuItem,
+            this.qualityStripMenuItem});
+            this.mazeStripMenuItem.Name = "mazeStripMenuItem";
+            this.mazeStripMenuItem.Size = new System.Drawing.Size(92, 36);
+            this.mazeStripMenuItem.Text = "&Maze";
+            // 
+            // trainStripMenuItem
+            // 
+            this.trainStripMenuItem.Name = "trainStripMenuItem";
+            this.trainStripMenuItem.Size = new System.Drawing.Size(294, 44);
+            this.trainStripMenuItem.Text = "&Train";
+            // 
+            // runMazeStripMenuItem
+            // 
+            this.runMazeStripMenuItem.Name = "runMazeStripMenuItem";
+            this.runMazeStripMenuItem.Size = new System.Drawing.Size(294, 44);
+            this.runMazeStripMenuItem.Text = "&Run Maze";
+            // 
+            // qualityStripMenuItem
+            // 
+            this.qualityStripMenuItem.Name = "qualityStripMenuItem";
+            this.qualityStripMenuItem.Size = new System.Drawing.Size(294, 44);
+            this.qualityStripMenuItem.Text = "Select &Quality";
             // 
             // Form1
             // 
@@ -591,6 +624,10 @@
         private System.Windows.Forms.ToolStripMenuItem rewardsMenuItem;
         private System.Windows.Forms.Label rewardsLabel;
         private System.Windows.Forms.Button rewardsButton;
+        private System.Windows.Forms.ToolStripMenuItem mazeStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem trainStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem runMazeStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem qualityStripMenuItem;
     }
 }
 

@@ -297,7 +297,7 @@
                     if (!name.EndsWith(".maze"))
                         name += ".maze";
 
-                    MazeUtilities.SaveMaze(name, maze);
+                    MazeUtilities.SaveObject(name, maze);
                 }
             }
         }
