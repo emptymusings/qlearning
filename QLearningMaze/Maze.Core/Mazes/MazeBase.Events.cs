@@ -20,11 +20,12 @@ namespace QLearningMaze.Core.Mazes
 
         public event EventHandler<AgentStateChangedEventArgs> AgentStateChangedEventHandler;
 
-        public event EventHandler<(int action, int state, int position, double newQuality, double oldQuality)> TrainingAgentStateChangingEventHandler;
+        public event EventHandler<TrainingAgentStateChangedEventArgs> TrainingAgentStateChangingEventHandler;
 
         public event EventHandler<bool> TrainingStatusChangedEventHandler;
 
         public event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompletedEventHandler;
+        public event EventHandler<AgentCompletedMazeEventArgs> AgentCompletedMazeEventHandler;
 
         protected virtual void OnObservationSpaceCreatingEventHandler()
         {
@@ -70,8 +71,8 @@ namespace QLearningMaze.Core.Mazes
 
         protected virtual void OnTrainingAgentStateChanging(int action, int state, int position, double newQuality, double oldQuality)
         {
-            EventHandler<(int action, int state, int position, double newQuality, double oldQuality)> handler = TrainingAgentStateChangingEventHandler;
-            handler?.Invoke(this, (action, state, position, newQuality, oldQuality));
+            EventHandler<TrainingAgentStateChangedEventArgs> handler = TrainingAgentStateChangingEventHandler;
+            handler?.Invoke(this, new TrainingAgentStateChangedEventArgs(action, state, position, newQuality, oldQuality));
         }
 
         protected virtual void OnTrainingStatusChanged(bool isTraining)
@@ -83,6 +84,12 @@ namespace QLearningMaze.Core.Mazes
         protected virtual void OnTrainingEpisodeCompleted(TrainingEpisodeCompletedEventArgs e)
         {
             EventHandler<TrainingEpisodeCompletedEventArgs> handler = TrainingEpisodeCompletedEventHandler;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnAgentCompletedMaze(AgentCompletedMazeEventArgs e)
+        {
+            EventHandler<AgentCompletedMazeEventArgs> handler = AgentCompletedMazeEventHandler;
             handler?.Invoke(this, e);
         }
     }
