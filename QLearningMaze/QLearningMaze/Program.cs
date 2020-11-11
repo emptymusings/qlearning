@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using Core;
+    using QLearningMaze.Core.Mazes;
 
     class QLearningMazeProgram
     {
@@ -83,7 +84,7 @@
             }
             else
             {
-                IMaze maze = MazeUtilities.LoadMaze(mazeName);
+                IMaze maze = MazeUtilities.LoadObject<UserDefinedMaze>(mazeName);
                 string response;
 
                 Console.Write("Do you want to make modifications to the maze (Y/N)? ");
@@ -105,12 +106,6 @@
         static void TrainMaze(IMaze maze)
         {
             maze.Train();
-            Console.WriteLine();
-
-            Console.WriteLine("Quality matrix: ");
-            maze.PrintQuality();
-
-            Console.WriteLine();
             Console.WriteLine();
         }
 
