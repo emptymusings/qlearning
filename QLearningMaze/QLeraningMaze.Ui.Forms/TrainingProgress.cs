@@ -23,7 +23,7 @@ namespace QLearningMaze.Ui.Forms
 
         private int _showEvery = 2500;
         private MazeSpace _mazeSpace;
-        private int _movementPause = 250;
+        private int _movementPause = 100;
         private int _runEpochs = 0;
 
         private delegate void EnableControlsHandler(bool value);
@@ -35,24 +35,31 @@ namespace QLearningMaze.Ui.Forms
             InitializeComponent();
             _maze = maze;
             _maze.TrainingEpisodeCompletedEventHandler += _maze_TrainingEpisodeCompletedEventHandler;
+            _totalMoves = 0;
+            _totalScore = 0;
+            _averageMoves = 0;
+            _averageScore = 0;
         }
 
         private void _maze_TrainingEpisodeCompletedEventHandler(object sender, TrainingEpisodeCompletedEventArgs e)
         {
             //UpdateText(message);
             if (e.Success)
+            {
                 _successfulRuns++;
 
-            _totalMoves += e.TotalMoves;
-            _totalScore += e.TotalScore;
+                _totalMoves += e.TotalMoves;
+                _totalScore += e.TotalScore;
+
+                _averageMoves = _totalMoves / _successfulRuns;
+                _averageScore = _totalScore / _successfulRuns;
+            }
+
             _runEpochs++;
+            _percentComplete = (double)e.CurrentEpisode / (double)e.TotalEpisodes;
 
             if (e.CurrentEpisode % trainingProgressBar.Step == 0)
             {
-                _percentComplete = (double)e.CurrentEpisode / (double)e.TotalEpisodes;
-                _averageMoves = _totalMoves / e.CurrentEpisode;
-                _averageScore = _totalScore / e.CurrentEpisode;
-
                 string message = $"Successful Runs: {_successfulRuns.ToString("#,##0")}/{e.CurrentEpisode.ToString("#,##0")} | " +
                     $"Avg Moves: {_averageMoves.ToString("#,##0")} | " +
                     $"Avg Score: {_averageScore.ToString("#,##0")} | " +
@@ -63,8 +70,7 @@ namespace QLearningMaze.Ui.Forms
             }
 
             if (_runEpochs % _showEvery == 0 && 
-                _runEpochs != _maze.MaxEpisodes &&
-                e.Success)
+                _runEpochs != _maze.MaxEpisodes)
             {
                 RenderTraining();
             }
@@ -89,7 +95,10 @@ namespace QLearningMaze.Ui.Forms
             {                
                 _maze.RunMaze();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.ToString());
+            }
             finally
             {
                 frm.Dispose();
@@ -122,6 +131,7 @@ namespace QLearningMaze.Ui.Forms
 
         private void closeButton_Click(object sender, EventArgs e)
         {
+            _maze.TrainingEpisodeCompletedEventHandler -= _maze_TrainingEpisodeCompletedEventHandler;
             this.Close();
         }
 
