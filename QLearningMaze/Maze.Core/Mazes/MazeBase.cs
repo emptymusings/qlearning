@@ -464,7 +464,7 @@ namespace QLearningMaze.Core.Mazes
             if (possibleNextStates.Count > 0)
                 return possibleNextStates[index];
             else
-                return -1;
+                throw new NullReferenceException($"There are no possible actions that can be taken from the position {GetPosition(currentState)}");
         }
 
         public virtual void Train()
@@ -524,6 +524,11 @@ namespace QLearningMaze.Core.Mazes
                     if (GetPosition(currentState) == GoalPosition ||
                         moves > 1000)
                     {
+                        if (moves <= 1000)
+                        {
+                            TotalRewards += _goalValue;
+                        }
+
                         done = true;
                     }
                 }
@@ -718,7 +723,7 @@ namespace QLearningMaze.Core.Mazes
                 
                 TotalRewards += Rewards[curr][action];
                 moves++;
-                Console.Write(action + "->");
+                Console.Write($"State: {curr} | Action: {(Actions)action} -> ");
                 nextState = GetNextState(curr, action);
 
                 int nextPosition = GetPosition(nextState);
@@ -741,9 +746,9 @@ namespace QLearningMaze.Core.Mazes
                 OnAgentStateChanged(GetPosition(curr), curr, TotalRewards, moves);
             }
 
-            OnAgentCompletedMaze(new AgentCompletedMazeEventArgs(moves, TotalRewards));
+            OnAgentCompletedMaze(new AgentCompletedMazeEventArgs(moves, TotalRewards + _goalValue));
 
-            Console.WriteLine("done");
+            Console.WriteLine($"done (current state: {curr})");
         }
 
         protected virtual int GetBestAction(int currentState, int previousState, ref int backtrackTimes)
