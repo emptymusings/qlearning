@@ -113,7 +113,7 @@ namespace QLearningMaze.Ui.Forms
                 }
                 catch
                 {
-                    //sessions.RemoveAt(i);
+                    sessions.RemoveAt(i);
                     continue;
                 }
 
