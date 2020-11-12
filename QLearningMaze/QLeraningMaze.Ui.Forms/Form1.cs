@@ -462,7 +462,7 @@ namespace QLearningMaze.Ui.Forms
                 _maze.StartPosition = newStartPosition;
                 GetSpaceByPosition(oldStartPosition).SetStart(false);
                 GetSpaceByPosition(newStartPosition).SetStart(true);
-                //RespawnMaze();
+                _needsRetrain = true;
             }
         }
 
@@ -479,7 +479,6 @@ namespace QLearningMaze.Ui.Forms
                 _maze.GoalPosition = newGoalPosition;
                 GetSpaceByPosition(oldGoalPosition).SetGoal(false);
                 GetSpaceByPosition(newGoalPosition).SetGoal(true);
-                //RespawnMaze();
             }            
         }
 
@@ -575,7 +574,6 @@ namespace QLearningMaze.Ui.Forms
         {
             int between, and;
             ObservationSpace andSpace;
-            //if (rowNumber == _maze.Rows - 1) return;
 
             between = space.Position;
 
@@ -611,6 +609,7 @@ namespace QLearningMaze.Ui.Forms
 
             RemoveObstructionsFromList(between, and);
             RemoveObstruction(between, and);
+            _needsRetrain = true;
         }
 
         private void RemoveObstructionsFromList(int between, int and)
