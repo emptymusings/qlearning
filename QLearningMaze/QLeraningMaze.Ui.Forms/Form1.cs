@@ -379,16 +379,27 @@ namespace QLearningMaze.Ui.Forms
                 _maze.MaxEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
             }
 
+            var dlg = new TrainingProgress(_maze);
             this.Cursor = Cursors.WaitCursor;
             this.Enabled = false;
-            _maze.AgentStateChangedEventHandler -= Maze_AgentStateChangedEventHandler;
-            var dlg = new TrainingProgress(_maze);
-            dlg.ShowDialog();
-            dlg.Dispose();
-            _needsRetrain = false;
-            _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
-            this.Enabled = true;
-            this.Cursor = Cursors.Default;
+
+            try
+            {
+                _maze.AgentStateChangedEventHandler -= Maze_AgentStateChangedEventHandler;
+                dlg.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex}");
+            }
+            finally
+            {
+                dlg.Dispose();
+                _needsRetrain = false;
+                _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+                this.Enabled = true;
+                this.Cursor = Cursors.Default;
+            }
 
             GetEpisodeSelection();
         }
