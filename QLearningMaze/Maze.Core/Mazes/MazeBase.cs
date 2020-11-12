@@ -524,7 +524,7 @@ namespace QLearningMaze.Core.Mazes
                     if (GetPosition(currentState) == GoalPosition ||
                         moves > 1000)
                     {
-                        if (moves <= 1000)
+                        if (GetPosition(currentState) == GoalPosition)
                         {
                             TotalRewards += _goalValue;
                         }
