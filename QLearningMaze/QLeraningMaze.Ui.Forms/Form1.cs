@@ -31,6 +31,7 @@ namespace QLearningMaze.Ui.Forms
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
             _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+            _maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
             _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
 
         }
@@ -87,6 +88,7 @@ namespace QLearningMaze.Ui.Forms
                 mazeSpace.Enabled = false;
                 _maze = MazeUtilities.LoadObject<UserDefinedMaze>(dlg.FileName);
                 _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+                _maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
                 _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
                 SetFormValuesFromMaze();
                 _needsRetrain = true;
@@ -160,6 +162,12 @@ namespace QLearningMaze.Ui.Forms
                 newSpace.rewardLabel.Visible = false;
                 Application.DoEvents();
             }
+        }
+
+
+        private void Maze_AgentCompletedMazeEventHandler(object sender, AgentCompletedMazeEventArgs e)
+        {
+            rewardsLabel.Text = $"Moves: {e.Moves} Reward: {e.Rewards}";
         }
 
         private void runMaze_Click(object sender, EventArgs e)
@@ -386,6 +394,7 @@ namespace QLearningMaze.Ui.Forms
             try
             {
                 _maze.AgentStateChangedEventHandler -= Maze_AgentStateChangedEventHandler;
+                _maze.AgentCompletedMazeEventHandler -= Maze_AgentCompletedMazeEventHandler;
                 dlg.ShowDialog();
             }
             catch (Exception ex)
@@ -397,6 +406,7 @@ namespace QLearningMaze.Ui.Forms
                 dlg.Dispose();
                 _needsRetrain = false;
                 _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
+                _maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
                 this.Enabled = true;
                 this.Cursor = Cursors.Default;
             }
