@@ -95,7 +95,7 @@ namespace QLearningMaze.Ui.Forms
             {                
                 _maze.RunMaze();
             }
-            catch (Exception ex)
+            catch 
             {
                 //MessageBox.Show(ex.ToString());
             }
