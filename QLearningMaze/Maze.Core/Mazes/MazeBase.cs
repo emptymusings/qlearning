@@ -123,7 +123,7 @@ namespace QLearningMaze.Core.Mazes
         /// <summary>
         /// Gets or Sets the episode interval between saving quality and run information during training
         /// </summary>
-        public int SaveEpisodes { get; set; } = 100;
+        public int SaveEpisodes { get; set; } = 10;
         /// <summary>
         /// Gets the count of actions available for the observation space
         /// </summary>
@@ -258,9 +258,28 @@ namespace QLearningMaze.Core.Mazes
             
             foreach (var prioritizedReward in orderedRewards)
             {
-                ObservationSpace[prioritizedReward.Position + rewardPriority][(int)Actions.GetCustomReward] = 1;
-                reward[prioritizedReward.Position + rewardPriority][(int)Actions.GetCustomReward] = prioritizedReward.Value;
-                rewardPriority += TotalSpaces;
+                if (prioritizedReward.Value >= 0)
+                {
+                    ObservationSpace[prioritizedReward.Position + rewardPriority][(int)Actions.GetCustomReward] = 1;
+                    reward[prioritizedReward.Position + rewardPriority][(int)Actions.GetCustomReward] = prioritizedReward.Value;
+                    rewardPriority += TotalSpaces;
+                }
+                else
+                {
+                    var phase = prioritizedReward.Position;
+
+                    while (phase < NumberOfStates)
+                    {
+                        double[] rs = reward[phase];
+
+                        for (int i = 0; i < rs.Length; ++i)
+                        {
+                            reward[phase][i] = prioritizedReward.Value;
+                        }
+
+                        phase += TotalSpaces;
+                    }
+                }
             }
 
             Rewards = reward;

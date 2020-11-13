@@ -19,8 +19,8 @@ namespace QLearningMaze.Ui.Forms
         private int _moves;
         private double _score;
 
-        private IEnumerable<TrainingSession> trainingSessions;
-        public TrainingSession SelectedSession { get; set; }
+        private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
+        public TrainingSessionEx SelectedSession { get; set; }
 
         public TrainingSessionSelector(IMaze maze)
         {
@@ -61,11 +61,14 @@ namespace QLearningMaze.Ui.Forms
             }
             else
             {
+                sesssionList.Items.Clear();
+
                 foreach (var session in trainingSessions)
                 {
                     ListViewItem lvi = new ListViewItem(session.Episode.ToString());
                     lvi.SubItems.Add(session.Moves.ToString("#,##0"));
                     lvi.SubItems.Add(session.Score.ToString("#,##0.##"));
+                    lvi.SubItems.Add(session.Succeeded.ToString());
                     sesssionList.Items.Add(lvi);
                 }
 
@@ -88,7 +91,7 @@ namespace QLearningMaze.Ui.Forms
             {
                 System.Threading.Thread.Sleep(1);
             }
-
+            
             FillList();
 
             return Task.CompletedTask;
@@ -101,7 +104,14 @@ namespace QLearningMaze.Ui.Forms
 
             for (int i = sessions.Count - 1; i >= 0; --i)
             {
-                var session = sessions[i];
+                var session = new TrainingSessionEx
+                {
+                    Episode = sessions[i].Episode,
+                    Moves = sessions[i].Moves,
+                    Quality = sessions[i].Quality,
+                    Score = sessions[i].Score
+                };
+
                 _moves = 0;
                 _score = 0;
 
@@ -110,18 +120,39 @@ namespace QLearningMaze.Ui.Forms
                 try
                 {
                     maze.RunMaze();
+                    session.Succeeded = true;
                 }
                 catch
                 {
-                    sessions.RemoveAt(i);
+                    //sessions.RemoveAt(i);
+                    session.Succeeded = false;                    
                     continue;
                 }
 
                 session.Moves = _moves;
-                session.Score = _score;                
+                session.Score = _score; 
+                
+                trainingSessions.Add(session);
             }
 
-            trainingSessions = sessions.OrderByDescending(s => s.Score).ThenBy(m => m.Moves).ThenBy(e => e.Episode);
+            //trainingSessions = sessions.OrderByDescending(s => s.Score).ThenBy(m => m.Moves).ThenBy(e => e.Episode);
+            var selection = trainingSessions
+                .GroupBy(x => new 
+                {
+                    x.Moves,
+                    x.Score,
+                    x.Succeeded
+                })
+                .Select(s => new TrainingSessionEx()
+                {
+                    Episode = s.Last().Episode,
+                    Moves = s.Key.Moves,
+                    Score = s.Key.Score,
+                    Succeeded = s.Key.Succeeded,
+                    Quality = s.Last().Quality
+                });
+
+            trainingSessions = selection.OrderBy(e => e.Episode).ToList();
             SelectedSession = trainingSessions.FirstOrDefault();
 
             _isChecking = false;
@@ -152,8 +183,12 @@ namespace QLearningMaze.Ui.Forms
 
         private void TrainingSessionSelector_Shown(object sender, EventArgs e)
         {
-            Cursor = Cursors.WaitCursor;
-            Task.Run(StartTestManager);
+            if (trainingSessions == null ||
+                trainingSessions.Count == 0)
+            {
+                Cursor = Cursors.WaitCursor;
+                Task.Run(StartTestManager);
+            }
         }
 
         private void sesssionList_DoubleClick(object sender, EventArgs e)
@@ -163,5 +198,10 @@ namespace QLearningMaze.Ui.Forms
                 useSessionButton_Click(sender, e);
             }
         }
+    }
+
+    public class TrainingSessionEx : TrainingSession
+    {
+        public bool Succeeded { get; set;}
     }
 }
