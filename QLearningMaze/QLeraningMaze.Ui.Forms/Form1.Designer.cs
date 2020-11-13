@@ -105,29 +105,30 @@
             this.entryPanel.Controls.Add(this.rowsText);
             this.entryPanel.Controls.Add(this.label1);
             this.entryPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.entryPanel.Location = new System.Drawing.Point(0, 40);
-            this.entryPanel.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.entryPanel.Location = new System.Drawing.Point(0, 24);
+            this.entryPanel.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.entryPanel.Name = "entryPanel";
-            this.entryPanel.Size = new System.Drawing.Size(1775, 277);
+            this.entryPanel.Size = new System.Drawing.Size(956, 130);
             this.entryPanel.TabIndex = 0;
             // 
             // rewardsButton
             // 
             this.rewardsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.rewardsButton.Location = new System.Drawing.Point(1601, 211);
+            this.rewardsButton.Location = new System.Drawing.Point(862, 99);
+            this.rewardsButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.rewardsButton.Name = "rewardsButton";
-            this.rewardsButton.Size = new System.Drawing.Size(150, 46);
+            this.rewardsButton.Size = new System.Drawing.Size(81, 22);
             this.rewardsButton.TabIndex = 12;
-            this.rewardsButton.Text = "Rewards";
+            this.rewardsButton.Text = "Objectives";
             this.rewardsButton.UseVisualStyleBackColor = true;
             this.rewardsButton.Click += new System.EventHandler(this.rewardsButton_Click);
             // 
             // clearObstructionsButton
             // 
-            this.clearObstructionsButton.Location = new System.Drawing.Point(1187, 211);
-            this.clearObstructionsButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.clearObstructionsButton.Location = new System.Drawing.Point(639, 99);
+            this.clearObstructionsButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.clearObstructionsButton.Name = "clearObstructionsButton";
-            this.clearObstructionsButton.Size = new System.Drawing.Size(150, 47);
+            this.clearObstructionsButton.Size = new System.Drawing.Size(81, 22);
             this.clearObstructionsButton.TabIndex = 11;
             this.clearObstructionsButton.TabStop = false;
             this.clearObstructionsButton.Text = "Clear All";
@@ -137,10 +138,10 @@
             // 
             // removeObstructionButton
             // 
-            this.removeObstructionButton.Location = new System.Drawing.Point(1187, 160);
-            this.removeObstructionButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.removeObstructionButton.Location = new System.Drawing.Point(639, 75);
+            this.removeObstructionButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.removeObstructionButton.Name = "removeObstructionButton";
-            this.removeObstructionButton.Size = new System.Drawing.Size(150, 47);
+            this.removeObstructionButton.Size = new System.Drawing.Size(81, 22);
             this.removeObstructionButton.TabIndex = 11;
             this.removeObstructionButton.TabStop = false;
             this.removeObstructionButton.Text = "Remove";
@@ -155,11 +156,11 @@
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.betweenText);
-            this.groupBox1.Location = new System.Drawing.Point(1187, 13);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.groupBox1.Location = new System.Drawing.Point(639, 6);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.groupBox1.Size = new System.Drawing.Size(470, 124);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.groupBox1.Size = new System.Drawing.Size(253, 58);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Add Obstruction";
@@ -167,10 +168,10 @@
             // 
             // addObstructionButton
             // 
-            this.addObstructionButton.Location = new System.Drawing.Point(336, 45);
-            this.addObstructionButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.addObstructionButton.Location = new System.Drawing.Point(181, 21);
+            this.addObstructionButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.addObstructionButton.Name = "addObstructionButton";
-            this.addObstructionButton.Size = new System.Drawing.Size(102, 47);
+            this.addObstructionButton.Size = new System.Drawing.Size(55, 22);
             this.addObstructionButton.TabIndex = 10;
             this.addObstructionButton.Text = "Add";
             this.addObstructionButton.UseVisualStyleBackColor = true;
@@ -178,39 +179,39 @@
             // 
             // andText
             // 
-            this.andText.Location = new System.Drawing.Point(264, 47);
-            this.andText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.andText.Location = new System.Drawing.Point(142, 22);
+            this.andText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.andText.Name = "andText";
-            this.andText.Size = new System.Drawing.Size(58, 39);
+            this.andText.Size = new System.Drawing.Size(33, 23);
             this.andText.TabIndex = 9;
             this.andText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(202, 51);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Location = new System.Drawing.Point(109, 24);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(54, 32);
+            this.label10.Size = new System.Drawing.Size(27, 15);
             this.label10.TabIndex = 0;
             this.label10.Text = "and";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(20, 51);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Location = new System.Drawing.Point(11, 24);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(106, 32);
+            this.label9.Size = new System.Drawing.Size(52, 15);
             this.label9.TabIndex = 0;
             this.label9.Text = "Between";
             // 
             // betweenText
             // 
-            this.betweenText.Location = new System.Drawing.Point(134, 47);
-            this.betweenText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.betweenText.Location = new System.Drawing.Point(72, 22);
+            this.betweenText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.betweenText.Name = "betweenText";
-            this.betweenText.Size = new System.Drawing.Size(58, 39);
+            this.betweenText.Size = new System.Drawing.Size(33, 23);
             this.betweenText.TabIndex = 8;
             this.betweenText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -223,11 +224,11 @@
             this.obstructionsList.GridLines = true;
             this.obstructionsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.obstructionsList.HideSelection = false;
-            this.obstructionsList.Location = new System.Drawing.Point(864, 13);
-            this.obstructionsList.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.obstructionsList.Location = new System.Drawing.Point(465, 6);
+            this.obstructionsList.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.obstructionsList.MultiSelect = false;
             this.obstructionsList.Name = "obstructionsList";
-            this.obstructionsList.Size = new System.Drawing.Size(262, 260);
+            this.obstructionsList.Size = new System.Drawing.Size(143, 124);
             this.obstructionsList.TabIndex = 3;
             this.obstructionsList.TabStop = false;
             this.obstructionsList.UseCompatibleStateImageBehavior = false;
@@ -248,10 +249,10 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(709, 13);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Location = new System.Drawing.Point(382, 6);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(149, 32);
+            this.label8.Size = new System.Drawing.Size(75, 15);
             this.label8.TabIndex = 2;
             this.label8.Text = "Obstructions";
             this.label8.Visible = false;
@@ -259,19 +260,19 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(297, 196);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(160, 92);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(199, 32);
+            this.label7.Size = new System.Drawing.Size(98, 15);
             this.label7.TabIndex = 0;
             this.label7.Text = "Training Episodes";
             // 
             // trainingEpisodesText
             // 
-            this.trainingEpisodesText.Location = new System.Drawing.Point(500, 196);
-            this.trainingEpisodesText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.trainingEpisodesText.Location = new System.Drawing.Point(269, 92);
+            this.trainingEpisodesText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.trainingEpisodesText.Name = "trainingEpisodesText";
-            this.trainingEpisodesText.Size = new System.Drawing.Size(97, 39);
+            this.trainingEpisodesText.Size = new System.Drawing.Size(54, 23);
             this.trainingEpisodesText.TabIndex = 6;
             this.trainingEpisodesText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.trainingEpisodesText.Leave += new System.EventHandler(this.trainingEpisodesText_Leave);
@@ -279,19 +280,19 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(318, 17);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(171, 8);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(162, 32);
+            this.label6.Size = new System.Drawing.Size(80, 15);
             this.label6.TabIndex = 0;
             this.label6.Text = "Discount Rate";
             // 
             // discountRateText
             // 
-            this.discountRateText.Location = new System.Drawing.Point(539, 13);
-            this.discountRateText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.discountRateText.Location = new System.Drawing.Point(290, 6);
+            this.discountRateText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.discountRateText.Name = "discountRateText";
-            this.discountRateText.Size = new System.Drawing.Size(58, 39);
+            this.discountRateText.Size = new System.Drawing.Size(33, 23);
             this.discountRateText.TabIndex = 4;
             this.discountRateText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.discountRateText.Leave += new System.EventHandler(this.discountRateText_Leave);
@@ -299,19 +300,19 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(318, 75);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(171, 35);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(160, 32);
+            this.label5.Size = new System.Drawing.Size(79, 15);
             this.label5.TabIndex = 0;
             this.label5.Text = "Learning Rate";
             // 
             // learningRateText
             // 
-            this.learningRateText.Location = new System.Drawing.Point(539, 70);
-            this.learningRateText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.learningRateText.Location = new System.Drawing.Point(290, 33);
+            this.learningRateText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.learningRateText.Name = "learningRateText";
-            this.learningRateText.Size = new System.Drawing.Size(58, 39);
+            this.learningRateText.Size = new System.Drawing.Size(33, 23);
             this.learningRateText.TabIndex = 5;
             this.learningRateText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.learningRateText.Leave += new System.EventHandler(this.learningRateText_Leave);
@@ -319,19 +320,19 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 139);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(7, 65);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(153, 32);
+            this.label4.Size = new System.Drawing.Size(77, 15);
             this.label4.TabIndex = 0;
             this.label4.Text = "Start Position";
             // 
             // startPositionText
             // 
-            this.startPositionText.Location = new System.Drawing.Point(195, 139);
-            this.startPositionText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.startPositionText.Location = new System.Drawing.Point(105, 65);
+            this.startPositionText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.startPositionText.Name = "startPositionText";
-            this.startPositionText.Size = new System.Drawing.Size(58, 39);
+            this.startPositionText.Size = new System.Drawing.Size(33, 23);
             this.startPositionText.TabIndex = 2;
             this.startPositionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.startPositionText.Leave += new System.EventHandler(this.startPositionText_Leave);
@@ -339,29 +340,29 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 196);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(7, 92);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(153, 32);
+            this.label3.Size = new System.Drawing.Size(77, 15);
             this.label3.TabIndex = 0;
             this.label3.Text = "Goal Position";
             // 
             // goalPositionText
             // 
-            this.goalPositionText.Location = new System.Drawing.Point(195, 196);
-            this.goalPositionText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.goalPositionText.Location = new System.Drawing.Point(105, 92);
+            this.goalPositionText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.goalPositionText.Name = "goalPositionText";
-            this.goalPositionText.Size = new System.Drawing.Size(58, 39);
+            this.goalPositionText.Size = new System.Drawing.Size(33, 23);
             this.goalPositionText.TabIndex = 3;
             this.goalPositionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.goalPositionText.Leave += new System.EventHandler(this.goalPositionText_Leave);
             // 
             // columnsText
             // 
-            this.columnsText.Location = new System.Drawing.Point(195, 70);
-            this.columnsText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.columnsText.Location = new System.Drawing.Point(105, 33);
+            this.columnsText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.columnsText.Name = "columnsText";
-            this.columnsText.Size = new System.Drawing.Size(58, 39);
+            this.columnsText.Size = new System.Drawing.Size(33, 23);
             this.columnsText.TabIndex = 1;
             this.columnsText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnsText.Leave += new System.EventHandler(this.columnsText_Leave);
@@ -369,19 +370,19 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 70);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(7, 33);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(108, 32);
+            this.label2.Size = new System.Drawing.Size(55, 15);
             this.label2.TabIndex = 0;
             this.label2.Text = "Columns";
             // 
             // rowsText
             // 
-            this.rowsText.Location = new System.Drawing.Point(195, 13);
-            this.rowsText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.rowsText.Location = new System.Drawing.Point(105, 6);
+            this.rowsText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.rowsText.Name = "rowsText";
-            this.rowsText.Size = new System.Drawing.Size(58, 39);
+            this.rowsText.Size = new System.Drawing.Size(33, 23);
             this.rowsText.TabIndex = 0;
             this.rowsText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.rowsText.Leave += new System.EventHandler(this.rowsText_Leave);
@@ -389,10 +390,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(7, 6);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 32);
+            this.label1.Size = new System.Drawing.Size(35, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Rows";
             // 
@@ -402,19 +403,19 @@
             this.panel2.Controls.Add(this.mazeSpace);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 317);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.panel2.Location = new System.Drawing.Point(0, 154);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1775, 622);
+            this.panel2.Size = new System.Drawing.Size(956, 286);
             this.panel2.TabIndex = 1;
             // 
             // rewardsLabel
             // 
             this.rewardsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.rewardsLabel.Location = new System.Drawing.Point(1073, 11);
-            this.rewardsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rewardsLabel.Location = new System.Drawing.Point(578, 5);
+            this.rewardsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.rewardsLabel.Name = "rewardsLabel";
-            this.rewardsLabel.Size = new System.Drawing.Size(678, 41);
+            this.rewardsLabel.Size = new System.Drawing.Size(365, 19);
             this.rewardsLabel.TabIndex = 16;
             this.rewardsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -423,10 +424,10 @@
             this.mazeSpace.AutoScroll = true;
             this.mazeSpace.BackColor = System.Drawing.SystemColors.ControlDark;
             this.mazeSpace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mazeSpace.Location = new System.Drawing.Point(0, 66);
-            this.mazeSpace.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.mazeSpace.Location = new System.Drawing.Point(0, 31);
+            this.mazeSpace.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.mazeSpace.Name = "mazeSpace";
-            this.mazeSpace.Size = new System.Drawing.Size(1775, 556);
+            this.mazeSpace.Size = new System.Drawing.Size(956, 255);
             this.mazeSpace.TabIndex = 0;
             this.mazeSpace.TabStop = false;
             // 
@@ -436,17 +437,17 @@
             this.panel3.Controls.Add(this.runMazeButton);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.panel3.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1775, 66);
+            this.panel3.Size = new System.Drawing.Size(956, 31);
             this.panel3.TabIndex = 12;
             // 
             // trainMazeButton
             // 
-            this.trainMazeButton.Location = new System.Drawing.Point(11, 11);
-            this.trainMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.trainMazeButton.Location = new System.Drawing.Point(6, 5);
+            this.trainMazeButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.trainMazeButton.Name = "trainMazeButton";
-            this.trainMazeButton.Size = new System.Drawing.Size(150, 47);
+            this.trainMazeButton.Size = new System.Drawing.Size(81, 22);
             this.trainMazeButton.TabIndex = 15;
             this.trainMazeButton.Text = "Train";
             this.trainMazeButton.UseVisualStyleBackColor = true;
@@ -454,10 +455,10 @@
             // 
             // runMazeButton
             // 
-            this.runMazeButton.Location = new System.Drawing.Point(180, 11);
-            this.runMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.runMazeButton.Location = new System.Drawing.Point(97, 5);
+            this.runMazeButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.runMazeButton.Name = "runMazeButton";
-            this.runMazeButton.Size = new System.Drawing.Size(150, 47);
+            this.runMazeButton.Size = new System.Drawing.Size(81, 22);
             this.runMazeButton.TabIndex = 15;
             this.runMazeButton.Text = "Run Maze";
             this.runMazeButton.UseVisualStyleBackColor = true;
@@ -472,7 +473,8 @@
             this.mazeStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1775, 40);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(3, 1, 0, 1);
+            this.menuStrip1.Size = new System.Drawing.Size(956, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -483,25 +485,25 @@
             this.openMenuItem,
             this.exitMenuItem});
             this.fileMenuItem.Name = "fileMenuItem";
-            this.fileMenuItem.Size = new System.Drawing.Size(71, 36);
+            this.fileMenuItem.Size = new System.Drawing.Size(37, 22);
             this.fileMenuItem.Text = "&File";
             // 
             // saveMenuItem
             // 
             this.saveMenuItem.Name = "saveMenuItem";
-            this.saveMenuItem.Size = new System.Drawing.Size(206, 44);
+            this.saveMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveMenuItem.Text = "Save";
             // 
             // openMenuItem
             // 
             this.openMenuItem.Name = "openMenuItem";
-            this.openMenuItem.Size = new System.Drawing.Size(206, 44);
+            this.openMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openMenuItem.Text = "&Open";
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(206, 44);
+            this.exitMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitMenuItem.Text = "E&xit";
             // 
             // viewStripMenuItem
@@ -510,19 +512,19 @@
             this.qualityMenuItem,
             this.rewardsMenuItem});
             this.viewStripMenuItem.Name = "viewStripMenuItem";
-            this.viewStripMenuItem.Size = new System.Drawing.Size(85, 36);
+            this.viewStripMenuItem.Size = new System.Drawing.Size(44, 22);
             this.viewStripMenuItem.Text = "&View";
             // 
             // qualityMenuItem
             // 
             this.qualityMenuItem.Name = "qualityMenuItem";
-            this.qualityMenuItem.Size = new System.Drawing.Size(296, 44);
+            this.qualityMenuItem.Size = new System.Drawing.Size(148, 22);
             this.qualityMenuItem.Text = "Quality Table";
             // 
             // rewardsMenuItem
             // 
             this.rewardsMenuItem.Name = "rewardsMenuItem";
-            this.rewardsMenuItem.Size = new System.Drawing.Size(296, 44);
+            this.rewardsMenuItem.Size = new System.Drawing.Size(148, 22);
             this.rewardsMenuItem.Text = "Rewards Table";
             // 
             // mazeStripMenuItem
@@ -532,37 +534,37 @@
             this.runMazeStripMenuItem,
             this.qualityStripMenuItem});
             this.mazeStripMenuItem.Name = "mazeStripMenuItem";
-            this.mazeStripMenuItem.Size = new System.Drawing.Size(92, 36);
+            this.mazeStripMenuItem.Size = new System.Drawing.Size(47, 22);
             this.mazeStripMenuItem.Text = "&Maze";
             // 
             // trainStripMenuItem
             // 
             this.trainStripMenuItem.Name = "trainStripMenuItem";
-            this.trainStripMenuItem.Size = new System.Drawing.Size(294, 44);
+            this.trainStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.trainStripMenuItem.Text = "&Train";
             // 
             // runMazeStripMenuItem
             // 
             this.runMazeStripMenuItem.Name = "runMazeStripMenuItem";
-            this.runMazeStripMenuItem.Size = new System.Drawing.Size(294, 44);
+            this.runMazeStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.runMazeStripMenuItem.Text = "&Run Maze";
             // 
             // qualityStripMenuItem
             // 
             this.qualityStripMenuItem.Name = "qualityStripMenuItem";
-            this.qualityStripMenuItem.Size = new System.Drawing.Size(294, 44);
+            this.qualityStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.qualityStripMenuItem.Text = "Select &Quality";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1775, 939);
+            this.ClientSize = new System.Drawing.Size(956, 440);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.entryPanel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

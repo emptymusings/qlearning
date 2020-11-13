@@ -141,6 +141,7 @@ namespace QLearningMaze.Ui.Forms
             this.Refresh();
             _maze.Train();
             EnableControls(true);
+            this.DialogResult = DialogResult.OK;
             return Task.CompletedTask;
         }
 
