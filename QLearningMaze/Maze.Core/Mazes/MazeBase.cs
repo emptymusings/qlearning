@@ -26,7 +26,6 @@ namespace QLearningMaze.Core.Mazes
         protected bool _observationSpaceInitialized = false;
         protected int _numberOfActions = 5;
         protected int _backtrackPunishment = -3;
-        private List<AdditionalReward> _tempAdditionalRewards;
         
         protected int _additionalRewardsReceived = 0;
 
@@ -123,7 +122,7 @@ namespace QLearningMaze.Core.Mazes
         /// <summary>
         /// Gets or Sets the episode interval between saving quality and run information during training
         /// </summary>
-        public int SaveEpisodes { get; set; } = 10;
+        public int SaveEpisodes { get; set; } = 50;
         /// <summary>
         /// Gets the count of actions available for the observation space
         /// </summary>
@@ -222,10 +221,13 @@ namespace QLearningMaze.Core.Mazes
                 CreateObservationSpace();
             }
 
-            // Order custom rewards.  This will be necessary to assign position
+            // Order custom rewards.  This will be necessary to assign reward value to a single state to prevent improper/repeated assignment 
+            // of quality in the Q-Table
             var orderedRewards = AdditionalRewards
                 .OrderByDescending(proximity => (
-                    (proximity.Position > StartPosition ? proximity.Position - StartPosition : StartPosition - proximity.Position) * _movementValue) + proximity.Value
+                    (proximity.Position > StartPosition ? 
+                        proximity.Position - StartPosition : 
+                        StartPosition - proximity.Position) * _movementValue) + proximity.Value
                 );
 
             for (int i = 0; i < NumberOfStates; ++i)
