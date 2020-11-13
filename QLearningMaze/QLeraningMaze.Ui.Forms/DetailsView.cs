@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
+using QLearningMaze.Core.Mazes;
 
 namespace QLearningMaze.Ui.Forms
 {
@@ -33,7 +34,7 @@ namespace QLearningMaze.Ui.Forms
 
             for (int i = 0; i < values[i].Length; ++i)
             {
-                dt.Columns.Add(i.ToString());
+                dt.Columns.Add(((Actions)i).ToString());
             }
 
             // Add row number column

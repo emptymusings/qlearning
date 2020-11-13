@@ -7,27 +7,21 @@
 
     public class MazeUtilities
     {
-        public static void SaveMaze(string saveToPath, object objectToSave)
+        public static readonly string TRAINING_SESSIONS_DIRECTORY = Directory.GetCurrentDirectory() + $@"\TrainingSessions\";
+
+        public static void SaveObject(string saveToPath, object objectToSave)
         {
             string json = JsonConvert.SerializeObject(objectToSave);
             File.WriteAllText(saveToPath, json);
         }
 
-        public static UserDefinedMaze LoadMaze(string loadFromPath)
+        public static T LoadObject<T>(string loadFromPath)
         {
-            UserDefinedMaze loaded = JsonConvert.DeserializeObject<UserDefinedMaze>(File.ReadAllText(loadFromPath));
+            T loaded = JsonConvert.DeserializeObject<T>(File.ReadAllText(loadFromPath));
 
             //AddObstructions(loaded);
 
             return loaded;
-        }
-
-        private static void AddObstructions(UserDefinedMaze maze)
-        {
-            foreach (var obstruction in maze.Obstructions)
-            {
-                maze.AddWall(obstruction.BetweenSpace, obstruction.AndSpace);
-            }
         }
     }
 }

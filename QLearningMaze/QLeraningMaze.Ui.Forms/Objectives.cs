@@ -9,11 +9,11 @@ using System.Windows.Forms;
 
 namespace QLearningMaze.Ui.Forms
 {
-    public partial class Rewards : Form
+    public partial class Objectives : Form
     {
         private IMaze _maze;
 
-        public Rewards(IMaze maze)
+        public Objectives(IMaze maze)
         {
             InitializeComponent();
             _maze = maze;

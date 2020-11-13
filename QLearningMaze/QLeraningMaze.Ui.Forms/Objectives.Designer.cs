@@ -1,0 +1,215 @@
+﻿namespace QLearningMaze.Ui.Forms
+{
+    partial class Objectives
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.addButton = new System.Windows.Forms.Button();
+            this.valueText = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.positionText = new System.Windows.Forms.TextBox();
+            this.removeButton = new System.Windows.Forms.Button();
+            this.clearButton = new System.Windows.Forms.Button();
+            this.rewardsList = new System.Windows.Forms.ListView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.okButton = new System.Windows.Forms.Button();
+            this.groupBox1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Position";
+            this.columnHeader1.Width = 130;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Value";
+            this.columnHeader2.Width = 90;
+            // 
+            // addButton
+            // 
+            this.addButton.Location = new System.Drawing.Point(190, 21);
+            this.addButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(55, 22);
+            this.addButton.TabIndex = 2;
+            this.addButton.Text = "Add";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            // 
+            // valueText
+            // 
+            this.valueText.Location = new System.Drawing.Point(151, 22);
+            this.valueText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.valueText.Name = "valueText";
+            this.valueText.Size = new System.Drawing.Size(33, 23);
+            this.valueText.TabIndex = 1;
+            this.valueText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(108, 23);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 15);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Value";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 24);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(50, 15);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Position";
+            // 
+            // positionText
+            // 
+            this.positionText.Location = new System.Drawing.Point(72, 22);
+            this.positionText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.positionText.Name = "positionText";
+            this.positionText.Size = new System.Drawing.Size(33, 23);
+            this.positionText.TabIndex = 0;
+            this.positionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // removeButton
+            // 
+            this.removeButton.Location = new System.Drawing.Point(12, 140);
+            this.removeButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.removeButton.Name = "removeButton";
+            this.removeButton.Size = new System.Drawing.Size(81, 22);
+            this.removeButton.TabIndex = 11;
+            this.removeButton.TabStop = false;
+            this.removeButton.Text = "Remove";
+            this.removeButton.UseVisualStyleBackColor = true;
+            this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
+            // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(12, 168);
+            this.clearButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(81, 22);
+            this.clearButton.TabIndex = 11;
+            this.clearButton.TabStop = false;
+            this.clearButton.Text = "Clear All";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            // 
+            // rewardsList
+            // 
+            this.rewardsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rewardsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.rewardsList.FullRowSelect = true;
+            this.rewardsList.GridLines = true;
+            this.rewardsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.rewardsList.HideSelection = false;
+            this.rewardsList.Location = new System.Drawing.Point(12, 5);
+            this.rewardsList.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.rewardsList.MultiSelect = false;
+            this.rewardsList.Name = "rewardsList";
+            this.rewardsList.Size = new System.Drawing.Size(237, 124);
+            this.rewardsList.TabIndex = 3;
+            this.rewardsList.TabStop = false;
+            this.rewardsList.UseCompatibleStateImageBehavior = false;
+            this.rewardsList.View = System.Windows.Forms.View.Details;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.addButton);
+            this.groupBox1.Controls.Add(this.valueText);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.positionText);
+            this.groupBox1.Location = new System.Drawing.Point(262, 10);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.groupBox1.Size = new System.Drawing.Size(255, 58);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Add Reward";
+            // 
+            // okButton
+            // 
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.Location = new System.Drawing.Point(447, 170);
+            this.okButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(81, 22);
+            this.okButton.TabIndex = 3;
+            this.okButton.Text = "Done";
+            this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            // 
+            // Objectives
+            // 
+            this.AcceptButton = this.okButton;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(535, 197);
+            this.Controls.Add(this.okButton);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.rewardsList);
+            this.Controls.Add(this.clearButton);
+            this.Controls.Add(this.removeButton);
+            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.Name = "Objectives";
+            this.Text = "Objectives";
+            this.Shown += new System.EventHandler(this.Rewards_Shown);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.TextBox valueText;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox positionText;
+        private System.Windows.Forms.Button removeButton;
+        private System.Windows.Forms.Button clearButton;
+        private System.Windows.Forms.ListView rewardsList;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button okButton;
+    }
+}
