@@ -97,8 +97,8 @@ namespace QLearningMaze.Core
         int SaveEpisodes { get; set; }
 
 
-        int GetNextState(int currentState, int action, bool isTraining = true);
-        int GetNextState(int currentState, Actions action, bool isTraining);
+        int GetNextState(int currentState, int action);
+        int GetNextState(int currentState, Actions action);
         void AddWall(int betweenSpace, int andSpace);
         void RemoveWall(int betweenSpace, int andSpace);
         void AddCustomReward(int position, double reward);
