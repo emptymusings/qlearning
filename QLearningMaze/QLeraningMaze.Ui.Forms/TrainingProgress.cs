@@ -14,41 +14,73 @@ namespace QLearningMaze.Ui.Forms
     {
         private IMaze _maze;
         private bool _trainingInProgress = false;
+        int _successfulRuns = 0;
+        double _averageMoves = 0;
+        double _averageScore = 0;
+        double _totalMoves = 0;
+        double _totalScore = 0;
+        double _percentComplete = 0;
+
         private int _showEvery = 2500;
         private MazeSpace _mazeSpace;
-        private int _movementPause = 250;
+        private int _movementPause = 100;
         private int _runEpochs = 0;
 
         private delegate void EnableControlsHandler(bool value);
         private delegate void UpdateTextHandler(string withValue);
+        private delegate void UpdateLabelHandler(string newText);
 
         public TrainingProgress(IMaze maze)
         {
             InitializeComponent();
             _maze = maze;
-            _maze.TrainingEpochCompletedEventHandler += _maze_TrainingEpochCompletedEventHandler;
+            _maze.TrainingEpisodeCompletedEventHandler += _maze_TrainingEpisodeCompletedEventHandler;
+            _totalMoves = 0;
+            _totalScore = 0;
+            _averageMoves = 0;
+            _averageScore = 0;
         }
 
-        private void _maze_TrainingEpochCompletedEventHandler(object sender, TrainingEpochCompletedEventArgs e)
+        private void _maze_TrainingEpisodeCompletedEventHandler(object sender, TrainingEpisodeCompletedEventArgs e)
         {
-            if (!e.Success) return;
-            string message = $"Completed {e.CurrentEpoch.ToString("#,##0")} of {e.TotalEpochs.ToString("#,##0")} epochs in {e.TotalMoves.ToString("#,##0")} moves. Agent {(e.Success ? "Succeeded" : "Failed")}";
-
-            _runEpochs++;
-
-            if (_runEpochs % _showEvery == 0)
+            //UpdateText(message);
+            if (e.Success)
             {
-                RenderTraining();
+                _successfulRuns++;
+
+                _totalMoves += e.TotalMoves;
+                _totalScore += e.TotalScore;
+
+                _averageMoves = _totalMoves / _successfulRuns;
+                _averageScore = _totalScore / _successfulRuns;
             }
 
-            UpdateText(message);
+            _runEpochs++;
+            _percentComplete = (double)e.CurrentEpisode / (double)e.TotalEpisodes;
+
+            if (e.CurrentEpisode % trainingProgressBar.Step == 0)
+            {
+                string message = $"Episode: {e.CurrentEpisode.ToString("#,##0")} | " +
+                    $"Avg Moves: {_averageMoves.ToString("#,##0")} | " +
+                    $"Avg Score: {_averageScore.ToString("#,##0")} | " +
+                    $"{_percentComplete.ToString("0%")} Complete";
+
+                UpdateLabel(message);
+                UpdateProgressBar();
+            }
+
+            if (_runEpochs % _showEvery == 0 && 
+                _runEpochs != _maze.MaxEpisodes)
+            {
+                //RenderTraining();
+            }
         }
+
 
         private void RenderTraining()
         {
             _mazeSpace = new MazeSpace();
             _mazeSpace.CreateMazeControls(_maze);
-            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
             Form frm = new Form();
             frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);
             frm.Controls.Add(_mazeSpace);
@@ -57,11 +89,22 @@ namespace QLearningMaze.Ui.Forms
             frm.Show();
             frm.WindowState = FormWindowState.Maximized;
             frm.FormBorderStyle = FormBorderStyle.None;
+            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
 
-            _maze.RunMaze();
-
-            frm.Close();
-            _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+            try
+            {                
+                _maze.RunMaze();
+            }
+            catch 
+            {
+                //MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                frm.Dispose();
+                _mazeSpace.Dispose();
+                _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+            }
         }
 
         private void _maze_AgentStateChangedEventHandler(object sender, AgentStateChangedEventArgs e)
@@ -82,19 +125,23 @@ namespace QLearningMaze.Ui.Forms
                 _mazeSpace.Invalidate();
                 newSpace.Refresh();
                 System.Threading.Thread.Sleep(_movementPause);
+                Application.DoEvents();
             }
         }
 
         private void closeButton_Click(object sender, EventArgs e)
         {
+            _maze.TrainingEpisodeCompletedEventHandler -= _maze_TrainingEpisodeCompletedEventHandler;
             this.Close();
         }
 
         private Task TrainingTask()
         {
             EnableControls(false);
+            this.Refresh();
             _maze.Train();
             EnableControls(true);
+            this.DialogResult = DialogResult.OK;
             return Task.CompletedTask;
         }
 
@@ -123,9 +170,32 @@ namespace QLearningMaze.Ui.Forms
             }
         }
 
+        private void UpdateLabel(string newText)
+        {
+            if (progressLabel.InvokeRequired)
+            {
+                progressLabel.BeginInvoke(new UpdateLabelHandler(UpdateLabel), newText);
+            }
+            else
+            {
+                progressLabel.Text = newText;
+                progressLabel.Refresh();
+            }
+        }
+
+        private void UpdateProgressBar()
+        {
+            trainingProgressBar.PerformStep();
+        }
+
         private void TrainingProgress_Shown(object sender, EventArgs e)
         {
+
+            trainingProgressBar.Maximum = _maze.MaxEpisodes;
+            trainingProgressBar.Value = 0;
+            trainingProgressBar.Step = 1;
             TrainingTask();
         }
+
     }
 }

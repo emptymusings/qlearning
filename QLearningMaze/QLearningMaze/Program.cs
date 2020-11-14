@@ -2,7 +2,8 @@
 {
     using System;
     using System.IO;
-    using Core;
+    using QLearningMaze.Core;
+    using QLearningMaze.Core.Mazes;
 
     class QLearningMazeProgram
     {
@@ -62,7 +63,7 @@
             maze.GoalPosition = PromptPosition(maze.Rows * maze.Columns, "goal", maze.GoalPosition);
             maze.DiscountRate = PromptRate(maze.DiscountRate, "discount");
             maze.LearningRate = PromptRate(maze.LearningRate, "learning");
-            maze.MaxEpochs = PromptEpochs(maze.MaxEpochs);
+            maze.MaxEpisodes = PromptEpisodes(maze.MaxEpisodes);
 
             PromptWalls(maze);
 
@@ -83,7 +84,7 @@
             }
             else
             {
-                IMaze maze = MazeUtilities.LoadMaze(mazeName);
+                IMaze maze = MazeUtilities.LoadObject<UserDefinedMaze>(mazeName);
                 string response;
 
                 Console.Write("Do you want to make modifications to the maze (Y/N)? ");
@@ -105,12 +106,6 @@
         static void TrainMaze(IMaze maze)
         {
             maze.Train();
-            Console.WriteLine();
-
-            Console.WriteLine("Quality matrix: ");
-            maze.PrintQuality();
-
-            Console.WriteLine();
             Console.WriteLine();
         }
 
@@ -176,7 +171,7 @@
             return result;
         }
 
-        static int PromptEpochs(int defaultValue)
+        static int PromptEpisodes(int defaultValue)
         {
             bool invalidEntry = false;
             int result = defaultValue;
@@ -199,7 +194,7 @@
             if (invalidEntry)
             {
                 Console.WriteLine($"'{entry}' is not a valid entry");
-                return PromptEpochs(defaultValue);
+                return PromptEpisodes(defaultValue);
             }
 
             return result;
@@ -251,7 +246,7 @@
             {
                 var wallInfo = PromptWallInfo();
 
-                maze.AddWall(wallInfo.betweenSpace, wallInfo.andSpace);
+                maze.AddObstruction(wallInfo.betweenSpace, wallInfo.andSpace);
 
                 PromptWalls(maze);
             }
@@ -297,7 +292,7 @@
                     if (!name.EndsWith(".maze"))
                         name += ".maze";
 
-                    MazeUtilities.SaveMaze(name, maze);
+                    MazeUtilities.SaveObject(name, maze);
                 }
             }
         }
