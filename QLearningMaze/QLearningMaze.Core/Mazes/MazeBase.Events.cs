@@ -27,13 +27,13 @@ namespace QLearningMaze.Core.Mazes
         public event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompletedEventHandler;
         public event EventHandler<AgentCompletedMazeEventArgs> AgentCompletedMazeEventHandler;
 
-        protected virtual void OnObservationSpaceCreatingEventHandler()
+        protected virtual void OnObservationSpaceCreating()
         {
             EventHandler handler = ObservationSpaceCreatingEventHandler;
             handler?.Invoke(this, new EventArgs());
         }
 
-        protected virtual void OnObservationSpaceCreatedEventhHandler()
+        protected virtual void OnObservationSpaceCreated()
         {
             EventHandler handler = ObservationSpaceCreatedEventHandler;
             handler?.Invoke(this, new EventArgs());

@@ -22,14 +22,14 @@
 
         }
 
-        protected override void CreateObservationSpace()
+        protected override void InitializeObservationSpace()
         {
-            base.CreateObservationSpace();
-            AddWall(0, 1);
-            AddWall(1, 2);
-            AddWall(4, 5);
-            AddWall(6, 10);
-            AddWall(10, 11);
+            base.InitializeObservationSpace();
+            AddObstruction(0, 1);
+            AddObstruction(1, 2);
+            AddObstruction(4, 5);
+            AddObstruction(6, 10);
+            AddObstruction(10, 11);
         }
     }
 }

@@ -94,13 +94,13 @@ namespace QLearningMaze.Core
         /// <summary>
         /// Gets or Sets the episode interval between saving quality and run information during training
         /// </summary>
-        int SaveEpisodes { get; set; }
+        int SaveQualityFrequency { get; set; }
 
 
         int GetNextState(int currentState, int action);
         int GetNextState(int currentState, Actions action);
-        void AddWall(int betweenSpace, int andSpace);
-        void RemoveWall(int betweenSpace, int andSpace);
+        void AddObstruction(int betweenSpace, int andSpace);
+        void RemoveObstruction(int betweenSpace, int andSpace);
         void AddCustomReward(int position, double reward);
         void RemoveCustomReward(int position);
         IEnumerable<AdditionalReward> GetAdditionalRewards();

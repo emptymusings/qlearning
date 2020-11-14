@@ -65,10 +65,10 @@ namespace QLearningMaze.Ui.Forms
 
                 foreach (var session in trainingSessions)
                 {
-                    ListViewItem lvi = new ListViewItem(session.Episode.ToString());
+                    ListViewItem lvi = new ListViewItem(session.MinEpisode.ToString());
+                    lvi.SubItems.Add(session.MaxEpisode.ToString());
                     lvi.SubItems.Add(session.Moves.ToString("#,##0"));
                     lvi.SubItems.Add(session.Score.ToString("#,##0.##"));
-                    lvi.SubItems.Add(session.Succeeded.ToString());
                     sesssionList.Items.Add(lvi);
                 }
 
@@ -99,7 +99,7 @@ namespace QLearningMaze.Ui.Forms
 
         private Task RunTests()
         {
-            var sessions = TrainingSession.GetTrainingSessions().ToList();
+            var sessions = TrainingSession.GetTrainingSessions().OrderBy(e => e.Episode).ToList();
             var maze = GetTestMaze();
 
             for (int i = sessions.Count - 1; i >= 0; --i)
@@ -145,6 +145,8 @@ namespace QLearningMaze.Ui.Forms
                 })
                 .Select(s => new TrainingSessionEx()
                 {
+                    MinEpisode = s.Last().Episode,
+                    MaxEpisode = s.First().Episode,
                     Episode = s.Last().Episode,
                     Moves = s.Key.Moves,
                     Score = s.Key.Score,
@@ -152,7 +154,7 @@ namespace QLearningMaze.Ui.Forms
                     Quality = s.Last().Quality
                 });
 
-            trainingSessions = selection.OrderBy(e => e.Episode).ToList();
+            trainingSessions = selection.OrderBy(e => e.MinEpisode).ToList();
             SelectedSession = trainingSessions.FirstOrDefault();
 
             _isChecking = false;
@@ -202,6 +204,8 @@ namespace QLearningMaze.Ui.Forms
 
     public class TrainingSessionEx : TrainingSession
     {
+        public int MinEpisode { get; set; }
+        public int MaxEpisode { get; set; }
         public bool Succeeded { get; set;}
     }
 }

@@ -195,7 +195,12 @@ namespace QLearningMaze.Ui.Forms
             foreach (var reward in _additionalRewards)
             {
                 var space = GetSpaceByPosition(reward.Position);
-                space.rewardLabel.Text = $"Objective: {reward.Value}";
+                
+                if (reward.Value < 0)
+                    space.rewardLabel.Text = $"Punishment: {reward.Value}";
+                else
+                    space.rewardLabel.Text = $"Reward: {reward.Value}";
+
                 space.rewardLabel.Visible = true;
             }
 
@@ -281,12 +286,12 @@ namespace QLearningMaze.Ui.Forms
             for (int i = _maze.Obstructions.Count - 1; i >= 0; i--)
                 {
                     var wall = _maze.Obstructions[i];
-                    _maze.RemoveWall(wall.BetweenSpace, wall.AndSpace);
+                    _maze.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
                 }
 
             foreach (ListViewItem lvi in obstructionsList.Items)
             {
-                _maze.AddWall(Convert.ToInt32(lvi.Text), Convert.ToInt32(lvi.SubItems[1].Text));
+                _maze.AddObstruction(Convert.ToInt32(lvi.Text), Convert.ToInt32(lvi.SubItems[1].Text));
             }
 
         }
@@ -319,7 +324,7 @@ namespace QLearningMaze.Ui.Forms
             lvi.SubItems.Add(and.ToString());
 
             obstructionsList.Items.Add(lvi);
-            _maze.AddWall(between, and);
+            _maze.AddObstruction(between, and);
             betweenText.Text = null;
             andText.Text = null;
 
@@ -341,7 +346,7 @@ namespace QLearningMaze.Ui.Forms
 
         private void RemoveObstruction(int between, int and)
         {
-            _maze.RemoveWall(between, and);
+            _maze.RemoveObstruction(between, and);
             
             for (int i = obstructionsList.Items.Count - 1; i >= 0; i--)
             {
@@ -365,7 +370,7 @@ namespace QLearningMaze.Ui.Forms
             for (int i = _maze.Obstructions.Count - 1; i >= 0; --i)
             {
                 var wall = _maze.Obstructions[i];
-                _maze.RemoveWall(wall.BetweenSpace, wall.AndSpace);
+                _maze.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
             }
 
             RespawnMaze();

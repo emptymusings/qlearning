@@ -246,7 +246,7 @@
             {
                 var wallInfo = PromptWallInfo();
 
-                maze.AddWall(wallInfo.betweenSpace, wallInfo.andSpace);
+                maze.AddObstruction(wallInfo.betweenSpace, wallInfo.andSpace);
 
                 PromptWalls(maze);
             }
