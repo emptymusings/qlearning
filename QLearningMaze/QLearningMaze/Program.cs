@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-    using Core;
+    using QLearningMaze.Core;
     using QLearningMaze.Core.Mazes;
 
     class QLearningMazeProgram
