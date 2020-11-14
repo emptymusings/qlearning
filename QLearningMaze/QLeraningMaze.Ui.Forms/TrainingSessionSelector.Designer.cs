@@ -34,7 +34,7 @@
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.useSessionButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
             this.SuspendLayout();
             // 
             // sesssionList
@@ -43,18 +43,18 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sesssionList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
             this.columnHeader1,
             this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
+            this.columnHeader3});
             this.sesssionList.FullRowSelect = true;
             this.sesssionList.GridLines = true;
             this.sesssionList.HideSelection = false;
-            this.sesssionList.Location = new System.Drawing.Point(6, 6);
-            this.sesssionList.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.sesssionList.Location = new System.Drawing.Point(11, 13);
+            this.sesssionList.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.sesssionList.MultiSelect = false;
             this.sesssionList.Name = "sesssionList";
-            this.sesssionList.Size = new System.Drawing.Size(375, 227);
+            this.sesssionList.Size = new System.Drawing.Size(693, 480);
             this.sesssionList.TabIndex = 0;
             this.sesssionList.UseCompatibleStateImageBehavior = false;
             this.sesssionList.View = System.Windows.Forms.View.Details;
@@ -63,16 +63,19 @@
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Episode";
-            this.columnHeader1.Width = 100;
+            this.columnHeader1.Name = "columnHeader1";
+            this.columnHeader1.Text = "Max Episode";
+            this.columnHeader1.Width = 120;
             // 
             // columnHeader2
             // 
+            this.columnHeader2.Name = "columnHeader2";
             this.columnHeader2.Text = "Moves";
             this.columnHeader2.Width = 100;
             // 
             // columnHeader3
             // 
+            this.columnHeader3.Name = "columnHeader3";
             this.columnHeader3.Text = "Score";
             this.columnHeader3.Width = 100;
             // 
@@ -80,10 +83,10 @@
             // 
             this.useSessionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.useSessionButton.Enabled = false;
-            this.useSessionButton.Location = new System.Drawing.Point(207, 246);
-            this.useSessionButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.useSessionButton.Location = new System.Drawing.Point(384, 525);
+            this.useSessionButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.useSessionButton.Name = "useSessionButton";
-            this.useSessionButton.Size = new System.Drawing.Size(81, 22);
+            this.useSessionButton.Size = new System.Drawing.Size(150, 47);
             this.useSessionButton.TabIndex = 1;
             this.useSessionButton.Text = "Use";
             this.useSessionButton.UseVisualStyleBackColor = true;
@@ -93,31 +96,33 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.Enabled = false;
-            this.cancelButton.Location = new System.Drawing.Point(299, 246);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.cancelButton.Location = new System.Drawing.Point(555, 525);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(81, 22);
+            this.cancelButton.Size = new System.Drawing.Size(150, 47);
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // columnHeader4
+            // columnHeader5
             // 
-            this.columnHeader4.Text = "Success";
+            this.columnHeader5.Name = "columnHeader5";
+            this.columnHeader5.Text = "Min Episode";
+            this.columnHeader5.Width = 120;
             // 
             // TrainingSessionSelector
             // 
             this.AcceptButton = this.useSessionButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(394, 273);
+            this.ClientSize = new System.Drawing.Size(732, 582);
             this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.useSessionButton);
             this.Controls.Add(this.sesssionList);
-            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TrainingSessionSelector";
@@ -138,6 +143,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Button useSessionButton;
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
     }
 }

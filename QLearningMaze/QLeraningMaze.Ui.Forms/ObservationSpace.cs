@@ -39,7 +39,11 @@
         public void SetReward(bool isReward, double value = 0)
         {
             rewardLabel.Visible = isReward;
-            rewardLabel.Text = $"Objective: {value}";
+
+            if (value < 0)
+                rewardLabel.Text = $"Punishment: {value}";
+            else
+                rewardLabel.Text = $"Reward: {value}";
         }
 
         public void SetPosition(int position)
