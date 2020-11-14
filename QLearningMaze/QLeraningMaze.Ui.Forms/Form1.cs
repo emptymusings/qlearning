@@ -502,7 +502,7 @@ namespace QLearningMaze.Ui.Forms
                 _maze.StartPosition = newStartPosition;
                 GetSpaceByPosition(oldStartPosition).SetStart(false);
                 GetSpaceByPosition(newStartPosition).SetStart(true);
-                _needsRetrain = true;
+                //_needsRetrain = true;
             }
         }
 

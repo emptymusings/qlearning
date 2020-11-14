@@ -154,7 +154,8 @@ namespace QLearningMaze.Ui.Forms
                     Quality = s.Last().Quality
                 });
 
-            trainingSessions = selection.OrderBy(e => e.MinEpisode).ToList();
+            //trainingSessions = selection.OrderBy(e => e.MinEpisode).ToList();
+            trainingSessions = selection.OrderByDescending(s => s.Score).ThenBy(m => m.Moves).ThenBy(e => e.MinEpisode).ToList();
             SelectedSession = trainingSessions.FirstOrDefault();
 
             _isChecking = false;
