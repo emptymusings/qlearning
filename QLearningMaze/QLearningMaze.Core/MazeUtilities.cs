@@ -11,16 +11,13 @@
 
         public static void SaveObject(string saveToPath, object objectToSave)
         {
-            string json = JsonConvert.SerializeObject(objectToSave);
+            string json = JsonConvert.SerializeObject(objectToSave, Formatting.Indented);
             File.WriteAllText(saveToPath, json);
         }
 
         public static T LoadObject<T>(string loadFromPath)
         {
             T loaded = JsonConvert.DeserializeObject<T>(File.ReadAllText(loadFromPath));
-
-            //AddObstructions(loaded);
-
             return loaded;
         }
     }

@@ -653,7 +653,6 @@ namespace QLearningMaze.Core.Mazes
                 Score = TotalRewards,
                 Quality = Quality
             });
-
         }
 
         /// <summary>
