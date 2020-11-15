@@ -6,21 +6,29 @@ namespace QLearning.Core
 {
     public interface IQLearning
     {
-        int[][] StatesTable { get; set; }
-        double[][] RewardsTable { get; set; }
-        double[][] QualityTable { get; set; }
+        event EventHandler<AgentStateChangedEventArgs> AgentStateChanged;
+        event EventHandler<TrainingAgentStateChangedEventArgs> TrainingAgentStateChanged;
+        event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompleted;
+        event EventHandler<bool> TrainingStateChanged;
+        event EventHandler<AgentCompletedEventArgs> AgentCompleted;
+        
+        int NumberOfStates { get; }
+        int TotalSpaces { get; set; }
+        double DiscountRate { get; set; }
+        double LearningRate { get; set; }
+        int[][] ObservationSpace { get; set; }
+        double[][] Rewards { get; set; }
+        double[][] Quality { get; set; }
         double EpsilonDecayStart { get; set; }
         double EpsilonDecayEnd { get; set; }
-        double LearningRate { get; set; }
-        double DiscountRate { get; set; }
         List<int> ObjectiveStates { get; set; }
+        int ObjectiveAction { get; set; }
         public int MaximumAllowedMoves { get; set; }
         double ObjectiveReward { get; set; }
         string QualitySaveDirectory { get; set; }
         int MaximumAllowedBacktracks { get; set; }
         List<TrainingSession> TrainingEpisodes { get; set; }
         int SaveQualityFrequency { get; set; }
-        int PhaseSize { get; set; }
 
         void InitializeStatesTable(int numberOfStates, int numberOfActions);
         void InitializeStatesTable();
@@ -29,6 +37,7 @@ namespace QLearning.Core
         void InitializeQualityTable(int numberOfStates, int numberOfActions);
         void InitializeQualityTable();
         void Train(int numberOfEpisodes);
-        void StartAgent(int fromState);
+        void RunMaze(int fromState);
+        int GetNextState(int state, int action);
     }
 }

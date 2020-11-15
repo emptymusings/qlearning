@@ -23,6 +23,7 @@
             double discountRate,
             string qualitySaveDirectory,
             double objectiveReward,
+            int objectiveAction,
             List<int> objectiveStates,
             int maximumAllowedMoves = 1000,
             int maximumAllowedBacktracks = -1)
@@ -33,6 +34,7 @@
                   discountRate,
                   qualitySaveDirectory,
                   objectiveReward,
+                  objectiveAction,
                   objectiveStates,
                   maximumAllowedMoves,
                   maximumAllowedBacktracks)
@@ -40,13 +42,13 @@
             
         }
 
-        public List<CustomObjective> CustomObjectives { get; set; } = new List<CustomObjective>();
+        public List<CustomObjective> AdditoinalRewards { get; set; } = new List<CustomObjective>();
 
         private void SetPhaseSize()
         {
-            if (PhaseSize <= 0)
+            if (TotalSpaces <= 0)
             {
-                PhaseSize = StatesTable.Length;
+                TotalSpaces = ObservationSpace.Length;
             }
         }
 
@@ -66,7 +68,7 @@
 
         public virtual void SetCustomObjectives()
         {
-            var prioritizedObjectives = CustomObjectives.OrderBy((priority) =>
+            var prioritizedObjectives = AdditoinalRewards.OrderBy((priority) =>
                 {
                     int differential = (priority.State > PrioritizeFromState ? priority.State - PrioritizeFromState : PrioritizeFromState - priority.State);
                     var value = differential + priority.Value;
@@ -92,8 +94,8 @@
                 else
                 {
                     SetObjectiveActionNextState(objective);
-                    RewardsTable[objective.State + ObjectiveAction][ObjectiveAction] = objective.Value;
-                    rewardPriority += PhaseSize;
+                    Rewards[objective.State + ObjectiveAction][ObjectiveAction] = objective.Value;
+                    rewardPriority += TotalSpaces;
                 }
             }
         }
@@ -102,20 +104,20 @@
         {
             int phase = 0;
 
-            while (phase < StatesTable.Length)
+            while (phase < ObservationSpace.Length)
             {
                 SetObjectiveActionNextState(objective);
-                RewardsTable[objective.State + phase][ObjectiveAction] = objective.Value;
+                Rewards[objective.State + phase][ObjectiveAction] = objective.Value;
 
-                phase += PhaseSize;
+                phase += TotalSpaces;
             }
         }
 
         protected virtual void SetObjectiveActionNextState(CustomObjective objective)
         {
-            if (objective.State + (PhaseSize * 2) <= StatesTable.Length - 1)
+            if (objective.State + (TotalSpaces * 2) <= ObservationSpace.Length - 1)
             {
-                StatesTable[objective.State + PhaseSize][ObjectiveAction] = objective.State + (PhaseSize * 2);
+                ObservationSpace[objective.State + TotalSpaces][ObjectiveAction] = objective.State + (TotalSpaces * 2);
             }
         }
     }

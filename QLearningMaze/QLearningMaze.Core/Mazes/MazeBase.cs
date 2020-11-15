@@ -8,7 +8,7 @@ namespace QLearningMaze.Core.Mazes
 {
     public enum Actions
     {
-        Stay = 0,
+        CompleteRun = 0,
         MoveUp = 1,
         MoveRight = 2,
         MoveDown = 3,
@@ -223,7 +223,7 @@ namespace QLearningMaze.Core.Mazes
         /// <param name="state"></param>
         protected virtual void SetObservationSpaceGoalActions(int state)
         {
-            ObservationSpace[state][(int)Actions.Stay] = 1;
+            ObservationSpace[state][(int)Actions.CompleteRun] = 1;
             ObservationSpace[state][(int)Actions.MoveUp] = 0;
             ObservationSpace[state][(int)Actions.MoveRight] = 0;
             ObservationSpace[state][(int)Actions.MoveDown] = 0;
@@ -841,7 +841,7 @@ namespace QLearningMaze.Core.Mazes
                     return state + Columns;
                 case Actions.MoveLeft:
                     return state - 1;
-                case Actions.Stay:
+                case Actions.CompleteRun:
                     return state;
                 case Actions.GetCustomReward:
                     return GetRewardState(state);

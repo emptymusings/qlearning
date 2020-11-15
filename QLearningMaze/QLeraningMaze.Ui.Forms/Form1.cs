@@ -10,10 +10,11 @@ namespace QLearningMaze.Ui.Forms
     using Core;
     using Microsoft.VisualBasic;
     using QLearningMaze.Core.Mazes;
-
+    
     public partial class Form1 : Form
     {
         private IMaze _maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
+        private IMazeNew _mazeNew = new MazeBaseNew(8, 8, 31, 0.5, 0.5);
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
         private bool _needsRetrain = false;
@@ -34,7 +35,6 @@ namespace QLearningMaze.Ui.Forms
             _maze.AgentStateChangedEventHandler += Maze_AgentStateChangedEventHandler;
             _maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
             _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
-
         }
 
         private void QualityStripMenuItem_Click(object sender, EventArgs e)
@@ -93,6 +93,16 @@ namespace QLearningMaze.Ui.Forms
                 _maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
                 _maze.TrainingAgentStateChangingEventHandler += Maze_TrainingAgentStateChangingEventHandler;
                 SetFormValuesFromMaze();
+
+                _mazeNew = new MazeBaseNew(_maze.Columns, _maze.Rows, _maze.GoalPosition, _maze.LearningRate, _maze.DiscountRate);
+                _mazeNew.QualitySaveDirectory = MazeUtilities.TRAINING_SESSIONS_DIRECTORY;
+                _mazeNew.ObjectiveReward = 200;
+
+                foreach(var obstruction in _maze.Obstructions)
+                {
+                    _mazeNew.AddObstruction(obstruction.BetweenSpace, obstruction.AndSpace);
+                }
+
                 _needsRetrain = true;
                 mazeSpace.Enabled = true;
             }
@@ -166,7 +176,6 @@ namespace QLearningMaze.Ui.Forms
             }
         }
 
-
         private void Maze_AgentCompletedMazeEventHandler(object sender, AgentCompletedMazeEventArgs e)
         {
             rewardsLabel.Text = $"Moves: {e.Moves} Reward: {e.Rewards}";
@@ -189,6 +198,7 @@ namespace QLearningMaze.Ui.Forms
             if (_needsRetrain)
             {
                 _maze.Train();
+                _mazeNew.Train(_maze.NumberOfStates);
                 _needsRetrain = false;
             }
 
@@ -218,6 +228,15 @@ namespace QLearningMaze.Ui.Forms
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+
+            try
+            {
+                _mazeNew.RunMaze(_maze.StartPosition);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
 
             entryPanel.Enabled = true;
