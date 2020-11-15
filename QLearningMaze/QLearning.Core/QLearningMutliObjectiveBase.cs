@@ -42,7 +42,7 @@
             
         }
 
-        public List<CustomObjective> AdditoinalRewards { get; set; } = new List<CustomObjective>();
+        public List<CustomObjective> AdditionalRewards { get; set; } = new List<CustomObjective>();
 
         private void SetPhaseSize()
         {
@@ -68,7 +68,7 @@
 
         public virtual void SetCustomObjectives()
         {
-            var prioritizedObjectives = AdditoinalRewards.OrderBy((priority) =>
+            var prioritizedObjectives = AdditionalRewards.OrderBy((priority) =>
                 {
                     int differential = (priority.State > PrioritizeFromState ? priority.State - PrioritizeFromState : PrioritizeFromState - priority.State);
                     var value = differential + priority.Value;

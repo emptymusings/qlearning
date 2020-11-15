@@ -46,5 +46,23 @@ namespace QLearningMaze.Core
                     throw new ArgumentOutOfRangeException("MazeType");
             }
         }
+
+        public static IMazeNew CreateMazeNew(
+            int rows,
+            int columns,
+            int startPosition,
+            int goalPosition,
+            double discountRate,
+            double learningRate,
+            int trainingEpisodes)
+        {
+            return new MazeBaseNew(
+                columns,
+                rows,
+                startPosition,
+                goalPosition,
+                discountRate,
+                learningRate);
+        }
     }
 }

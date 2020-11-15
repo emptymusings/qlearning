@@ -9,20 +9,29 @@
 
     public partial class MazeBaseNew : QLearningMutliObjectiveBase, IMazeNew
     {
-        public MazeBaseNew(int columns, int rows, int goalPosition, double learningRate, double discountRate)
+        public MazeBaseNew(
+            int columns, 
+            int rows, 
+            int startPosition,
+            int goalPosition, 
+            double discountRate,
+            double learningRate)
             : base((columns * rows), Enum.GetNames(typeof(Actions)).Length)
         {
             Columns = columns;
             Rows = rows;
             TotalSpaces = columns * rows;
+            StartPosition = startPosition;
             GoalPosition = goalPosition;
             ObjectiveAction = (int)Actions.CompleteRun;
             LearningRate = learningRate;
             DiscountRate = discountRate;
+            
         }
 
         public int Columns { get; set; }
         public int Rows { get; set; }
+        public int StartPosition { get; set; }
 
         private int _goalPosition;
 
@@ -40,7 +49,6 @@
                 }
             }
         }
-
 
         public double MovementPunishement { get; set; } = -1;
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
@@ -170,6 +178,34 @@
 
             return Actions.CompleteRun;
 
+        }
+
+        public virtual void AddReward(CustomObjective reward)
+        {
+            var r = AdditionalRewards.Where(s => s.State == reward.State).FirstOrDefault();
+
+            if (r != null)
+                return;
+
+            AdditionalRewards.Add(reward);
+        }
+
+        public virtual void AddReward(int state, double reward)
+        {
+            AddReward(new CustomObjective { State = state, Value = reward });
+        }
+
+        public virtual void RemoveReward(int state)
+        {
+            var reward = AdditionalRewards.Where(s => s.State == state).FirstOrDefault();
+
+            if (reward != null)
+                AdditionalRewards.Remove(reward);
+        }
+
+        public List<CustomObjective> GetAdditionalRewards()
+        {
+            return AdditionalRewards;
         }
     }
 }

@@ -12,11 +12,13 @@ namespace QLearningMaze.Ui.Forms
     public partial class Objectives : Form
     {
         private IMaze _maze;
+        private IMazeNew _mazeNew;
 
-        public Objectives(IMaze maze)
+        public Objectives(IMaze maze, IMazeNew mazeNew)
         {
             InitializeComponent();
             _maze = maze;
+            _mazeNew = mazeNew;
         }
 
         public bool RewardsChanged { get; set; }
@@ -49,6 +51,7 @@ namespace QLearningMaze.Ui.Forms
                 return;
 
             _maze.RemoveCustomReward(Convert.ToInt32(rewardsList.SelectedItems[0].Text));
+            _mazeNew.RemoveReward(Convert.ToInt32(rewardsList.SelectedItems[0].Text));
             rewardsList.Items.Remove(rewardsList.SelectedItems[0]);
             rewardsList.SelectedItems.Clear();
 

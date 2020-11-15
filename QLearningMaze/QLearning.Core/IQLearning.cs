@@ -27,6 +27,7 @@ namespace QLearning.Core
         double ObjectiveReward { get; set; }
         string QualitySaveDirectory { get; set; }
         int MaximumAllowedBacktracks { get; set; }
+        int MaxEpisodes { get; set; }
         List<TrainingSession> TrainingEpisodes { get; set; }
         int SaveQualityFrequency { get; set; }
 
@@ -36,7 +37,7 @@ namespace QLearning.Core
         void InitializeRewardsTable();
         void InitializeQualityTable(int numberOfStates, int numberOfActions);
         void InitializeQualityTable();
-        void Train(int numberOfEpisodes);
+        void Train();
         void RunMaze(int fromState);
         int GetNextState(int state, int action);
     }

@@ -13,6 +13,7 @@ namespace QLearningMaze.Ui.Forms
     public partial class TrainingProgress : Form
     {
         private IMaze _maze;
+        private IMazeNew _mazeNew;
         private bool _trainingInProgress = false;
         int _successfulRuns = 0;
         double _averageMoves = 0;
@@ -30,20 +31,21 @@ namespace QLearningMaze.Ui.Forms
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
 
-        public TrainingProgress(IMaze maze)
+        public TrainingProgress(IMaze maze, IMazeNew mazeNew)
         {
             InitializeComponent();
             _maze = maze;
+            _mazeNew = mazeNew;
             _maze.TrainingEpisodeCompletedEventHandler += _maze_TrainingEpisodeCompletedEventHandler;
+            _mazeNew.TrainingEpisodeCompleted += _mazeNew_TrainingEpisodeCompleted;
             _totalMoves = 0;
             _totalScore = 0;
             _averageMoves = 0;
             _averageScore = 0;
         }
 
-        private void _maze_TrainingEpisodeCompletedEventHandler(object sender, TrainingEpisodeCompletedEventArgs e)
+        private void _mazeNew_TrainingEpisodeCompleted(object sender, QLearning.Core.TrainingEpisodeCompletedEventArgs e)
         {
-            //UpdateText(message);
             if (e.Success)
             {
                 _successfulRuns++;
@@ -69,11 +71,12 @@ namespace QLearningMaze.Ui.Forms
                 UpdateProgressBar();
             }
 
-            if (_runEpochs % _showEvery == 0 && 
-                _runEpochs != _maze.MaxEpisodes)
-            {
-                //RenderTraining();
-            }
+        }
+
+        private void _maze_TrainingEpisodeCompletedEventHandler(object sender, TrainingEpisodeCompletedEventArgs e)
+        {
+            //UpdateText(message);
+            
         }
 
 
@@ -132,6 +135,7 @@ namespace QLearningMaze.Ui.Forms
         private void closeButton_Click(object sender, EventArgs e)
         {
             _maze.TrainingEpisodeCompletedEventHandler -= _maze_TrainingEpisodeCompletedEventHandler;
+            _mazeNew.TrainingEpisodeCompleted -= _mazeNew_TrainingEpisodeCompleted;
             this.Close();
         }
 
@@ -140,6 +144,7 @@ namespace QLearningMaze.Ui.Forms
             EnableControls(false);
             this.Refresh();
             _maze.Train();
+            _mazeNew.Train();
             EnableControls(true);
             this.DialogResult = DialogResult.OK;
             return Task.CompletedTask;

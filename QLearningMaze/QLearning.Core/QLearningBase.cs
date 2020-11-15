@@ -30,6 +30,7 @@
             double objectiveReward,
             int objectiveAction,
             List<int> objectiveStates,
+            int maxEpisodes,
             int maximumAllowedMoves = 1000,
             int maximumAllowedBacktracks = -1)
         {
@@ -41,6 +42,7 @@
             ObjectiveReward = objectiveReward;
             ObjectiveAction = objectiveAction;
             ObjectiveStates = objectiveStates;
+            MaxEpisodes = maxEpisodes;
             MaximumAllowedMoves = maximumAllowedMoves;
             MaximumAllowedBacktracks = maximumAllowedBacktracks;
         }
@@ -68,6 +70,7 @@
         public virtual double ObjectiveReward { get; set; }
         public virtual string QualitySaveDirectory { get; set; }
         public virtual int MaximumAllowedBacktracks { get; set; } = -1;
+        public virtual int MaxEpisodes { get; set; }
         public virtual List<TrainingSession> TrainingEpisodes { get; set; }
         public virtual int SaveQualityFrequency { get; set; } = 10;
         public virtual int TotalSpaces { get; set; }
@@ -144,8 +147,7 @@
         /// <summary>
         /// Performs the training necessary to populate the Q-Table
         /// </summary>
-        /// <param name="numberOfEpisodes">The number of episodes for which to execute training</param>
-        public virtual void Train(int numberOfEpisodes)
+        public virtual void Train()
         {
             InitializeStatesTable();
             InitializeQualityTable();
@@ -153,13 +155,13 @@
             
             double epsilon = 1;
 
-            EpsilonDecayEnd = numberOfEpisodes / 2;
+            EpsilonDecayEnd = MaxEpisodes / 2;
             _epsilonDecayValue = epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
 
             TrainingEpisodes = new List<TrainingSession>();
             OnTrainingStateChanged(true);
 
-            for (int episode = 0; episode < numberOfEpisodes; ++episode)
+            for (int episode = 0; episode < MaxEpisodes; ++episode)
             {
                 var episodeResults = RunTrainingEpisode(epsilon);
                 var state = episodeResults.finalState;
@@ -173,7 +175,7 @@
 
                 epsilon = DecayEpsilon(episode, epsilon);
 
-                OnTrainingEpisodeCompleted(episode, numberOfEpisodes, moves, _accumulatedEpisodeRewards, ObjectiveStates.Contains(state));
+                OnTrainingEpisodeCompleted(episode, MaxEpisodes, moves, _accumulatedEpisodeRewards, ObjectiveStates.Contains(state));
             }
 
             OnTrainingStateChanged(false);

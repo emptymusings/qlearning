@@ -6,6 +6,6 @@ namespace QLearning.Core
 {
     public interface IQLearningMultiObjective : IQLearning
     {
-        List<CustomObjective> AdditoinalRewards { get; set; }
+        List<CustomObjective> AdditionalRewards { get; set; }
     }
 }
