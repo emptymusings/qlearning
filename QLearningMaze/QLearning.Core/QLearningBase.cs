@@ -27,8 +27,8 @@
             double learningRate,
             double discountRate,
             string qualitySaveDirectory,
-            double goalReward,
-            List<int> goalStates,
+            double objectiveReward,
+            List<int> objectiveStates,
             int maximumAllowedMoves = 1000,
             int maximumAllowedBacktracks = -1)
         {
@@ -37,10 +37,10 @@
             LearningRate = learningRate;
             DiscountRate = discountRate;
             QualitySaveDirectory = qualitySaveDirectory;
-            ObjectiveReward = goalReward;
-            ObjectiveStates = goalStates;
+            ObjectiveReward = objectiveReward;
+            ObjectiveStates = objectiveStates;
             MaximumAllowedMoves = maximumAllowedMoves;
-            maximumAllowedBacktracks = maximumAllowedBacktracks;
+            MaximumAllowedBacktracks = maximumAllowedBacktracks;
         }
 
         public virtual int[][] StatesTable { get; set; }
@@ -57,6 +57,7 @@
         public virtual int MaximumAllowedBacktracks { get; set; } = -1;
         public virtual List<TrainingSession> TrainingEpisodes { get; set; }
         public virtual int SaveQualityFrequency { get; set; } = 10;
+        public virtual int PhaseSize { get; set; }
 
         public virtual void InitializeStatesTable(int numberOfStates, int numberOfActions)
         {

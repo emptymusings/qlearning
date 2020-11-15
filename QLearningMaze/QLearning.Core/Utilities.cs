@@ -22,11 +22,11 @@
             return loaded;
         }
 
-        public static IEnumerable<TrainingSession> GetTrainingSessions()
+        public static IEnumerable<TrainingSession> GetTrainingSessions(string sessionsPath)
         {
             List<TrainingSession> results = new List<TrainingSession>();
 
-            foreach (var file in Directory.GetFiles(QTableSaveDirectory))
+            foreach (var file in Directory.GetFiles(sessionsPath, "*.json"))
             {
                 results.Add(LoadObject<TrainingSession>(file));
             }

@@ -20,6 +20,7 @@ namespace QLearning.Core
         int MaximumAllowedBacktracks { get; set; }
         List<TrainingSession> TrainingEpisodes { get; set; }
         int SaveQualityFrequency { get; set; }
+        int PhaseSize { get; set; }
 
         void InitializeStatesTable(int numberOfStates, int numberOfActions);
         void InitializeStatesTable();
