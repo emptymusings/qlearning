@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
+    using System.IO;
 
     public partial class QLearningBase : IQLearning
     {
@@ -72,7 +73,7 @@
         public virtual int MaximumAllowedBacktracks { get; set; } = -1;
         public virtual int MaxEpisodes { get; set; }
         public virtual List<TrainingSession> TrainingEpisodes { get; set; }
-        public virtual int SaveQualityFrequency { get; set; } = 10;
+        public virtual int SaveQualityFrequency { get; set; } = 100;
         public virtual int TotalSpaces { get; set; }
 
         public virtual void InitializeStatesTable(int numberOfStates, int numberOfActions)
@@ -86,7 +87,7 @@
         public virtual void InitializeStatesTable()
         {
             ObservationSpace = new int[_numberOfStates][];
-
+            
             for (int i = 0; i < _numberOfStates; ++i)
             {
                 ObservationSpace[i] = new int[_numberOfActions];
@@ -108,11 +109,15 @@
 
         public virtual void InitializeRewardsTable()
         {
-            Rewards = new double[_numberOfStates][];
-
-            for (int i = 0; i < _numberOfStates; ++i)
+            if (Rewards == null ||
+                Rewards.Length < _numberOfStates)
             {
-                Rewards[i] = new double[_numberOfActions];
+                Rewards = new double[_numberOfStates][];
+
+                for (int i = 0; i < _numberOfStates; ++i)
+                {
+                    Rewards[i] = new double[_numberOfActions];
+                }
             }
         }
 
@@ -152,7 +157,9 @@
             InitializeStatesTable();
             InitializeQualityTable();
             InitializeRewardsTable();
-            
+
+            InitializeSaveFolder();
+
             double epsilon = 1;
 
             EpsilonDecayEnd = MaxEpisodes / 2;
@@ -188,6 +195,7 @@
         protected virtual (int finalState, int moves) RunTrainingEpisode(double epsilon)
         {
             int moves = 0;
+            int previousState = -1;
             bool done = false;
             int state = _random.Next(0, _numberOfStates);
 
@@ -199,7 +207,11 @@
                 int nextAction = GetGreedyNextAction(state, epsilon);
                 CalculateQValue(state, nextAction);
 
+                previousState = state;
                 state = ObservationSpace[state][nextAction];
+
+                if (state == previousState)
+                    state = _random.Next(0, _numberOfStates);
 
                 if (ObjectiveStates.Contains(state) ||
                     moves > MaximumAllowedMoves)
@@ -308,10 +320,9 @@
             var r = Rewards[state][action];
             var q = Quality[state][action] + (LearningRate * (r + (DiscountRate * maxQ) - Quality[state][action]));
             // I have found a couple of Q-Value formulas.  Aside form some rounding issues, this and the formula below it are identical
+            //double similarQFormula  = ((1 - LearningRate) * Quality[state][action]) + (LearningRate * (r + (DiscountRate * maxQ)));
+
             Quality[state][action] = q;
-
-            //double similarQFormula  = ((1 - LearningRate) * Quality[currentState][action]) + (LearningRate * (r + (DiscountRate * maxQ)));
-
             _accumulatedEpisodeRewards += r;
         }
 
@@ -341,6 +352,19 @@
             }
 
             return (selectedNextState, maxQ);
+        }
+
+        protected virtual void InitializeSaveFolder()
+        {
+            if (!Directory.Exists(QualitySaveDirectory))
+            {
+                Directory.CreateDirectory(QualitySaveDirectory);
+            }
+
+            foreach(string file in Directory.GetFiles(QualitySaveDirectory))
+            {
+                File.Delete(file);
+            }
         }
 
         protected virtual void SaveQualityForEpisode(int episode, int moves)
@@ -421,7 +445,7 @@
 
                 OnAgentStateChanged(fromState, moves, _accumulatedEpisodeRewards);
 
-                if (ObjectiveStates.Contains(fromState) &&
+                if (ObjectiveStates.Contains((fromState % TotalSpaces)) &&
                     action == ObjectiveAction)
                 {
                     done = true;

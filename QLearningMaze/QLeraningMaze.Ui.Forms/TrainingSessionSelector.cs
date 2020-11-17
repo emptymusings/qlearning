@@ -14,7 +14,7 @@ namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingSessionSelector : Form
     {
-        private IMaze _maze;
+        private IMazeNew _mazeNew;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -22,10 +22,10 @@ namespace QLearningMaze.Ui.Forms
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(IMaze maze)
+        public TrainingSessionSelector(IMazeNew mazeNew)
         {
             InitializeComponent();
-            _maze = maze;
+            _mazeNew = mazeNew;
         }
 
         private delegate void ShowResultsHandler();
@@ -119,7 +119,7 @@ namespace QLearningMaze.Ui.Forms
 
                 try
                 {
-                    maze.RunMaze();
+                    maze.RunMaze(maze.StartPosition);
                     session.Succeeded = true;
                 }
                 catch
@@ -162,23 +162,25 @@ namespace QLearningMaze.Ui.Forms
             return Task.CompletedTask;
         }
 
-        private UserDefinedMaze GetTestMaze()
+        private MazeBaseNew GetTestMaze()
         {
-            var maze = new UserDefinedMaze();
-            maze.Rows = _maze.Rows;
-            maze.Columns = _maze.Columns;
-            maze.Rewards = _maze.Rewards;
-            maze.ObservationSpace = _maze.ObservationSpace;
-            maze.AdditionalRewards = _maze.AdditionalRewards;
-            maze.StartPosition = _maze.StartPosition;
-            maze.GoalPosition = _maze.GoalPosition;
+            var maze = new MazeBaseNew(
+                _mazeNew.Columns,
+                _mazeNew.Rows,
+                _mazeNew.StartPosition,
+                _mazeNew.GoalPosition,
+                _mazeNew.DiscountRate,
+                _mazeNew.LearningRate);
+            maze.Rewards = _mazeNew.Rewards;
+            maze.ObservationSpace = _mazeNew.ObservationSpace;
+            maze.AdditionalRewards = _mazeNew.AdditionalRewards;
 
-            maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
+            maze.AgentCompleted += Maze_AgentCompleted;
 
             return maze;
         }
 
-        private void Maze_AgentCompletedMazeEventHandler(object sender, AgentCompletedMazeEventArgs e)
+        private void Maze_AgentCompleted(object sender, QLearning.Core.AgentCompletedEventArgs e)
         {
             _moves += e.Moves;
             _score += e.Rewards;

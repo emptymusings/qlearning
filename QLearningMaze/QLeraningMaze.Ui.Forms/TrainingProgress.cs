@@ -12,7 +12,6 @@ namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingProgress : Form
     {
-        private IMaze _maze;
         private IMazeNew _mazeNew;
         private bool _trainingInProgress = false;
         int _successfulRuns = 0;
@@ -31,12 +30,10 @@ namespace QLearningMaze.Ui.Forms
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
 
-        public TrainingProgress(IMaze maze, IMazeNew mazeNew)
+        public TrainingProgress(IMazeNew mazeNew)
         {
             InitializeComponent();
-            _maze = maze;
             _mazeNew = mazeNew;
-            _maze.TrainingEpisodeCompletedEventHandler += _maze_TrainingEpisodeCompletedEventHandler;
             _mazeNew.TrainingEpisodeCompleted += _mazeNew_TrainingEpisodeCompleted;
             _totalMoves = 0;
             _totalScore = 0;
@@ -73,17 +70,10 @@ namespace QLearningMaze.Ui.Forms
 
         }
 
-        private void _maze_TrainingEpisodeCompletedEventHandler(object sender, TrainingEpisodeCompletedEventArgs e)
-        {
-            //UpdateText(message);
-            
-        }
-
-
         private void RenderTraining()
         {
             _mazeSpace = new MazeSpace();
-            _mazeSpace.CreateMazeControls(_maze);
+            _mazeSpace.CreateMazeControls(_mazeNew);
             Form frm = new Form();
             frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);
             frm.Controls.Add(_mazeSpace);
@@ -92,11 +82,11 @@ namespace QLearningMaze.Ui.Forms
             frm.Show();
             frm.WindowState = FormWindowState.Maximized;
             frm.FormBorderStyle = FormBorderStyle.None;
-            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
+            //_maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
 
             try
             {                
-                _maze.RunMaze();
+                //_maze.RunMaze();
             }
             catch 
             {
@@ -106,7 +96,7 @@ namespace QLearningMaze.Ui.Forms
             {
                 frm.Dispose();
                 _mazeSpace.Dispose();
-                _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+                //_maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
             }
         }
 
@@ -134,7 +124,7 @@ namespace QLearningMaze.Ui.Forms
 
         private void closeButton_Click(object sender, EventArgs e)
         {
-            _maze.TrainingEpisodeCompletedEventHandler -= _maze_TrainingEpisodeCompletedEventHandler;
+            //_maze.TrainingEpisodeCompletedEventHandler -= _maze_TrainingEpisodeCompletedEventHandler;
             _mazeNew.TrainingEpisodeCompleted -= _mazeNew_TrainingEpisodeCompleted;
             this.Close();
         }
@@ -143,7 +133,7 @@ namespace QLearningMaze.Ui.Forms
         {
             EnableControls(false);
             this.Refresh();
-            _maze.Train();
+            //_maze.Train();
             _mazeNew.Train();
             EnableControls(true);
             this.DialogResult = DialogResult.OK;
@@ -196,7 +186,7 @@ namespace QLearningMaze.Ui.Forms
         private void TrainingProgress_Shown(object sender, EventArgs e)
         {
 
-            trainingProgressBar.Maximum = _maze.MaxEpisodes;
+            trainingProgressBar.Maximum = _mazeNew.MaxEpisodes;
             trainingProgressBar.Value = 0;
             trainingProgressBar.Step = 1;
             TrainingTask();

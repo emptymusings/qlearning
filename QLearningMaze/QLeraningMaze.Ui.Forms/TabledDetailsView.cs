@@ -14,16 +14,17 @@ namespace QLearningMaze.Ui.Forms
         public enum ValueTypes
         {
             Quality,
-            Rewards
+            Rewards,
+            StateSpace
         }
 
-        private IMaze _maze;
+        private IMazeNew _mazeNew;
         private ValueTypes _valueType;
 
-        public TabledDetailsView(IMaze maze, ValueTypes valueType)
+        public TabledDetailsView(IMazeNew mazeNew, ValueTypes valueType)
         {
             InitializeComponent();
-            _maze = maze;
+            _mazeNew = mazeNew;
             _valueType = valueType;
         }
 
@@ -31,12 +32,39 @@ namespace QLearningMaze.Ui.Forms
         {
             double[][] values;
 
-            if (_valueType == ValueTypes.Quality)
-                values = _maze.Quality;
-            else
-                values = _maze.Rewards;
+            switch (_valueType)
+            {
+                case ValueTypes.Quality:
+                    values = _mazeNew.Quality;
+                    break;
+                case ValueTypes.Rewards:
+                    values = _mazeNew.Rewards;
+                    break;
+                case ValueTypes.StateSpace:
+                    values = ConvertObservationSpace();
+                    break;
+                default:
+                    throw new InvalidOperationException("Invalid Value Type");
+            }
 
-            detailsView1.ShowValues(values, _maze.NumberOfStates);
+            detailsView1.ShowValues(values, _mazeNew.NumberOfStates);
+        }
+
+        private double[][] ConvertObservationSpace()
+        {
+            double[][] result = new double[_mazeNew.ObservationSpace.Length][];
+
+            for (int i = 0; i < _mazeNew.ObservationSpace.Length; ++i)
+            {
+                result[i] = new double[_mazeNew.ObservationSpace[i].Length];
+
+                for (int j = 0; j < result[i].Length; ++j)
+                {
+                    result[i][j] = _mazeNew.ObservationSpace[i][j];
+                }
+            }
+
+            return result;
         }
     }
 }

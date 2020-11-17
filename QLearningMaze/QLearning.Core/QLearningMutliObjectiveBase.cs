@@ -7,8 +7,9 @@
 
     public class QLearningMutliObjectiveBase : QLearningBase, IQLearningMultiObjective
     {
-        public virtual int ObjectiveAction { get; set; } = -1;
+        public virtual int GetRewardAction { get; set; } = -1;
         public virtual int PrioritizeFromState { get; set; }
+        
         public QLearningMutliObjectiveBase() { }
 
         public QLearningMutliObjectiveBase(int numberOfStates, int numberOfActions)
@@ -68,10 +69,10 @@
 
         public virtual void SetCustomObjectives()
         {
-            var prioritizedObjectives = AdditionalRewards.OrderBy((priority) =>
+            var prioritizedObjectives = AdditionalRewards.OrderByDescending((priority) =>
                 {
                     int differential = (priority.State > PrioritizeFromState ? priority.State - PrioritizeFromState : PrioritizeFromState - priority.State);
-                    var value = differential + priority.Value;
+                    var value = (differential * -1) + priority.Value; // Hardcoded movement of -1 - look into more flexible approach
 
                     return value;
                 });
@@ -93,8 +94,8 @@
                 }
                 else
                 {
-                    SetObjectiveActionNextState(objective);
-                    Rewards[objective.State + ObjectiveAction][ObjectiveAction] = objective.Value;
+                    SetObjectiveActionNextState(objective.State + rewardPriority);
+                    Rewards[objective.State + rewardPriority][GetRewardAction] = objective.Value;
                     rewardPriority += TotalSpaces;
                 }
             }
@@ -106,18 +107,21 @@
 
             while (phase < ObservationSpace.Length)
             {
-                SetObjectiveActionNextState(objective);
-                Rewards[objective.State + phase][ObjectiveAction] = objective.Value;
+                for (int i = 0; i < _numberOfActions; i++)
+                {
+                    Rewards[objective.State + phase][i] = objective.Value;
+                }
+                //Rewards[objective.State + phase - 1][GetRewardAction] = objective.Value;
 
                 phase += TotalSpaces;
             }
         }
 
-        protected virtual void SetObjectiveActionNextState(CustomObjective objective)
+        protected virtual void SetObjectiveActionNextState(int state)
         {
-            if (objective.State + (TotalSpaces * 2) <= ObservationSpace.Length - 1)
+            if (state + (TotalSpaces) <= ObservationSpace.Length - 1)
             {
-                ObservationSpace[objective.State + TotalSpaces][ObjectiveAction] = objective.State + (TotalSpaces * 2);
+                ObservationSpace[state][GetRewardAction] = state + TotalSpaces;
             }
         }
     }

@@ -26,7 +26,8 @@
             ObjectiveAction = (int)Actions.CompleteRun;
             LearningRate = learningRate;
             DiscountRate = discountRate;
-            
+            MaximumAllowedBacktracks = 3;
+            GetRewardAction = (int)Actions.GetCustomReward;
         }
 
         public int Columns { get; set; }
@@ -55,6 +56,10 @@
 
         public override void InitializeStatesTable()
         {
+            if (AdditionalRewards == null)
+                AdditionalRewards = new List<CustomObjective>();
+
+            _numberOfStates = Rows * Columns * (AdditionalRewards.Where(v => v.Value >= 0).Count() + 1);
             base.InitializeStatesTable();
             ObjectiveAction = (int)Actions.CompleteRun;
 
@@ -82,15 +87,32 @@
 
         public override void InitializeRewardsTable()
         {
-            base.InitializeRewardsTable();
-
-            for(int i = 0; i < Rewards.Length; ++i)
+            if (Rewards == null ||
+                Rewards.Length < NumberOfStates)
             {
+                Rewards = new double[NumberOfStates][];
+            }
+
+            // Create an initial rewards table for each possible state/action using -1 as the movement cost
+            for (int i = 0; i < Rewards.Length; ++i)
+            {
+                if (Rewards[i] == null ||
+                    Rewards[i].Length != Enum.GetNames(typeof(Actions)).Length)
+                {
+                    Rewards[i] = new double[Enum.GetNames(typeof(Actions)).Length];
+                }
+
                 for (int j = 0; j < Rewards[i].Length; ++j)
                 {
                     Rewards[i][j] = -1;
                 }
             }
+
+
+            PrioritizeFromState = StartPosition;
+
+            // Use the base rewards assignment
+            base.InitializeRewardsTable();
 
             int phase = 0;
 
@@ -141,7 +163,7 @@
             var andAction = GetActionBetweenStates(obstruction.AndSpace, obstruction.BetweenSpace);
             var phase = 0;
 
-            while (obstruction.BetweenSpace + phase <= TotalSpaces)
+            while (obstruction.BetweenSpace + phase <= NumberOfStates)
             {
                 ObservationSpace[obstruction.BetweenSpace + phase][(int)betweenAction] = -1;
                 ObservationSpace[obstruction.AndSpace + phase][(int)andAction] = -1;
@@ -151,13 +173,16 @@
 
         public virtual void RemoveObstruction(int betweenState, int andState)
         {
-            var exists = Obstructions.Where(o => (o.BetweenSpace == betweenState && o.AndSpace == andState) ||
-                (o.AndSpace == betweenState && o.BetweenSpace == andState));
+            if (ObservationSpace == null)
+                InitializeStatesTable();
 
-            foreach(var obstruction in exists)
-            {
-                Obstructions.Remove(obstruction);
-            }
+            var obstruction = Obstructions.Where(o => (o.BetweenSpace == betweenState && o.AndSpace == andState) ||
+                (o.AndSpace == betweenState && o.BetweenSpace == andState)).FirstOrDefault();
+
+            if (obstruction == null)
+                return;
+
+            Obstructions.Remove(obstruction);
 
             int betweenAction = (int)GetActionBetweenStates(betweenState, andState);
             int andAction = (int)GetActionBetweenStates(andState, betweenState);

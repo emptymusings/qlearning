@@ -11,13 +11,11 @@ namespace QLearningMaze.Ui.Forms
 {
     public partial class Rewards : Form
     {
-        private IMaze _maze;
         private IMazeNew _mazeNew;
 
-        public Rewards(IMaze maze, IMazeNew mazeNew)
+        public Rewards(IMazeNew mazeNew)
         {
             InitializeComponent();
-            _maze = maze;
             _mazeNew = mazeNew;
         }
 
@@ -35,7 +33,7 @@ namespace QLearningMaze.Ui.Forms
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            _maze.AddCustomReward(Convert.ToInt32(positionText.Text), Convert.ToDouble(valueText.Text));
+            _mazeNew.AddReward(Convert.ToInt32(positionText.Text), Convert.ToDouble(valueText.Text));
             var lvi = new ListViewItem(positionText.Text);
             lvi.SubItems.Add(valueText.Text);
             rewardsList.Items.Add(lvi);
@@ -50,7 +48,6 @@ namespace QLearningMaze.Ui.Forms
             if (rewardsList.SelectedItems.Count == 0)
                 return;
 
-            _maze.RemoveCustomReward(Convert.ToInt32(rewardsList.SelectedItems[0].Text));
             _mazeNew.RemoveReward(Convert.ToInt32(rewardsList.SelectedItems[0].Text));
             rewardsList.Items.Remove(rewardsList.SelectedItems[0]);
             rewardsList.SelectedItems.Clear();
@@ -60,10 +57,10 @@ namespace QLearningMaze.Ui.Forms
 
         private void Rewards_Shown(object sender, EventArgs e)
         {
-            foreach(var reward in _maze.AdditionalRewards)
+            foreach(var reward in _mazeNew.AdditionalRewards)
             {
                 var lvi = new ListViewItem();
-                lvi.SubItems[0].Text = reward.Position.ToString();
+                lvi.SubItems[0].Text = reward.State.ToString();
                 lvi.SubItems.Add(reward.Value.ToString());
                 rewardsList.Items.Add(lvi);
             }
@@ -71,7 +68,7 @@ namespace QLearningMaze.Ui.Forms
 
         private void clearButton_Click(object sender, EventArgs e)
         {
-            _maze.AdditionalRewards.Clear();
+            _mazeNew.AdditionalRewards.Clear();
             rewardsList.Items.Clear();
 
             RewardsChanged = true;

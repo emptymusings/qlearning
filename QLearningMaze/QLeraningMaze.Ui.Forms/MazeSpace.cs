@@ -17,7 +17,7 @@ namespace QLearningMaze.Ui.Forms
         public List<ObservationSpaceRow> Rows { get; set; } = new List<ObservationSpaceRow>();
         public static ObservationSpace ActiveSpace { get; set; }
 
-        public void CreateMazeControls(IMaze maze)
+        public void CreateMazeControls(IMazeNew maze)
         {
             this.SuspendLayout();
             Rows.Clear();
@@ -42,40 +42,40 @@ namespace QLearningMaze.Ui.Forms
             this.ResumeLayout();
         }
 
-        private List<ObservationSpaceRow> CreateRowControls(IMaze maze)
+        private List<ObservationSpaceRow> CreateRowControls(IMazeNew mazeNew)
         {
             int position = 0;
             int rowNumber = 0;
             List<ObservationSpaceRow> rows = new List<ObservationSpaceRow>();
 
-            for (int i = 0; i < maze.Rows; i++)
+            for (int i = 0; i < mazeNew.Rows; i++)
             {
                 var row = new ObservationSpaceRow();
                 row.SetRowNumber(rowNumber);
 
-                for (int j = 0; j < maze.Columns; j++)
+                for (int j = 0; j < mazeNew.Columns; j++)
                 {
                     var space = new ObservationSpace();
                     space.SetPosition(position);
 
-                    if (position == maze.StartPosition)
+                    if (position == mazeNew.StartPosition)
                     {
                         space.SetStart(true);
                         space.SetActive();
                         space.Invalidate();
                     }
 
-                    if (position == maze.GoalPosition)
+                    if (position == mazeNew.GoalPosition)
                         space.SetGoal(true);
 
-                    var customReward = maze.GetAdditionalRewards().Where(x => x.Position == position).FirstOrDefault();
+                    var customReward = mazeNew.GetAdditionalRewards().Where(x => x.State == position).FirstOrDefault();
 
                     if (customReward != null)
                     {
                         space.SetReward(true, customReward.Value);
                     }
                     
-                    DrawWalls(maze, position, space);
+                    DrawWalls(mazeNew, position, space);
 
                     row.AddSpace(space);
                     space.BorderStyle = BorderStyle.FixedSingle;
@@ -92,7 +92,7 @@ namespace QLearningMaze.Ui.Forms
             return rows;
         }
 
-        private void DrawWalls(IMaze maze, int position, ObservationSpace space)
+        private void DrawWalls(IMazeNew maze, int position, ObservationSpace space)
         {
             var walls = maze.Obstructions.Where(x => x.BetweenSpace == position || x.AndSpace == position);
 
