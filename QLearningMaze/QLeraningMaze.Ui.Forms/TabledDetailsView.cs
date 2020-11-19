@@ -35,10 +35,10 @@ namespace QLearningMaze.Ui.Forms
             switch (_valueType)
             {
                 case ValueTypes.Quality:
-                    values = _mazeNew.Quality;
+                    values = _mazeNew.QualityTable;
                     break;
                 case ValueTypes.Rewards:
-                    values = _mazeNew.Rewards;
+                    values = _mazeNew.RewardsTable;
                     break;
                 case ValueTypes.StateSpace:
                     values = ConvertObservationSpace();
@@ -52,15 +52,15 @@ namespace QLearningMaze.Ui.Forms
 
         private double[][] ConvertObservationSpace()
         {
-            double[][] result = new double[_mazeNew.ObservationSpace.Length][];
+            double[][] result = new double[_mazeNew.StatesTable.Length][];
 
-            for (int i = 0; i < _mazeNew.ObservationSpace.Length; ++i)
+            for (int i = 0; i < _mazeNew.StatesTable.Length; ++i)
             {
-                result[i] = new double[_mazeNew.ObservationSpace[i].Length];
+                result[i] = new double[_mazeNew.StatesTable[i].Length];
 
                 for (int j = 0; j < result[i].Length; ++j)
                 {
-                    result[i][j] = _mazeNew.ObservationSpace[i][j];
+                    result[i][j] = _mazeNew.StatesTable[i][j];
                 }
             }
 

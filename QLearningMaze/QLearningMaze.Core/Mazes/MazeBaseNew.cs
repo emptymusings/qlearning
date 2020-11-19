@@ -9,6 +9,11 @@
 
     public partial class MazeBaseNew : QLearningMutliObjectiveBase, IMazeNew
     {
+        public MazeBaseNew() 
+        {
+            SetupStandardValues();
+        }
+
         public MazeBaseNew(
             int columns, 
             int rows, 
@@ -20,13 +25,19 @@
         {
             Columns = columns;
             Rows = rows;
-            TotalSpaces = columns * rows;
+            StatesPerPhase = columns * rows;
             StartPosition = startPosition;
             GoalPosition = goalPosition;
-            ObjectiveAction = (int)Actions.CompleteRun;
             LearningRate = learningRate;
             DiscountRate = discountRate;
-            MaximumAllowedBacktracks = 3;
+            SetupStandardValues();
+        }
+
+        private void SetupStandardValues()
+        {
+            MaximumAllowedBacktracks = 3; 
+            _numberOfActions = Enum.GetNames(typeof(Actions)).Length;
+            ObjectiveAction = (int)Actions.CompleteRun;
             GetRewardAction = (int)Actions.GetCustomReward;
         }
 
@@ -67,18 +78,18 @@
             {
                 int position = GetPosition(state);
 
-                if (position >= Columns) ObservationSpace[state][(int)Actions.MoveUp] = state - Columns;
-                if (position % Columns != 0 && position > 0) ObservationSpace[state][(int)Actions.MoveLeft] = state - 1;
-                if (position < TotalSpaces - 1 && (position + 1) % Columns != 0) ObservationSpace[state][(int)Actions.MoveRight] = state + 1;
-                if (position < TotalSpaces - Columns) ObservationSpace[state][(int)Actions.MoveDown] = state + Columns;
+                if (position >= Columns) StatesTable[state][(int)Actions.MoveUp] = state - Columns;
+                if (position % Columns != 0 && position > 0) StatesTable[state][(int)Actions.MoveLeft] = state - 1;
+                if (position < StatesPerPhase - 1 && (position + 1) % Columns != 0) StatesTable[state][(int)Actions.MoveRight] = state + 1;
+                if (position < StatesPerPhase - Columns) StatesTable[state][(int)Actions.MoveDown] = state + Columns;
 
                 if (position == GoalPosition)
                 {
-                    ObservationSpace[state][(int)Actions.CompleteRun] = state;
-                    ObservationSpace[state][(int)Actions.MoveDown] = -1;
-                    ObservationSpace[state][(int)Actions.MoveLeft] = -1;
-                    ObservationSpace[state][(int)Actions.MoveRight] = -1;
-                    ObservationSpace[state][(int)Actions.MoveUp] = -1;
+                    StatesTable[state][(int)Actions.CompleteRun] = state;
+                    StatesTable[state][(int)Actions.MoveDown] = -1;
+                    StatesTable[state][(int)Actions.MoveLeft] = -1;
+                    StatesTable[state][(int)Actions.MoveRight] = -1;
+                    StatesTable[state][(int)Actions.MoveUp] = -1;
                 }
             }
 
@@ -87,24 +98,24 @@
 
         public override void InitializeRewardsTable()
         {
-            if (Rewards == null ||
-                Rewards.Length < NumberOfStates)
+            if (RewardsTable == null ||
+                RewardsTable.Length < NumberOfStates)
             {
-                Rewards = new double[NumberOfStates][];
+                RewardsTable = new double[NumberOfStates][];
             }
 
             // Create an initial rewards table for each possible state/action using -1 as the movement cost
-            for (int i = 0; i < Rewards.Length; ++i)
+            for (int i = 0; i < RewardsTable.Length; ++i)
             {
-                if (Rewards[i] == null ||
-                    Rewards[i].Length != Enum.GetNames(typeof(Actions)).Length)
+                if (RewardsTable[i] == null ||
+                    RewardsTable[i].Length != Enum.GetNames(typeof(Actions)).Length)
                 {
-                    Rewards[i] = new double[Enum.GetNames(typeof(Actions)).Length];
+                    RewardsTable[i] = new double[Enum.GetNames(typeof(Actions)).Length];
                 }
 
-                for (int j = 0; j < Rewards[i].Length; ++j)
+                for (int j = 0; j < RewardsTable[i].Length; ++j)
                 {
-                    Rewards[i][j] = -1;
+                    RewardsTable[i][j] = -1;
                 }
             }
 
@@ -116,21 +127,21 @@
 
             int phase = 0;
 
-            while (GoalPosition + phase <= NumberOfStates)
+            while (GoalPosition + phase < NumberOfStates)
             {
-                Rewards[GoalPosition + phase][(int)Actions.CompleteRun] = ObjectiveReward;
-                phase += TotalSpaces;
+                RewardsTable[GoalPosition + phase][(int)Actions.CompleteRun] = ObjectiveReward;
+                phase += StatesPerPhase;
             }
         }
 
         protected virtual int GetPosition(int state)
         {
-            return state % TotalSpaces;
+            return state % StatesPerPhase;
         }
 
         public virtual void AddObstruction(int betweenState, int andState)
         {
-            if (ObservationSpace == null)
+            if (StatesTable == null)
                 InitializeStatesTable();
 
             var exists = Obstructions.Where(o => (o.BetweenSpace == betweenState && o.AndSpace == andState) ||
@@ -165,15 +176,15 @@
 
             while (obstruction.BetweenSpace + phase <= NumberOfStates)
             {
-                ObservationSpace[obstruction.BetweenSpace + phase][(int)betweenAction] = -1;
-                ObservationSpace[obstruction.AndSpace + phase][(int)andAction] = -1;
-                phase += TotalSpaces;
+                StatesTable[obstruction.BetweenSpace + phase][(int)betweenAction] = -1;
+                StatesTable[obstruction.AndSpace + phase][(int)andAction] = -1;
+                phase += StatesPerPhase;
             }
         }
 
         public virtual void RemoveObstruction(int betweenState, int andState)
         {
-            if (ObservationSpace == null)
+            if (StatesTable == null)
                 InitializeStatesTable();
 
             var obstruction = Obstructions.Where(o => (o.BetweenSpace == betweenState && o.AndSpace == andState) ||
@@ -187,8 +198,8 @@
             int betweenAction = (int)GetActionBetweenStates(betweenState, andState);
             int andAction = (int)GetActionBetweenStates(andState, betweenState);
 
-            ObservationSpace[betweenState][betweenAction] = andState;
-            ObservationSpace[andState][andAction] = betweenState;
+            StatesTable[betweenState][betweenAction] = andState;
+            StatesTable[andState][andAction] = betweenState;
         }
 
         protected virtual Actions GetActionBetweenStates(int betweenState, int andState)
@@ -199,7 +210,7 @@
             if (differential == -Columns) return Actions.MoveDown;
             if (differential == 1) return Actions.MoveLeft;
             if (differential == -1) return Actions.MoveRight;
-            if (differential == TotalSpaces) return Actions.GetCustomReward;
+            if (differential == StatesPerPhase) return Actions.GetCustomReward;
 
             return Actions.CompleteRun;
 

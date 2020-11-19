@@ -60,8 +60,6 @@ namespace QLearningMaze.Ui.Forms
             if (e.CurrentEpisode % trainingProgressBar.Step == 0)
             {
                 string message = $"Episode: {e.CurrentEpisode.ToString("#,##0")} | " +
-                    $"Avg Moves: {_averageMoves.ToString("#,##0")} | " +
-                    $"Avg Score: {_averageScore.ToString("#,##0")} | " +
                     $"{_percentComplete.ToString("0%")} Complete";
 
                 UpdateLabel(message);
@@ -186,7 +184,7 @@ namespace QLearningMaze.Ui.Forms
         private void TrainingProgress_Shown(object sender, EventArgs e)
         {
 
-            trainingProgressBar.Maximum = _mazeNew.MaxEpisodes;
+            trainingProgressBar.Maximum = _mazeNew.NumberOfTrainingEpisodes;
             trainingProgressBar.Value = 0;
             trainingProgressBar.Step = 1;
             TrainingTask();

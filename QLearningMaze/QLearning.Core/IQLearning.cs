@@ -13,12 +13,12 @@ namespace QLearning.Core
         event EventHandler<AgentCompletedEventArgs> AgentCompleted;
         
         int NumberOfStates { get; }
-        int TotalSpaces { get; set; }
+        int StatesPerPhase { get; set; }
         double DiscountRate { get; set; }
         double LearningRate { get; set; }
-        int[][] ObservationSpace { get; set; }
-        double[][] Rewards { get; set; }
-        double[][] Quality { get; set; }
+        int[][] StatesTable { get; set; }
+        double[][] RewardsTable { get; set; }
+        double[][] QualityTable { get; set; }
         double EpsilonDecayStart { get; set; }
         double EpsilonDecayEnd { get; set; }
         List<int> ObjectiveStates { get; set; }
@@ -27,9 +27,9 @@ namespace QLearning.Core
         double ObjectiveReward { get; set; }
         string QualitySaveDirectory { get; set; }
         int MaximumAllowedBacktracks { get; set; }
-        int MaxEpisodes { get; set; }
+        int NumberOfTrainingEpisodes { get; set; }
         List<TrainingSession> TrainingEpisodes { get; set; }
-        int SaveQualityFrequency { get; set; }
+        int QualitySaveFrequency { get; set; }
 
         void InitializeStatesTable(int numberOfStates, int numberOfActions);
         void InitializeStatesTable();
@@ -38,7 +38,7 @@ namespace QLearning.Core
         void InitializeQualityTable(int numberOfStates, int numberOfActions);
         void InitializeQualityTable();
         void Train();
-        void RunMaze(int fromState);
+        void RunAgent(int fromState);
         int GetNextState(int state, int action);
     }
 }

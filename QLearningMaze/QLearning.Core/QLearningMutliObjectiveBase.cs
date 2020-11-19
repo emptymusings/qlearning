@@ -47,9 +47,9 @@
 
         private void SetPhaseSize()
         {
-            if (TotalSpaces <= 0)
+            if (StatesPerPhase <= 0)
             {
-                TotalSpaces = ObservationSpace.Length;
+                StatesPerPhase = StatesTable.Length;
             }
         }
 
@@ -95,8 +95,8 @@
                 else
                 {
                     SetObjectiveActionNextState(objective.State + rewardPriority);
-                    Rewards[objective.State + rewardPriority][GetRewardAction] = objective.Value;
-                    rewardPriority += TotalSpaces;
+                    RewardsTable[objective.State + rewardPriority][GetRewardAction] = objective.Value;
+                    rewardPriority += StatesPerPhase;
                 }
             }
         }
@@ -105,23 +105,33 @@
         {
             int phase = 0;
 
-            while (phase < ObservationSpace.Length)
+            while (phase < StatesTable.Length)
             {
-                for (int i = 0; i < _numberOfActions; i++)
+                for (int i = 0; i < _numberOfStates; i++)
                 {
-                    Rewards[objective.State + phase][i] = objective.Value;
+                    for (int j = 0; j < _numberOfActions; j++)
+                    {
+                        if (StatesTable[i][j] == objective.State + phase)
+                        {
+                            RewardsTable[i][j] = objective.Value;
+                        }
+                    }
                 }
-                //Rewards[objective.State + phase - 1][GetRewardAction] = objective.Value;
 
-                phase += TotalSpaces;
+                //for (int i = 0; i < StatesTable[phase].Length; ++i)
+                //{
+                //    RewardsTable[phase][i] = objective.Value;
+                //}
+
+                phase += StatesPerPhase;
             }
         }
 
         protected virtual void SetObjectiveActionNextState(int state)
         {
-            if (state + (TotalSpaces) <= ObservationSpace.Length - 1)
+            if (state + (StatesPerPhase) <= StatesTable.Length - 1)
             {
-                ObservationSpace[state][GetRewardAction] = state + TotalSpaces;
+                StatesTable[state][GetRewardAction] = state + StatesPerPhase;
             }
         }
     }

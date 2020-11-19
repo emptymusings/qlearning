@@ -43,7 +43,7 @@
             ObjectiveReward = objectiveReward;
             ObjectiveAction = objectiveAction;
             ObjectiveStates = objectiveStates;
-            MaxEpisodes = maxEpisodes;
+            NumberOfTrainingEpisodes = maxEpisodes;
             MaximumAllowedMoves = maximumAllowedMoves;
             MaximumAllowedBacktracks = maximumAllowedBacktracks;
         }
@@ -52,29 +52,29 @@
         {
             get
             {
-                if (ObservationSpace == null)
+                if (StatesTable == null)
                     return 0;
 
-                return ObservationSpace.Length;
+                return StatesTable.Length;
             }
         }
-        public virtual int[][] ObservationSpace { get; set; }
-        public virtual double[][] Rewards { get; set; }
-        public virtual double[][] Quality { get; set; }
+        public virtual int[][] StatesTable { get; set; }
+        public virtual double[][] RewardsTable { get; set; }
+        public virtual double[][] QualityTable { get; set; }
         public virtual double EpsilonDecayStart { get; set; } = 1;
         public virtual double EpsilonDecayEnd { get; set; }
         public virtual double LearningRate { get; set; }
         public virtual double DiscountRate { get; set; }
         public virtual List<int> ObjectiveStates { get; set; } = new List<int>();
         public virtual int ObjectiveAction { get; set; }
-        public virtual int MaximumAllowedMoves { get; set; } = 1000;
+        public virtual int MaximumAllowedMoves { get; set; } = 100000;
         public virtual double ObjectiveReward { get; set; }
         public virtual string QualitySaveDirectory { get; set; }
         public virtual int MaximumAllowedBacktracks { get; set; } = -1;
-        public virtual int MaxEpisodes { get; set; }
+        public virtual int NumberOfTrainingEpisodes { get; set; }
         public virtual List<TrainingSession> TrainingEpisodes { get; set; }
-        public virtual int SaveQualityFrequency { get; set; } = 100;
-        public virtual int TotalSpaces { get; set; }
+        public virtual int QualitySaveFrequency { get; set; } = 100;
+        public virtual int StatesPerPhase { get; set; }
 
         public virtual void InitializeStatesTable(int numberOfStates, int numberOfActions)
         {
@@ -86,15 +86,15 @@
 
         public virtual void InitializeStatesTable()
         {
-            ObservationSpace = new int[_numberOfStates][];
+            StatesTable = new int[_numberOfStates][];
             
             for (int i = 0; i < _numberOfStates; ++i)
             {
-                ObservationSpace[i] = new int[_numberOfActions];
+                StatesTable[i] = new int[_numberOfActions];
                 
                 for (int j = 0; j < _numberOfActions; ++j)
                 {
-                    ObservationSpace[i][j] = -1;
+                    StatesTable[i][j] = -1;
                 }
             }
         }
@@ -109,14 +109,14 @@
 
         public virtual void InitializeRewardsTable()
         {
-            if (Rewards == null ||
-                Rewards.Length < _numberOfStates)
+            if (RewardsTable == null ||
+                RewardsTable.Length < _numberOfStates)
             {
-                Rewards = new double[_numberOfStates][];
+                RewardsTable = new double[_numberOfStates][];
 
                 for (int i = 0; i < _numberOfStates; ++i)
                 {
-                    Rewards[i] = new double[_numberOfActions];
+                    RewardsTable[i] = new double[_numberOfActions];
                 }
             }
         }
@@ -131,11 +131,11 @@
 
         public virtual void InitializeQualityTable()
         {
-            Quality = new double[_numberOfStates][];
+            QualityTable = new double[_numberOfStates][];
 
             for (int i = 0; i < _numberOfStates; ++i)
             {
-                Quality[i] = new double[_numberOfActions];
+                QualityTable[i] = new double[_numberOfActions];
             }
         }
 
@@ -162,27 +162,27 @@
 
             double epsilon = 1;
 
-            EpsilonDecayEnd = MaxEpisodes / 2;
+            EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
             _epsilonDecayValue = epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
 
             TrainingEpisodes = new List<TrainingSession>();
             OnTrainingStateChanged(true);
 
-            for (int episode = 0; episode < MaxEpisodes; ++episode)
+            for (int episode = 0; episode < NumberOfTrainingEpisodes; ++episode)
             {
                 var episodeResults = RunTrainingEpisode(epsilon);
                 var state = episodeResults.finalState;
                 var moves = episodeResults.moves;
 
                 if (ObjectiveStates.Contains(state) &&
-                    (1 + episode) % SaveQualityFrequency == 0)
+                    (1 + episode) % QualitySaveFrequency == 0)
                 {
                     SaveQualityForEpisode(episode + 1, moves);
                 }
 
                 epsilon = DecayEpsilon(episode, epsilon);
 
-                OnTrainingEpisodeCompleted(episode, MaxEpisodes, moves, _accumulatedEpisodeRewards, ObjectiveStates.Contains(state));
+                OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, moves, _accumulatedEpisodeRewards, ObjectiveStates.Contains(state));
             }
 
             OnTrainingStateChanged(false);
@@ -197,18 +197,21 @@
             int moves = 0;
             int previousState = -1;
             bool done = false;
-            int state = _random.Next(0, _numberOfStates);
+            int state = _random.Next(0, NumberOfStates);
 
             _accumulatedEpisodeRewards = 0;
 
             while (!done)
             {
                 moves++;
-                int nextAction = GetGreedyNextAction(state, epsilon);
+                var nextActionSet = GetGreedyNextAction(state, epsilon);
+                int nextAction = nextActionSet.nextAction;
+                bool usedGreed = nextActionSet.usedGreedy;
+
                 CalculateQValue(state, nextAction);
 
                 previousState = state;
-                state = ObservationSpace[state][nextAction];
+                state = StatesTable[state][nextAction];
 
                 if (state == previousState)
                     state = _random.Next(0, _numberOfStates);
@@ -228,10 +231,11 @@
         /// </summary>
         /// <param name="state">The state in which the agent currently resides</param>
         /// <param name="epsilon"></param>
-        protected virtual int GetGreedyNextAction(int state, double epsilon)
+        protected virtual (int nextAction, bool usedGreedy) GetGreedyNextAction(int state, double epsilon)
         {
             double randRand = _random.NextDouble();
             int nextAction = -1;
+            bool usedGreedy = false;
 
             if (randRand > epsilon)
             {
@@ -240,13 +244,14 @@
                 if (preferredNext >= 0)
                 {
                     nextAction = preferredNext;
+                    usedGreedy = true;
                 }
             }
 
             while (nextAction < 0)
                 nextAction = GetRandomNextAction(state);
 
-            return nextAction;
+            return (nextAction, usedGreedy);
         }
 
         /// <summary>
@@ -258,13 +263,13 @@
         {
             int preferredNext = -1;
             double max = double.MinValue;
-
-            for (int i = 0; i < this.Quality[state].Length; ++i)
+            
+            for (int i = 0; i < this.QualityTable[state].Length; ++i)
             {
-                if (this.Quality[state][i] > max &&
-                    Quality[state][i] != 0)
+                if (this.QualityTable[state][i] > max &&
+                    QualityTable[state][i] != 0)
                 {
-                    max = this.Quality[state][i];
+                    max = this.QualityTable[state][i];
                     preferredNext = i;
                 }
             }
@@ -282,6 +287,16 @@
             int count = possibleNextStates.Count;
             int index = _random.Next(0, count);
 
+            //List<int> possibleNextStates = StatesTable[state].ToList();
+            //int index = _random.Next(0, possibleNextStates.Count);
+
+            //while (StatesTable[state][index] < 0)
+            //{
+            //    index = _random.Next(0, possibleNextStates.Count);
+            //}
+
+            //return index;
+
             if (possibleNextStates.Count > 0)
                 return possibleNextStates[index];
             else
@@ -298,7 +313,7 @@
 
             for (int i = 0; i < actionCount; ++i)
             {
-                if (ObservationSpace[state][i] >= 0)
+                if (StatesTable[state][i] >= 0)
                 {
                     result.Add(i);
                 }
@@ -309,7 +324,7 @@
 
         protected virtual void CalculateQValue(int state, int action)
         {
-            int nextState = ObservationSpace[state][action];
+            int nextState = StatesTable[state][action];
 
             if (!IsValidState(nextState)) ThrowInvalidActionException(state, action);
 
@@ -317,32 +332,34 @@
             var maxQ = forecaster.maxQ;
             var selectedNextState = forecaster.selectedNextState;
 
-            var r = Rewards[state][action];
-            var q = Quality[state][action] + (LearningRate * (r + (DiscountRate * maxQ) - Quality[state][action]));
-            // I have found a couple of Q-Value formulas.  Aside form some rounding issues, this and the formula below it are identical
-            //double similarQFormula  = ((1 - LearningRate) * Quality[state][action]) + (LearningRate * (r + (DiscountRate * maxQ)));
+            var r = RewardsTable[state][action];
+            var q = QualityTable[state][action] + (LearningRate * (r + (DiscountRate * maxQ) - QualityTable[state][action]));
 
-            Quality[state][action] = q;
+            // I have found a couple of Q-Value formulas.  Aside form some rounding issues, this and the formula below it are identical
+            double similarQFormula  = ((1 - LearningRate) * QualityTable[state][action]) + (LearningRate * (r + (DiscountRate * maxQ)));
+
+            QualityTable[state][action] = similarQFormula;
             _accumulatedEpisodeRewards += r;
         }
 
         /// <summary>
         /// Gets the maximum quality for future position based on the agent's state
         /// </summary>
-        protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int state)
+        protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int nextState)
         {
             double maxQ = double.MinValue;
-            List<int> possNextNextActions = GetPossibleNextActions(state);
+            List<int> possNextNextActions = GetPossibleNextActions(nextState);
             int selectedNextState = -1;
+
+            double max = QualityTable[nextState].Cast<double>().Max();
 
             for (int i = 0; i < possNextNextActions.Count; ++i)
             {
                 int futureNextAction = possNextNextActions[i];  // short alias
 
-                double futureQuality = Quality[state][futureNextAction];
-                int nextState = ObservationSpace[state][futureNextAction];
+                double futureQuality = QualityTable[nextState][futureNextAction];
 
-                if (!IsValidState(nextState)) ThrowInvalidActionException(state, futureNextAction);
+                if (!IsValidState(nextState)) ThrowInvalidActionException(nextState, futureNextAction);
 
                 if (futureQuality > maxQ)
                 {
@@ -351,11 +368,18 @@
                 }
             }
 
+            
             return (selectedNextState, maxQ);
         }
 
         protected virtual void InitializeSaveFolder()
         {
+            if (string.IsNullOrEmpty(QualitySaveDirectory))
+            {
+                var executingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                QualitySaveDirectory = executingDirectory + @"\TrainingSessions";
+            }
+
             if (!Directory.Exists(QualitySaveDirectory))
             {
                 Directory.CreateDirectory(QualitySaveDirectory);
@@ -374,7 +398,7 @@
                 Episode = episode,
                 Moves = moves,
                 Score = _accumulatedEpisodeRewards,
-                Quality = Quality
+                Quality = QualityTable
             };
 
             TrainingEpisodes.Add(trainingEpisode);
@@ -395,7 +419,7 @@
             return epsilon;
         }
 
-        public virtual void RunMaze(int fromState)
+        public virtual void RunAgent(int fromState)
         {
             int action = -1;
             int nextState;
@@ -408,18 +432,18 @@
 
             while (!done)
             {
-                if (Quality == null)
+                if (QualityTable == null)
                     throw new InvalidOperationException($"The Q-table has not been initialized.  Train the agent first");
 
                 action = GetPreferredNextAction(fromState);
-                nextState = ObservationSpace[fromState][action];
+                nextState = StatesTable[fromState][action];
 
-                if (ObservationSpace[fromState][action] < 0)
+                if (StatesTable[fromState][action] < 0)
                 {
                     throw new InvalidOperationException($"I guess I didn't learn very well.  Please try training again (perhaps adjusing the learning rate, discount rate, and/or episode count)");
                 }
 
-                _accumulatedEpisodeRewards += Rewards[fromState][action];
+                _accumulatedEpisodeRewards += RewardsTable[fromState][action];
                 moves++;
 
                 if (moves > MaximumAllowedMoves)
@@ -445,7 +469,7 @@
 
                 OnAgentStateChanged(fromState, moves, _accumulatedEpisodeRewards);
 
-                if (ObjectiveStates.Contains((fromState % TotalSpaces)) &&
+                if (ObjectiveStates.Contains((fromState % StatesPerPhase)) &&
                     action == ObjectiveAction)
                 {
                     done = true;
@@ -457,7 +481,7 @@
 
         public virtual int GetNextState(int state, int action)
         {
-            return ObservationSpace[state][action];
+            return StatesTable[state][action];
         }
 
     }

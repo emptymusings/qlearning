@@ -115,11 +115,11 @@ namespace QLearningMaze.Ui.Forms
                 _moves = 0;
                 _score = 0;
 
-                maze.Quality = session.Quality;
+                maze.QualityTable = session.Quality;
 
                 try
                 {
-                    maze.RunMaze(maze.StartPosition);
+                    maze.RunAgent(maze.StartPosition);
                     session.Succeeded = true;
                 }
                 catch
@@ -137,25 +137,25 @@ namespace QLearningMaze.Ui.Forms
 
             //trainingSessions = sessions.OrderByDescending(s => s.Score).ThenBy(m => m.Moves).ThenBy(e => e.Episode);
             var selection = trainingSessions
-                .GroupBy(x => new 
-                {
-                    x.Moves,
-                    x.Score,
-                    x.Succeeded
-                })
+                //.GroupBy(x => new 
+                //{
+                //    x.Moves,
+                //    x.Score,
+                //    x.Succeeded
+                //})
                 .Select(s => new TrainingSessionEx()
                 {
-                    MinEpisode = s.Last().Episode,
-                    MaxEpisode = s.First().Episode,
-                    Episode = s.Last().Episode,
-                    Moves = s.Key.Moves,
-                    Score = s.Key.Score,
-                    Succeeded = s.Key.Succeeded,
-                    Quality = s.Last().Quality
+                    MinEpisode = s.Episode,
+                    MaxEpisode = s.Episode,
+                    Episode = s.Episode,
+                    Moves = s.Moves,
+                    Score = s.Score,
+                    Succeeded = s.Succeeded,
+                    Quality = s.Quality
                 });
 
             //trainingSessions = selection.OrderBy(e => e.MinEpisode).ToList();
-            trainingSessions = selection.OrderByDescending(s => s.Score).ThenBy(m => m.Moves).ThenBy(e => e.MinEpisode).ToList();
+            trainingSessions = selection.OrderByDescending(s => s.Score).ThenByDescending(m => m.Moves).ThenByDescending(e => e.MinEpisode).ToList();
             SelectedSession = trainingSessions.FirstOrDefault();
 
             _isChecking = false;
@@ -171,8 +171,8 @@ namespace QLearningMaze.Ui.Forms
                 _mazeNew.GoalPosition,
                 _mazeNew.DiscountRate,
                 _mazeNew.LearningRate);
-            maze.Rewards = _mazeNew.Rewards;
-            maze.ObservationSpace = _mazeNew.ObservationSpace;
+            maze.RewardsTable = _mazeNew.RewardsTable;
+            maze.StatesTable = _mazeNew.StatesTable;
             maze.AdditionalRewards = _mazeNew.AdditionalRewards;
 
             maze.AgentCompleted += Maze_AgentCompleted;
