@@ -103,25 +103,15 @@
 
         protected virtual void SetMultiPhaseObjective(CustomObjective objective)
         {
-            int phase = 0;
+
+            int phase = objective.State;
 
             while (phase < StatesTable.Length)
             {
-                for (int i = 0; i < _numberOfStates; i++)
+                for (int i = 0; i < _numberOfActions; ++i)
                 {
-                    for (int j = 0; j < _numberOfActions; j++)
-                    {
-                        if (StatesTable[i][j] == objective.State + phase)
-                        {
-                            RewardsTable[i][j] = objective.Value;
-                        }
-                    }
+                    RewardsTable[phase][i] = objective.Value;
                 }
-
-                //for (int i = 0; i < StatesTable[phase].Length; ++i)
-                //{
-                //    RewardsTable[phase][i] = objective.Value;
-                //}
 
                 phase += StatesPerPhase;
             }
@@ -129,6 +119,11 @@
 
         protected virtual void SetObjectiveActionNextState(int state)
         {
+            for (int i = 0; i < _numberOfActions; ++i)
+            {
+                StatesTable[state][i] = -1;
+            }
+
             if (state + (StatesPerPhase) <= StatesTable.Length - 1)
             {
                 StatesTable[state][GetRewardAction] = state + StatesPerPhase;

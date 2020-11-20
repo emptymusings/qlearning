@@ -70,7 +70,7 @@
             if (AdditionalRewards == null)
                 AdditionalRewards = new List<CustomObjective>();
 
-            _numberOfStates = Rows * Columns * (AdditionalRewards.Where(v => v.Value >= 0).Count() + 1);
+            _numberOfStates = Rows * Columns * (AdditionalRewards.Count + 1);
             base.InitializeStatesTable();
             ObjectiveAction = (int)Actions.CompleteRun;
 
@@ -125,13 +125,9 @@
             // Use the base rewards assignment
             base.InitializeRewardsTable();
 
-            int phase = 0;
-
-            while (GoalPosition + phase < NumberOfStates)
-            {
-                RewardsTable[GoalPosition + phase][(int)Actions.CompleteRun] = ObjectiveReward;
-                phase += StatesPerPhase;
-            }
+            int goalToEnd = StatesPerPhase - (GoalPosition % StatesPerPhase);
+            int finalGoalRewardState = NumberOfStates - goalToEnd;
+            RewardsTable[finalGoalRewardState][(int)Actions.CompleteRun] = ObjectiveReward;
         }
 
         protected virtual int GetPosition(int state)

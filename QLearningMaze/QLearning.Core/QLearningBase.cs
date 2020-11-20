@@ -331,12 +331,12 @@
             var forecaster = GetFuturePositionMaxQ(nextState);
             var maxQ = forecaster.maxQ;
             var selectedNextState = forecaster.selectedNextState;
-
+            
             var r = RewardsTable[state][action];
             var q = QualityTable[state][action] + (LearningRate * (r + (DiscountRate * maxQ) - QualityTable[state][action]));
 
             // I have found a couple of Q-Value formulas.  Aside form some rounding issues, this and the formula below it are identical
-            double similarQFormula  = ((1 - LearningRate) * QualityTable[state][action]) + (LearningRate * (r + (DiscountRate * maxQ)));
+            double similarQFormula = ((1 - LearningRate) * QualityTable[state][action]) + (LearningRate * (r + (DiscountRate * maxQ))); 
 
             QualityTable[state][action] = similarQFormula;
             _accumulatedEpisodeRewards += r;
