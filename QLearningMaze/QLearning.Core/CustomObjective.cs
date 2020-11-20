@@ -8,7 +8,6 @@ namespace QLearning.Core
     {
         public int State { get; set; }
         public double Value { get; set; }
-        public bool IsMultiphase { get; set; } = false;
-        public bool IsRequred { get; set; } = false;
+        public bool IsRequired { get; set; } = true;
     }
 }

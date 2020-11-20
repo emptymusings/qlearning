@@ -577,7 +577,6 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.entryPanel.ResumeLayout(false);
             this.entryPanel.PerformLayout();
             this.groupBox1.ResumeLayout(false);

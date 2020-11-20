@@ -33,7 +33,11 @@ namespace QLearningMaze.Ui.Forms
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            _mazeNew.AddReward(Convert.ToInt32(positionText.Text), Convert.ToDouble(valueText.Text));
+            int position = Convert.ToInt32(positionText.Text);
+            double value = Convert.ToDouble(valueText.Text);
+            bool isRequired = value >= 0;
+
+            _mazeNew.AddReward(position, value, isRequired);
             var lvi = new ListViewItem(positionText.Text);
             lvi.SubItems.Add(valueText.Text);
             rewardsList.Items.Add(lvi);

@@ -228,9 +228,9 @@
             AdditionalRewards.Add(reward);
         }
 
-        public virtual void AddReward(int state, double reward)
+        public virtual void AddReward(int state, double reward, bool isRequired)
         {
-            AddReward(new CustomObjective { State = state, Value = reward });
+            AddReward(new CustomObjective { State = state, Value = reward, IsRequired = isRequired });
         }
 
         public virtual void RemoveReward(int state)

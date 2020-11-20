@@ -47,7 +47,7 @@
 
             foreach (var reward in oldMaze.AdditionalRewards)
             {
-                newMaze.AddReward(reward.Position, reward.Value);
+                newMaze.AddReward(reward.Position, reward.Value, (reward.Value >= 0));
             }
 
             File.Move(file, _converted + fn);

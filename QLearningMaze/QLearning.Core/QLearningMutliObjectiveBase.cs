@@ -87,7 +87,7 @@
 
             foreach(var objective in prioritizedObjectives)
             {
-                if (objective.IsMultiphase ||
+                if (!objective.IsRequired ||
                     objective.Value < 0)
                 {
                     SetMultiPhaseObjective(objective);

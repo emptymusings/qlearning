@@ -17,7 +17,7 @@
         void RemoveObstruction(int betweenState, int andState);
 
         void AddReward(CustomObjective reward);
-        void AddReward(int state, double value);
+        void AddReward(int state, double value, bool isRequired = true);
         void RemoveReward(int state);
         List<CustomObjective> GetAdditionalRewards();
     }
