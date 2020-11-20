@@ -70,7 +70,7 @@
             if (AdditionalRewards == null)
                 AdditionalRewards = new List<CustomObjective>();
 
-            _numberOfStates = Rows * Columns * (AdditionalRewards.Count + 1);
+            _numberOfStates = Rows * Columns * (AdditionalRewards.Where(v => v.Value > 0).Count() + 1);
             base.InitializeStatesTable();
             ObjectiveAction = (int)Actions.CompleteRun;
 

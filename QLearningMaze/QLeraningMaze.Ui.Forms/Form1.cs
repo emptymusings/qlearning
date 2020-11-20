@@ -111,6 +111,8 @@ namespace QLearningMaze.Ui.Forms
                 _mazeNew = MazeUtilities.LoadObject<MazeBaseNew>(dlg.FileName);
 
                 _mazeNew.ObjectiveReward = 200;
+                _mazeNew.MaximumAllowedMoves = _mazeNew.NumberOfStates;
+                _mazeNew.MaximumAllowedBacktracks = 3;
                 _mazeNew.AgentStateChanged += MazeNew_AgentStateChanged;
                 _mazeNew.AgentCompleted += MazeNew_AgentCompleted;
                 _mazeNew.TrainingAgentStateChanged += MazeNew_TrainingAgentStateChanged;

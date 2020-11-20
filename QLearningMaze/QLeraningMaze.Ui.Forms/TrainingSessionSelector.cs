@@ -69,6 +69,7 @@ namespace QLearningMaze.Ui.Forms
                     lvi.SubItems.Add(session.MaxEpisode.ToString());
                     lvi.SubItems.Add(session.Moves.ToString("#,##0"));
                     lvi.SubItems.Add(session.Score.ToString("#,##0.##"));
+                    lvi.SubItems.Add(session.Succeeded ? "Yes" : "No");
                     sesssionList.Items.Add(lvi);
                 }
 
@@ -126,7 +127,7 @@ namespace QLearningMaze.Ui.Forms
                 {
                     //sessions.RemoveAt(i);
                     session.Succeeded = false;                    
-                    continue;
+                    //continue;
                 }
 
                 session.Moves = _moves;
@@ -155,7 +156,7 @@ namespace QLearningMaze.Ui.Forms
                 });
 
             //trainingSessions = selection.OrderBy(e => e.MinEpisode).ToList();
-            trainingSessions = selection.OrderByDescending(s => s.Score).ThenByDescending(m => m.Moves).ThenByDescending(e => e.MinEpisode).ToList();
+            trainingSessions = selection.OrderByDescending(s => s.Succeeded).ThenByDescending(s => s.Score).ThenByDescending(m => m.Moves).ThenByDescending(e => e.MinEpisode).ToList();
             SelectedSession = trainingSessions.FirstOrDefault();
 
             _isChecking = false;
