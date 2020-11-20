@@ -70,7 +70,8 @@
             if (AdditionalRewards == null)
                 AdditionalRewards = new List<CustomObjective>();
 
-            _numberOfStates = Rows * Columns * (AdditionalRewards.Where(v => v.Value > 0).Count() + 1);
+            
+            _numberOfStates = Rows * Columns * GetCustomRewardPhaseAdjustment();
             base.InitializeStatesTable();
             ObjectiveAction = (int)Actions.CompleteRun;
 
@@ -94,6 +95,11 @@
             }
 
             SetObstructions();
+        }
+
+        protected virtual int GetCustomRewardPhaseAdjustment()
+        {
+            return (AdditionalRewards.Where(v => v.Value > 0).Count() + 1);
         }
 
         public override void InitializeRewardsTable()
