@@ -1,6 +1,6 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
-    partial class Form1
+    partial class MazeMain
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MazeMain));
             this.entryPanel = new System.Windows.Forms.Panel();
             this.rewardsButton = new System.Windows.Forms.Button();
             this.clearObstructionsButton = new System.Windows.Forms.Button();
@@ -71,11 +71,11 @@
             this.viewStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qualityMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rewardsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mazeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trainStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runMazeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qualityStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.entryPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -530,6 +530,12 @@
             this.rewardsMenuItem.Size = new System.Drawing.Size(296, 44);
             this.rewardsMenuItem.Text = "Rewards Table";
             // 
+            // statesMenuItem
+            // 
+            this.statesMenuItem.Name = "statesMenuItem";
+            this.statesMenuItem.Size = new System.Drawing.Size(296, 44);
+            this.statesMenuItem.Text = "&State Space";
+            // 
             // mazeStripMenuItem
             // 
             this.mazeStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -558,13 +564,7 @@
             this.qualityStripMenuItem.Size = new System.Drawing.Size(294, 44);
             this.qualityStripMenuItem.Text = "Select &Quality";
             // 
-            // statesMenuItem
-            // 
-            this.statesMenuItem.Name = "statesMenuItem";
-            this.statesMenuItem.Size = new System.Drawing.Size(296, 44);
-            this.statesMenuItem.Text = "&State Space";
-            // 
-            // Form1
+            // MazeMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -574,8 +574,8 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MazeMain";
+            this.Text = "Maze";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.entryPanel.ResumeLayout(false);
             this.entryPanel.PerformLayout();

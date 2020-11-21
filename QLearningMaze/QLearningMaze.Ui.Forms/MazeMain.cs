@@ -9,7 +9,7 @@
     using QLearningMaze.Core.Mazes;
     
 
-    public partial class Form1 : Form
+    public partial class MazeMain : Form
     {
         private IMaze _maze = new MazeBase(8, 8, 11, 31, 0.5, 0.5);
         private int _movementPause = 100;
@@ -18,7 +18,7 @@
         private List<QLearning.Core.CustomObjective> _additionalRewards = new List<QLearning.Core.CustomObjective>();
         private TrainingSessionSelector _trainingSessionSelector = null;
 
-        public Form1()
+        public MazeMain()
         {
             InitializeComponent();
             saveMenuItem.Click += SaveMenuItem_Click;
@@ -102,7 +102,7 @@
                 obstructionsList.Items.Clear();
                 mazeSpace.Enabled = false;
                 _maze = MazeUtilities.LoadObject<MazeBase>(dlg.FileName);
-
+                                
                 _maze.ObjectiveReward = 200;
                 _maze.MaximumAllowedMoves = _maze.NumberOfStates;
                 _maze.MaximumAllowedBacktracks = 3;

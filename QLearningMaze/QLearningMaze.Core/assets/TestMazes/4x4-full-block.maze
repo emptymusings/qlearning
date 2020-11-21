@@ -45,7 +45,7 @@
   "GetRewardAction": 5,
   "PrioritizeFromState": 0,
   "AdditionalRewards": [],
-  "NumberOfStates": 0,
+  "NumberOfStates": 16,
   "StatesTable": null,
   "RewardsTable": [
     [

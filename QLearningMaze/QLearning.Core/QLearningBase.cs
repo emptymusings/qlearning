@@ -53,7 +53,7 @@
             get
             {
                 if (StatesTable == null)
-                    return 0;
+                    InitializeStatesTable();
 
                 return StatesTable.Length;
             }

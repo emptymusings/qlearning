@@ -100,7 +100,7 @@ namespace QLearningMaze.Ui.Forms
 
         private Task RunTests()
         {
-            var sessions = TrainingSession.GetTrainingSessions().OrderBy(e => e.Episode).ToList();
+            var sessions = TrainingSession.GetTrainingSessions(_maze.QualitySaveDirectory).OrderBy(e => e.Episode).ToList();
             var maze = GetTestMaze();
 
             for (int i = sessions.Count - 1; i >= 0; --i)
