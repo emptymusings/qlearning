@@ -5,7 +5,7 @@
     using System.Text;
     using System.Linq;
 
-    public class QLearningMutliObjectiveBase : QLearningBase, IQLearningMultiObjective
+    public abstract class QLearningMutliObjectiveBase : QLearningBase, IQLearningMultiObjective
     {
         public virtual int GetRewardAction { get; set; } = -1;
         public virtual int PrioritizeFromState { get; set; }
@@ -53,18 +53,17 @@
             }
         }
 
-        public override void InitializeRewardsTable(int numberOfStates, int numberOfActions)
+        public override void InitializeRewardsTable(bool overrideBaseEvents)
         {
-            SetPhaseSize();
-            base.InitializeRewardsTable(numberOfStates, numberOfActions);
-            SetCustomObjectives();
-        }
+            if (!overrideBaseEvents)
+                OnRewardTableCreating();
 
-        public override void InitializeRewardsTable()
-        {
             SetPhaseSize();
-            base.InitializeRewardsTable();
+            base.InitializeRewardsTable(true);
             SetCustomObjectives();
+
+            if (!overrideBaseEvents)
+                OnRewardTableCreated();
         }
 
         public virtual void SetCustomObjectives()

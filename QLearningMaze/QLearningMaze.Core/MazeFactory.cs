@@ -12,7 +12,7 @@ namespace QLearningMaze.Core
     }
     public class MazeFactory
     {
-        public static IMaze CreateMaze(
+        public static IMazeOld CreateMazeOld(
             MazeTypes mazeType = MazeTypes.Undefined,
             int rows = 4,
             int columns = 4,
@@ -47,7 +47,7 @@ namespace QLearningMaze.Core
             }
         }
 
-        public static IMazeNew CreateMazeNew(
+        public static IMaze CreateMaze(
             int rows,
             int columns,
             int startPosition,
@@ -56,7 +56,7 @@ namespace QLearningMaze.Core
             double learningRate,
             int trainingEpisodes)
         {
-            return new MazeBaseNew(
+            return new MazeBase(
                 columns,
                 rows,
                 startPosition,

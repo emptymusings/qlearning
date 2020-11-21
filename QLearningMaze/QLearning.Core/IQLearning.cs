@@ -6,6 +6,12 @@ namespace QLearning.Core
 {
     public interface IQLearning
     {
+        event EventHandler StateTableCreating;
+        event EventHandler StateTableCreated;
+        event EventHandler RewardTableCreating;
+        event EventHandler RewardTableCreated;
+        event EventHandler QualityTableCreating;
+        event EventHandler QualityTableCreated;
         event EventHandler<AgentStateChangedEventArgs> AgentStateChanged;
         event EventHandler<TrainingAgentStateChangedEventArgs> TrainingAgentStateChanged;
         event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompleted;
@@ -31,13 +37,15 @@ namespace QLearning.Core
         List<TrainingSession> TrainingEpisodes { get; set; }
         int QualitySaveFrequency { get; set; }
 
-        void InitializeStatesTable(int numberOfStates, int numberOfActions);
+        void InitializeStatesTable(bool overrideBaseEvents);
         void InitializeStatesTable();
-        void InitializeRewardsTable(int numberOfStates, int numberOfActions);
+        void InitializeRewardsTable(bool overrideBaseEvents);
         void InitializeRewardsTable();
-        void InitializeQualityTable(int numberOfStates, int numberOfActions);
+        void InitializeQualityTable(bool overrideBaseEvents);
         void InitializeQualityTable();
+        void Train(bool overrideBaseEvents);
         void Train();
+        void RunAgent(int fromState, bool overrideBaseEvents);
         void RunAgent(int fromState);
         int GetNextState(int state, int action);
     }

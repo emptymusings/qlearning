@@ -1,6 +1,6 @@
 ﻿namespace QLearningMaze.Core.Mazes
 {
-    class OriginalMaze : MazeBase, IMaze
+    class OriginalMaze : MazeBaseOld, IMazeOld
     {
         public OriginalMaze(
             int rows,

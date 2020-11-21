@@ -4,7 +4,7 @@ using System.Text;
 
 namespace QLearningMaze.Core.Mazes
 {
-    public abstract partial class MazeBase : IMaze
+    public abstract partial class MazeBaseOld : IMazeOld
     {
         public event EventHandler ObservationSpaceCreatingEventHandler;
 

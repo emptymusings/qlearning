@@ -14,7 +14,7 @@ namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingSessionSelector : Form
     {
-        private IMazeNew _mazeNew;
+        private IMaze _maze;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -22,10 +22,10 @@ namespace QLearningMaze.Ui.Forms
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(IMazeNew mazeNew)
+        public TrainingSessionSelector(IMaze maze)
         {
             InitializeComponent();
-            _mazeNew = mazeNew;
+            _maze = maze;
         }
 
         private delegate void ShowResultsHandler();
@@ -163,18 +163,18 @@ namespace QLearningMaze.Ui.Forms
             return Task.CompletedTask;
         }
 
-        private MazeBaseNew GetTestMaze()
+        private MazeBase GetTestMaze()
         {
-            var maze = new MazeBaseNew(
-                _mazeNew.Columns,
-                _mazeNew.Rows,
-                _mazeNew.StartPosition,
-                _mazeNew.GoalPosition,
-                _mazeNew.DiscountRate,
-                _mazeNew.LearningRate);
-            maze.RewardsTable = _mazeNew.RewardsTable;
-            maze.StatesTable = _mazeNew.StatesTable;
-            maze.AdditionalRewards = _mazeNew.AdditionalRewards;
+            var maze = new MazeBase(
+                _maze.Columns,
+                _maze.Rows,
+                _maze.StartPosition,
+                _maze.GoalPosition,
+                _maze.DiscountRate,
+                _maze.LearningRate);
+            maze.RewardsTable = _maze.RewardsTable;
+            maze.StatesTable = _maze.StatesTable;
+            maze.AdditionalRewards = _maze.AdditionalRewards;
 
             maze.AgentCompleted += Maze_AgentCompleted;
 

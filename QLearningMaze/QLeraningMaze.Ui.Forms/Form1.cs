@@ -11,7 +11,7 @@
 
     public partial class Form1 : Form
     {
-        private IMazeNew _mazeNew = new MazeBaseNew(8, 8, 11, 31, 0.5, 0.5);
+        private IMaze _maze = new MazeBase(8, 8, 11, 31, 0.5, 0.5);
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
         private bool _needsRetrain = false;
@@ -30,9 +30,9 @@
             trainStripMenuItem.Click += TrainStripMenuItem_Click;
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
-            _mazeNew.AgentStateChanged += MazeNew_AgentStateChanged;
-            _mazeNew.AgentCompleted += MazeNew_AgentCompleted;
-            _mazeNew.TrainingAgentStateChanged += MazeNew_TrainingAgentStateChanged;
+            _maze.AgentStateChanged += Maze_AgentStateChanged;
+            _maze.AgentCompleted += Maze_AgentCompleted;
+            _maze.TrainingAgentStateChanged += Maze_TrainingAgentStateChanged;
         }
 
 
@@ -58,7 +58,7 @@
             double oldQuality = e.OldQuality;
 
         }
-        private void MazeNew_TrainingAgentStateChanged(object sender, QLearning.Core.TrainingAgentStateChangedEventArgs e)
+        private void Maze_TrainingAgentStateChanged(object sender, QLearning.Core.TrainingAgentStateChangedEventArgs e)
         {
             int newState = e.NewState;
             double newQuality = e.NewQuality;
@@ -67,23 +67,23 @@
 
         private void RewardsMenuItem_Click(object sender, EventArgs e)
         {
-            var view = new TabledDetailsView(_mazeNew, TabledDetailsView.ValueTypes.Rewards);
+            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.Rewards);
             view.Show();
         }
 
         private void QualityMenuItem_Click(object sender, EventArgs e)
         {
-            if (_mazeNew.QualityTable == null) trainMazeButton_Click(sender, e);
+            if (_maze.QualityTable == null) trainMazeButton_Click(sender, e);
 
-            var view = new TabledDetailsView(_mazeNew, TabledDetailsView.ValueTypes.Quality);
+            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.Quality);
             view.Show();
         }
 
         private void StatesMenuItem_Click(object sender, EventArgs e)
         {
-            if (_mazeNew.StatesTable == null) trainMazeButton_Click(sender, e);
+            if (_maze.StatesTable == null) trainMazeButton_Click(sender, e);
 
-            var view = new TabledDetailsView(_mazeNew, TabledDetailsView.ValueTypes.StateSpace);
+            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.StateSpace);
             view.Show();
         }
 
@@ -101,14 +101,14 @@
             {
                 obstructionsList.Items.Clear();
                 mazeSpace.Enabled = false;
-                _mazeNew = MazeUtilities.LoadObject<MazeBaseNew>(dlg.FileName);
+                _maze = MazeUtilities.LoadObject<MazeBase>(dlg.FileName);
 
-                _mazeNew.ObjectiveReward = 200;
-                _mazeNew.MaximumAllowedMoves = _mazeNew.NumberOfStates;
-                _mazeNew.MaximumAllowedBacktracks = 3;
-                _mazeNew.AgentStateChanged += MazeNew_AgentStateChanged;
-                _mazeNew.AgentCompleted += MazeNew_AgentCompleted;
-                _mazeNew.TrainingAgentStateChanged += MazeNew_TrainingAgentStateChanged;
+                _maze.ObjectiveReward = 200;
+                _maze.MaximumAllowedMoves = _maze.NumberOfStates;
+                _maze.MaximumAllowedBacktracks = 3;
+                _maze.AgentStateChanged += Maze_AgentStateChanged;
+                _maze.AgentCompleted += Maze_AgentCompleted;
+                _maze.TrainingAgentStateChanged += Maze_TrainingAgentStateChanged;
                 SetFormValuesFromMaze();
                 
                 _needsRetrain = true;
@@ -124,7 +124,7 @@
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                MazeUtilities.SaveObject(dlg.FileName, _mazeNew);
+                MazeUtilities.SaveObject(dlg.FileName, _maze);
             }
         }
                 
@@ -133,7 +133,7 @@
             var newSpace = new MazeSpace();
 
             SetMazeValuesFromForm();
-            mazeSpace.CreateMazeControls(_mazeNew);
+            mazeSpace.CreateMazeControls(_maze);
 
             foreach(var row in mazeSpace.Rows)
             {
@@ -177,9 +177,9 @@
             }
         }
 
-        private void MazeNew_AgentStateChanged(object sender, QLearning.Core.AgentStateChangedEventArgs e)
+        private void Maze_AgentStateChanged(object sender, QLearning.Core.AgentStateChangedEventArgs e)
         {
-            var newSpace = GetSpaceByPosition(e.NewState % _mazeNew.StatesPerPhase);
+            var newSpace = GetSpaceByPosition(e.NewState % _maze.StatesPerPhase);
 
             if (newSpace != null)
             {
@@ -199,7 +199,7 @@
 
                 if (newSpace.rewardLabel.Visible == true)
                 {
-                    if (_mazeNew.RewardsTable[e.NewState][(int)Actions.GetCustomReward] > -1)
+                    if (_maze.RewardsTable[e.NewState][(int)Actions.GetCustomReward] > -1)
                     {
                         newSpace.rewardLabel.Visible = false;
                     }
@@ -209,7 +209,7 @@
             }
         }
 
-        private void MazeNew_AgentCompleted(object sender, QLearning.Core.AgentCompletedEventArgs e)
+        private void Maze_AgentCompleted(object sender, QLearning.Core.AgentCompletedEventArgs e)
         {
             rewardsLabel.Text = $"Moves: {e.Moves} Reward: {e.Rewards}";
         }
@@ -230,7 +230,7 @@
             entryPanel.Enabled = false;
             if (_needsRetrain)
             {
-                _mazeNew.Train();
+                _maze.Train();
                 _needsRetrain = false;
             }
 
@@ -246,7 +246,7 @@
                 space.rewardLabel.Visible = true;
             }
 
-            var startSpace = GetSpaceByPosition(_mazeNew.StartPosition);
+            var startSpace = GetSpaceByPosition(_maze.StartPosition);
             startSpace.SetActive();
             MazeSpace.ActiveSpace = startSpace;
             startSpace.Refresh();
@@ -255,7 +255,7 @@
 
             try
             {
-                _mazeNew.RunAgent(_mazeNew.StartPosition);
+                _maze.RunAgent(_maze.StartPosition);
             }
             catch (Exception ex)
             {
@@ -275,22 +275,22 @@
         {
             _overrideRespawn = true;
 
-            rowsText.Text = _mazeNew.Rows.ToString();
-            columnsText.Text = _mazeNew.Columns.ToString();
-            startPositionText.Text = _mazeNew.StartPosition.ToString();
-            goalPositionText.Text = _mazeNew.GoalPosition.ToString();
-            discountRateText.Text = _mazeNew.DiscountRate.ToString("0.##");
-            learningRateText.Text = _mazeNew.LearningRate.ToString("0.##");
-            trainingEpisodesText.Text = _mazeNew.NumberOfTrainingEpisodes.ToString();
+            rowsText.Text = _maze.Rows.ToString();
+            columnsText.Text = _maze.Columns.ToString();
+            startPositionText.Text = _maze.StartPosition.ToString();
+            goalPositionText.Text = _maze.GoalPosition.ToString();
+            discountRateText.Text = _maze.DiscountRate.ToString("0.##");
+            learningRateText.Text = _maze.LearningRate.ToString("0.##");
+            trainingEpisodesText.Text = _maze.NumberOfTrainingEpisodes.ToString();
 
-            foreach (var obstruction in _mazeNew.Obstructions)
+            foreach (var obstruction in _maze.Obstructions)
             {
                 var lvi = new ListViewItem(obstruction.BetweenSpace.ToString());
                 lvi.SubItems.Add(obstruction.AndSpace.ToString());
                 obstructionsList.Items.Add(lvi);
             }
 
-            _additionalRewards = _mazeNew.AdditionalRewards;
+            _additionalRewards = _maze.AdditionalRewards;
 
             _overrideRespawn = false;
 
@@ -309,25 +309,25 @@
 
                 foreach(var reward in _additionalRewards)
                 {
-                    _mazeNew.AddReward(reward.State, reward.Value, (reward.IsRequired ? true : reward.Value >= 0));
+                    _maze.AddReward(reward.State, reward.Value, (reward.IsRequired ? true : reward.Value >= 0));
                 }
 
-                _additionalRewards = _mazeNew.GetAdditionalRewards().ToList();
+                _additionalRewards = _maze.GetAdditionalRewards().ToList();
             }
             catch
             {
                 return;
             }
 
-            for (int i = _mazeNew.Obstructions.Count - 1; i >= 0; i--)
+            for (int i = _maze.Obstructions.Count - 1; i >= 0; i--)
             {
-                var wall = _mazeNew.Obstructions[i];
-                _mazeNew.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
+                var wall = _maze.Obstructions[i];
+                _maze.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
             }
 
             foreach (ListViewItem lvi in obstructionsList.Items)
             {
-                _mazeNew.AddObstruction(Convert.ToInt32(lvi.Text), Convert.ToInt32(lvi.SubItems[1].Text));
+                _maze.AddObstruction(Convert.ToInt32(lvi.Text), Convert.ToInt32(lvi.SubItems[1].Text));
             }
 
         }
@@ -360,7 +360,7 @@
             lvi.SubItems.Add(and.ToString());
 
             obstructionsList.Items.Add(lvi);
-            _mazeNew.AddObstruction(between, and);
+            _maze.AddObstruction(between, and);
             betweenText.Text = null;
             andText.Text = null;
 
@@ -381,7 +381,7 @@
 
         private void RemoveObstruction(int between, int and)
         {
-            _mazeNew.RemoveObstruction(between, and);
+            _maze.RemoveObstruction(between, and);
             
             for (int i = obstructionsList.Items.Count - 1; i >= 0; i--)
             {
@@ -401,10 +401,10 @@
         {
             obstructionsList.Items.Clear();
             
-            for (int i = _mazeNew.Obstructions.Count - 1; i >= 0; --i)
+            for (int i = _maze.Obstructions.Count - 1; i >= 0; --i)
             {
-                var wall = _mazeNew.Obstructions[i];
-                _mazeNew.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
+                var wall = _maze.Obstructions[i];
+                _maze.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
             }
 
             RespawnMaze();
@@ -423,9 +423,9 @@
 
         private void Train()
         {
-            if (Convert.ToInt32(trainingEpisodesText.Text) != _mazeNew.NumberOfTrainingEpisodes)
+            if (Convert.ToInt32(trainingEpisodesText.Text) != _maze.NumberOfTrainingEpisodes)
             {
-                _mazeNew.NumberOfTrainingEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
+                _maze.NumberOfTrainingEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
             }
 
             try
@@ -438,14 +438,15 @@
             }
             catch { }
 
-            var dlg = new TrainingProgress(_mazeNew);
+            var dlg = new TrainingProgress(_maze);
             this.Cursor = Cursors.WaitCursor;
             this.Enabled = false;
 
             try
             {
-                _mazeNew.AgentStateChanged -= MazeNew_AgentStateChanged;
-                _mazeNew.AgentCompleted -= MazeNew_AgentCompleted;
+                _maze.AgentStateChanged -= Maze_AgentStateChanged;
+                _maze.AgentCompleted -= Maze_AgentCompleted;
+                
                 dlg.ShowDialog();
             }
             catch (Exception ex)
@@ -456,8 +457,8 @@
             {
                 dlg.Dispose();
                 _needsRetrain = false;
-                _mazeNew.AgentStateChanged += MazeNew_AgentStateChanged;
-                _mazeNew.AgentCompleted += MazeNew_AgentCompleted;
+                _maze.AgentStateChanged += Maze_AgentStateChanged;
+                _maze.AgentCompleted += Maze_AgentCompleted;
 
                 this.Enabled = true;
                 this.Cursor = Cursors.Default;
@@ -471,12 +472,12 @@
             if (_trainingSessionSelector == null ||
                 _trainingSessionSelector.IsDisposed)
             {
-                _trainingSessionSelector = new TrainingSessionSelector(_mazeNew);
+                _trainingSessionSelector = new TrainingSessionSelector(_maze);
             }
 
             if (_trainingSessionSelector.ShowDialog() == DialogResult.OK)
             {
-                _mazeNew.QualityTable = _trainingSessionSelector.SelectedSession.Quality;
+                _maze.QualityTable = _trainingSessionSelector.SelectedSession.Quality;
             }
         }
 
@@ -501,11 +502,11 @@
 
         private void rowsText_Leave(object sender, EventArgs e)
         {
-            if (_mazeNew.Rows.ToString() != rowsText.Text &&
+            if (_maze.Rows.ToString() != rowsText.Text &&
                 MazeTextChanged(rowsText))
             {
                 clearObstructionsButton_Click(sender, e);
-                _mazeNew.Rows = Convert.ToInt32(rowsText.Text);
+                _maze.Rows = Convert.ToInt32(rowsText.Text);
                 _needsRetrain = true;
                 RespawnMaze();
             }
@@ -514,11 +515,11 @@
 
         private void columnsText_Leave(object sender, EventArgs e)
         {
-            if (_mazeNew.Columns.ToString() != columnsText.Text &&
+            if (_maze.Columns.ToString() != columnsText.Text &&
                 MazeTextChanged(columnsText))
             {
                 clearObstructionsButton_Click(sender, e);
-                _mazeNew.Columns = Convert.ToInt32(columnsText.Text);
+                _maze.Columns = Convert.ToInt32(columnsText.Text);
                 _needsRetrain = true;
                 RespawnMaze();
             }
@@ -529,12 +530,12 @@
             int newStartPosition;
             int oldStartPosition;
 
-            if (_mazeNew.StartPosition.ToString() != startPositionText.Text &&
+            if (_maze.StartPosition.ToString() != startPositionText.Text &&
                 MazeTextChanged(startPositionText, false))
             {
-                oldStartPosition = _mazeNew.StartPosition;
+                oldStartPosition = _maze.StartPosition;
                 newStartPosition = Convert.ToInt32(startPositionText.Text);
-                _mazeNew.StartPosition = newStartPosition;
+                _maze.StartPosition = newStartPosition;
                 GetSpaceByPosition(oldStartPosition).SetStart(false);
                 GetSpaceByPosition(newStartPosition).SetStart(true);
             }
@@ -545,12 +546,12 @@
             int newGoalPosition;
             int oldGoalPosition;
 
-            if (_mazeNew.GoalPosition.ToString() != goalPositionText.Text &&
+            if (_maze.GoalPosition.ToString() != goalPositionText.Text &&
                 MazeTextChanged(goalPositionText))
             {
-                oldGoalPosition = _mazeNew.GoalPosition;
+                oldGoalPosition = _maze.GoalPosition;
                 newGoalPosition = Convert.ToInt32(goalPositionText.Text);
-                _mazeNew.GoalPosition = newGoalPosition;
+                _maze.GoalPosition = newGoalPosition;
                 GetSpaceByPosition(oldGoalPosition).SetGoal(false);
                 GetSpaceByPosition(newGoalPosition).SetGoal(true);
             }            
@@ -560,10 +561,10 @@
         {
             _overrideRespawn = true;
 
-            if (_mazeNew.DiscountRate.ToString() != discountRateText.Text &&
+            if (_maze.DiscountRate.ToString() != discountRateText.Text &&
                 MazeTextChanged(discountRateText))
             {
-                _mazeNew.DiscountRate = Convert.ToDouble(discountRateText.Text);
+                _maze.DiscountRate = Convert.ToDouble(discountRateText.Text);
                 _needsRetrain = true;
             }
 
@@ -574,10 +575,10 @@
         {
             _overrideRespawn = true;
 
-            if (_mazeNew.LearningRate.ToString() != learningRateText.Text &&
+            if (_maze.LearningRate.ToString() != learningRateText.Text &&
                 MazeTextChanged(learningRateText))
             {
-                _mazeNew.LearningRate = Convert.ToDouble(learningRateText.Text);
+                _maze.LearningRate = Convert.ToDouble(learningRateText.Text);
                 _needsRetrain = true;
             }
 
@@ -588,10 +589,10 @@
         {
             _overrideRespawn = true;
 
-            if (_mazeNew.NumberOfTrainingEpisodes.ToString() != trainingEpisodesText.Text &&
+            if (_maze.NumberOfTrainingEpisodes.ToString() != trainingEpisodesText.Text &&
                 MazeTextChanged(trainingEpisodesText))
             {
-                _mazeNew.NumberOfTrainingEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
+                _maze.NumberOfTrainingEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
                 _needsRetrain = true;
             }
 
@@ -607,14 +608,14 @@
             {
                 case "topWall":
                     if (rowNumber == 0) return;
-                    andSpacePosition = space.Position - _mazeNew.Columns;
+                    andSpacePosition = space.Position - _maze.Columns;
                     andSpace = GetSpaceByPosition(andSpacePosition);
                     space.topWall.Visible = true;
                     andSpace.bottomWall.Visible = true;
                     break;
                 case "bottomWall":
-                    if (rowNumber == _mazeNew.Rows - 1) return;
-                    andSpacePosition = space.Position + _mazeNew.Columns;
+                    if (rowNumber == _maze.Rows - 1) return;
+                    andSpacePosition = space.Position + _maze.Columns;
                     andSpace = GetSpaceByPosition(andSpacePosition);
                     space.bottomWall.Visible = true;
                     andSpace.topWall.Visible = true;
@@ -654,13 +655,13 @@
             switch (wallBox.Name)
             {
                 case "topWall":
-                    and = between - _mazeNew.Columns;
+                    and = between - _maze.Columns;
                     andSpace = GetSpaceByPosition(and);
                     space.topWall.Visible = false;
                     andSpace.bottomWall.Visible = false;
                     break;
                 case "bottomWall":
-                    and = between + _mazeNew.Columns;
+                    and = between + _maze.Columns;
                     andSpace = GetSpaceByPosition(and);
                     space.bottomWall.Visible = false;
                     andSpace.topWall.Visible = false;
@@ -700,12 +701,12 @@
 
         private void rewardsButton_Click(object sender, EventArgs e)
         {
-            var dlg = new Objectives(_mazeNew);
+            var dlg = new Objectives(_maze);
             dlg.ShowDialog();
             
             if (dlg.RewardsChanged)
             {
-                _additionalRewards = _mazeNew.AdditionalRewards;
+                _additionalRewards = _maze.AdditionalRewards;
                 RespawnMaze();
                 _needsRetrain = true;
             }

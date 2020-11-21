@@ -18,7 +18,7 @@
 
             foreach(string file in Directory.GetFiles(_folder))
             {
-                var maze = MazeUtilities.LoadObject<MazeBaseNew>(file);
+                var maze = MazeUtilities.LoadObject<MazeBase>(file);
                 maze.GetRewardAction = 5;
                 MazeUtilities.SaveObject(file, maze);
             }
@@ -28,7 +28,7 @@
         {
             var fn = Path.GetFileName(file);
             var oldMaze = MazeUtilities.LoadObject<UserDefinedMaze>(file);
-            var newMaze = new MazeBaseNew
+            var newMaze = new MazeBase
             {
                 Columns = oldMaze.Columns,
                 DiscountRate = oldMaze.DiscountRate,

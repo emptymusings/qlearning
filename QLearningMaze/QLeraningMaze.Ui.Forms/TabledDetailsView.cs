@@ -18,13 +18,13 @@ namespace QLearningMaze.Ui.Forms
             StateSpace
         }
 
-        private IMazeNew _mazeNew;
+        private IMaze _maze;
         private ValueTypes _valueType;
 
-        public TabledDetailsView(IMazeNew mazeNew, ValueTypes valueType)
+        public TabledDetailsView(IMaze maze, ValueTypes valueType)
         {
             InitializeComponent();
-            _mazeNew = mazeNew;
+            _maze = maze;
             _valueType = valueType;
         }
 
@@ -35,10 +35,10 @@ namespace QLearningMaze.Ui.Forms
             switch (_valueType)
             {
                 case ValueTypes.Quality:
-                    values = _mazeNew.QualityTable;
+                    values = _maze.QualityTable;
                     break;
                 case ValueTypes.Rewards:
-                    values = _mazeNew.RewardsTable;
+                    values = _maze.RewardsTable;
                     break;
                 case ValueTypes.StateSpace:
                     values = ConvertObservationSpace();
@@ -47,20 +47,20 @@ namespace QLearningMaze.Ui.Forms
                     throw new InvalidOperationException("Invalid Value Type");
             }
 
-            detailsView1.ShowValues(values, _mazeNew.NumberOfStates);
+            detailsView1.ShowValues(values, _maze.NumberOfStates);
         }
 
         private double[][] ConvertObservationSpace()
         {
-            double[][] result = new double[_mazeNew.StatesTable.Length][];
+            double[][] result = new double[_maze.StatesTable.Length][];
 
-            for (int i = 0; i < _mazeNew.StatesTable.Length; ++i)
+            for (int i = 0; i < _maze.StatesTable.Length; ++i)
             {
-                result[i] = new double[_mazeNew.StatesTable[i].Length];
+                result[i] = new double[_maze.StatesTable[i].Length];
 
                 for (int j = 0; j < result[i].Length; ++j)
                 {
-                    result[i][j] = _mazeNew.StatesTable[i][j];
+                    result[i][j] = _maze.StatesTable[i][j];
                 }
             }
 
