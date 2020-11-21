@@ -16,13 +16,4 @@
     <ProjectReference Include="..\QLearning.Core\QLearning.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="assets\maze.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="assets\maze1.drawio">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
