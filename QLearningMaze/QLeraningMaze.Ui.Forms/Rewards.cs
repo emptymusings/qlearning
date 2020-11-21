@@ -33,7 +33,11 @@ namespace QLearningMaze.Ui.Forms
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            _maze.AddCustomReward(Convert.ToInt32(positionText.Text), Convert.ToDouble(valueText.Text));
+            int position = Convert.ToInt32(positionText.Text);
+            double value = Convert.ToDouble(valueText.Text);
+            bool isRequired = value >= 0;
+
+            _maze.AddReward(position, value, isRequired);
             var lvi = new ListViewItem(positionText.Text);
             lvi.SubItems.Add(valueText.Text);
             rewardsList.Items.Add(lvi);
@@ -48,7 +52,7 @@ namespace QLearningMaze.Ui.Forms
             if (rewardsList.SelectedItems.Count == 0)
                 return;
 
-            _maze.RemoveCustomReward(Convert.ToInt32(rewardsList.SelectedItems[0].Text));
+            _maze.RemoveReward(Convert.ToInt32(rewardsList.SelectedItems[0].Text));
             rewardsList.Items.Remove(rewardsList.SelectedItems[0]);
             rewardsList.SelectedItems.Clear();
 
@@ -60,7 +64,7 @@ namespace QLearningMaze.Ui.Forms
             foreach(var reward in _maze.AdditionalRewards)
             {
                 var lvi = new ListViewItem();
-                lvi.SubItems[0].Text = reward.Position.ToString();
+                lvi.SubItems[0].Text = reward.State.ToString();
                 lvi.SubItems.Add(reward.Value.ToString());
                 rewardsList.Items.Add(lvi);
             }

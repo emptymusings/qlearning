@@ -14,7 +14,8 @@ namespace QLearningMaze.Ui.Forms
         public enum ValueTypes
         {
             Quality,
-            Rewards
+            Rewards,
+            StateSpace
         }
 
         private IMaze _maze;
@@ -31,12 +32,39 @@ namespace QLearningMaze.Ui.Forms
         {
             double[][] values;
 
-            if (_valueType == ValueTypes.Quality)
-                values = _maze.Quality;
-            else
-                values = _maze.Rewards;
+            switch (_valueType)
+            {
+                case ValueTypes.Quality:
+                    values = _maze.QualityTable;
+                    break;
+                case ValueTypes.Rewards:
+                    values = _maze.RewardsTable;
+                    break;
+                case ValueTypes.StateSpace:
+                    values = ConvertObservationSpace();
+                    break;
+                default:
+                    throw new InvalidOperationException("Invalid Value Type");
+            }
 
             detailsView1.ShowValues(values, _maze.NumberOfStates);
+        }
+
+        private double[][] ConvertObservationSpace()
+        {
+            double[][] result = new double[_maze.StatesTable.Length][];
+
+            for (int i = 0; i < _maze.StatesTable.Length; ++i)
+            {
+                result[i] = new double[_maze.StatesTable[i].Length];
+
+                for (int j = 0; j < result[i].Length; ++j)
+                {
+                    result[i][j] = _maze.StatesTable[i][j];
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -45,20 +45,22 @@
             // 
             // columnHeader1
             // 
+            this.columnHeader1.Name = "columnHeader1";
             this.columnHeader1.Text = "Position";
             this.columnHeader1.Width = 130;
             // 
             // columnHeader2
             // 
+            this.columnHeader2.Name = "columnHeader2";
             this.columnHeader2.Text = "Value";
             this.columnHeader2.Width = 90;
             // 
             // addButton
             // 
-            this.addButton.Location = new System.Drawing.Point(190, 21);
-            this.addButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.addButton.Location = new System.Drawing.Point(353, 45);
+            this.addButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(55, 22);
+            this.addButton.Size = new System.Drawing.Size(102, 47);
             this.addButton.TabIndex = 2;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
@@ -66,48 +68,48 @@
             // 
             // valueText
             // 
-            this.valueText.Location = new System.Drawing.Point(151, 22);
-            this.valueText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.valueText.Location = new System.Drawing.Point(280, 47);
+            this.valueText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.valueText.Name = "valueText";
-            this.valueText.Size = new System.Drawing.Size(33, 23);
+            this.valueText.Size = new System.Drawing.Size(58, 39);
             this.valueText.TabIndex = 1;
             this.valueText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(108, 23);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(201, 49);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 15);
+            this.label1.Size = new System.Drawing.Size(72, 32);
             this.label1.TabIndex = 0;
             this.label1.Text = "Value";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 24);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(20, 51);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 15);
+            this.label2.Size = new System.Drawing.Size(98, 32);
             this.label2.TabIndex = 0;
             this.label2.Text = "Position";
             // 
             // positionText
             // 
-            this.positionText.Location = new System.Drawing.Point(72, 22);
-            this.positionText.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.positionText.Location = new System.Drawing.Point(134, 47);
+            this.positionText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.positionText.Name = "positionText";
-            this.positionText.Size = new System.Drawing.Size(33, 23);
+            this.positionText.Size = new System.Drawing.Size(58, 39);
             this.positionText.TabIndex = 0;
             this.positionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // removeButton
             // 
-            this.removeButton.Location = new System.Drawing.Point(12, 140);
-            this.removeButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.removeButton.Location = new System.Drawing.Point(22, 299);
+            this.removeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.removeButton.Name = "removeButton";
-            this.removeButton.Size = new System.Drawing.Size(81, 22);
+            this.removeButton.Size = new System.Drawing.Size(150, 47);
             this.removeButton.TabIndex = 11;
             this.removeButton.TabStop = false;
             this.removeButton.Text = "Remove";
@@ -116,10 +118,10 @@
             // 
             // clearButton
             // 
-            this.clearButton.Location = new System.Drawing.Point(12, 168);
-            this.clearButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.clearButton.Location = new System.Drawing.Point(22, 358);
+            this.clearButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(81, 22);
+            this.clearButton.Size = new System.Drawing.Size(150, 47);
             this.clearButton.TabIndex = 11;
             this.clearButton.TabStop = false;
             this.clearButton.Text = "Clear All";
@@ -137,11 +139,11 @@
             this.rewardsList.GridLines = true;
             this.rewardsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.rewardsList.HideSelection = false;
-            this.rewardsList.Location = new System.Drawing.Point(12, 5);
-            this.rewardsList.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.rewardsList.Location = new System.Drawing.Point(22, 11);
+            this.rewardsList.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.rewardsList.MultiSelect = false;
             this.rewardsList.Name = "rewardsList";
-            this.rewardsList.Size = new System.Drawing.Size(237, 124);
+            this.rewardsList.Size = new System.Drawing.Size(437, 260);
             this.rewardsList.TabIndex = 3;
             this.rewardsList.TabStop = false;
             this.rewardsList.UseCompatibleStateImageBehavior = false;
@@ -155,11 +157,11 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.positionText);
-            this.groupBox1.Location = new System.Drawing.Point(262, 10);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.groupBox1.Location = new System.Drawing.Point(487, 21);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.groupBox1.Size = new System.Drawing.Size(255, 58);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.groupBox1.Size = new System.Drawing.Size(474, 123);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Add Reward";
@@ -167,10 +169,10 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(447, 170);
-            this.okButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.okButton.Location = new System.Drawing.Point(830, 363);
+            this.okButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(81, 22);
+            this.okButton.Size = new System.Drawing.Size(150, 47);
             this.okButton.TabIndex = 3;
             this.okButton.Text = "Done";
             this.okButton.UseVisualStyleBackColor = true;
@@ -179,15 +181,15 @@
             // Objectives
             // 
             this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(535, 197);
+            this.ClientSize = new System.Drawing.Size(994, 420);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.rewardsList);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.removeButton);
-            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.Name = "Objectives";
             this.Text = "Objectives";
             this.Shown += new System.EventHandler(this.Rewards_Shown);

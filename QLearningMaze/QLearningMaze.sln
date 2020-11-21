@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QLearningMaze.Ui.Forms", "Q
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QLearningMaze.Core", "QLearningMaze.Core\QLearningMaze.Core.csproj", "{AFFA4913-6BD7-4F5D-ACD3-AE31B627079B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QLearning.Core", "QLearning.Core\QLearning.Core.csproj", "{EDAA73CC-8F40-4389-9AEE-A3BCB3664F60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AFFA4913-6BD7-4F5D-ACD3-AE31B627079B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFFA4913-6BD7-4F5D-ACD3-AE31B627079B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFFA4913-6BD7-4F5D-ACD3-AE31B627079B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDAA73CC-8F40-4389-9AEE-A3BCB3664F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDAA73CC-8F40-4389-9AEE-A3BCB3664F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDAA73CC-8F40-4389-9AEE-A3BCB3664F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDAA73CC-8F40-4389-9AEE-A3BCB3664F60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

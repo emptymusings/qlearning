@@ -29,24 +29,23 @@
         private void InitializeComponent()
         {
             this.sesssionList = new System.Windows.Forms.ListView();
+            this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.useSessionButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.columnHeader5 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.SuspendLayout();
             // 
             // sesssionList
             // 
-            this.sesssionList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.sesssionList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader5,
             this.columnHeader1,
             this.columnHeader2,
-            this.columnHeader3});
+            this.columnHeader3,
+            this.columnHeader4});
             this.sesssionList.FullRowSelect = true;
             this.sesssionList.GridLines = true;
             this.sesssionList.HideSelection = false;
@@ -61,11 +60,17 @@
             this.sesssionList.SelectedIndexChanged += new System.EventHandler(this.sesssionList_SelectedIndexChanged);
             this.sesssionList.DoubleClick += new System.EventHandler(this.sesssionList_DoubleClick);
             // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Name = "columnHeader5";
+            this.columnHeader5.Text = "Episode";
+            this.columnHeader5.Width = 120;
+            // 
             // columnHeader1
             // 
             this.columnHeader1.Name = "columnHeader1";
             this.columnHeader1.Text = "Max Episode";
-            this.columnHeader1.Width = 120;
+            this.columnHeader1.Width = 0;
             // 
             // columnHeader2
             // 
@@ -105,11 +110,11 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // columnHeader5
+            // columnHeader4
             // 
-            this.columnHeader5.Name = "columnHeader5";
-            this.columnHeader5.Text = "Min Episode";
-            this.columnHeader5.Width = 120;
+            this.columnHeader4.Name = "columnHeader4";
+            this.columnHeader4.Text = "Succeeded";
+            this.columnHeader4.Width = 140;
             // 
             // TrainingSessionSelector
             // 
@@ -144,5 +149,6 @@
         private System.Windows.Forms.Button useSessionButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
     }
 }

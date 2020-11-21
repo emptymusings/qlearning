@@ -34,16 +34,15 @@ namespace QLearningMaze.Ui.Forms
         {
             InitializeComponent();
             _maze = maze;
-            _maze.TrainingEpisodeCompletedEventHandler += _maze_TrainingEpisodeCompletedEventHandler;
+            _maze.TrainingEpisodeCompleted += _maze_TrainingEpisodeCompleted;
             _totalMoves = 0;
             _totalScore = 0;
             _averageMoves = 0;
             _averageScore = 0;
         }
 
-        private void _maze_TrainingEpisodeCompletedEventHandler(object sender, TrainingEpisodeCompletedEventArgs e)
+        private void _maze_TrainingEpisodeCompleted(object sender, QLearning.Core.TrainingEpisodeCompletedEventArgs e)
         {
-            //UpdateText(message);
             if (e.Success)
             {
                 _successfulRuns++;
@@ -61,21 +60,18 @@ namespace QLearningMaze.Ui.Forms
             if (e.CurrentEpisode % trainingProgressBar.Step == 0)
             {
                 string message = $"Episode: {e.CurrentEpisode.ToString("#,##0")} | " +
-                    $"Avg Moves: {_averageMoves.ToString("#,##0")} | " +
-                    $"Avg Score: {_averageScore.ToString("#,##0")} | " +
                     $"{_percentComplete.ToString("0%")} Complete";
 
                 UpdateLabel(message);
                 UpdateProgressBar();
             }
 
-            if (_runEpochs % _showEvery == 0 && 
-                _runEpochs != _maze.MaxEpisodes)
+            if ((e.CurrentEpisode + 1) % _showEvery == 0 &&
+                e.CurrentEpisode > 1)
             {
-                //RenderTraining();
+                RenderTraining();
             }
         }
-
 
         private void RenderTraining()
         {
@@ -89,11 +85,11 @@ namespace QLearningMaze.Ui.Forms
             frm.Show();
             frm.WindowState = FormWindowState.Maximized;
             frm.FormBorderStyle = FormBorderStyle.None;
-            _maze.AgentStateChangedEventHandler += _maze_AgentStateChangedEventHandler;
 
             try
-            {                
-                _maze.RunMaze();
+            {
+                _maze.AgentStateChanged += _maze_AgentStateChanged;
+                _maze.RunAgent(_maze.StartPosition);
             }
             catch 
             {
@@ -101,15 +97,20 @@ namespace QLearningMaze.Ui.Forms
             }
             finally
             {
-                frm.Dispose();
                 _mazeSpace.Dispose();
-                _maze.AgentStateChangedEventHandler -= _maze_AgentStateChangedEventHandler;
+                _mazeSpace = null;
+
+                frm.Dispose();
+                frm = null;
+
+                _maze.AgentStateChanged -= _maze_AgentStateChanged;
             }
         }
 
-        private void _maze_AgentStateChangedEventHandler(object sender, AgentStateChangedEventArgs e)
+        private void _maze_AgentStateChanged(object sender, QLearning.Core.AgentStateChangedEventArgs e)
         {
-            var newSpace = _mazeSpace.GetSpaceByPosition(e.NewPosition);
+            int position = e.NewState % _maze.StatesPerPhase;
+            var newSpace = _mazeSpace.GetSpaceByPosition(position);
 
             if (newSpace != null)
             {
@@ -131,7 +132,7 @@ namespace QLearningMaze.Ui.Forms
 
         private void closeButton_Click(object sender, EventArgs e)
         {
-            _maze.TrainingEpisodeCompletedEventHandler -= _maze_TrainingEpisodeCompletedEventHandler;
+            _maze.TrainingEpisodeCompleted -= _maze_TrainingEpisodeCompleted;
             this.Close();
         }
 
@@ -142,6 +143,9 @@ namespace QLearningMaze.Ui.Forms
             _maze.Train();
             EnableControls(true);
             this.DialogResult = DialogResult.OK;
+
+            _maze.TrainingEpisodeCompleted -= _maze_TrainingEpisodeCompleted;
+
             return Task.CompletedTask;
         }
 
@@ -191,7 +195,7 @@ namespace QLearningMaze.Ui.Forms
         private void TrainingProgress_Shown(object sender, EventArgs e)
         {
 
-            trainingProgressBar.Maximum = _maze.MaxEpisodes;
+            trainingProgressBar.Maximum = _maze.NumberOfTrainingEpisodes;
             trainingProgressBar.Value = 0;
             trainingProgressBar.Step = 1;
             TrainingTask();

@@ -69,6 +69,7 @@ namespace QLearningMaze.Ui.Forms
                     lvi.SubItems.Add(session.MaxEpisode.ToString());
                     lvi.SubItems.Add(session.Moves.ToString("#,##0"));
                     lvi.SubItems.Add(session.Score.ToString("#,##0.##"));
+                    lvi.SubItems.Add(session.Succeeded ? "Yes" : "No");
                     sesssionList.Items.Add(lvi);
                 }
 
@@ -115,18 +116,18 @@ namespace QLearningMaze.Ui.Forms
                 _moves = 0;
                 _score = 0;
 
-                maze.Quality = session.Quality;
+                maze.QualityTable = session.Quality;
 
                 try
                 {
-                    maze.RunMaze();
+                    maze.RunAgent(maze.StartPosition);
                     session.Succeeded = true;
                 }
                 catch
                 {
                     //sessions.RemoveAt(i);
                     session.Succeeded = false;                    
-                    continue;
+                    //continue;
                 }
 
                 session.Moves = _moves;
@@ -137,48 +138,50 @@ namespace QLearningMaze.Ui.Forms
 
             //trainingSessions = sessions.OrderByDescending(s => s.Score).ThenBy(m => m.Moves).ThenBy(e => e.Episode);
             var selection = trainingSessions
-                .GroupBy(x => new 
-                {
-                    x.Moves,
-                    x.Score,
-                    x.Succeeded
-                })
+                //.GroupBy(x => new 
+                //{
+                //    x.Moves,
+                //    x.Score,
+                //    x.Succeeded
+                //})
                 .Select(s => new TrainingSessionEx()
                 {
-                    MinEpisode = s.Last().Episode,
-                    MaxEpisode = s.First().Episode,
-                    Episode = s.Last().Episode,
-                    Moves = s.Key.Moves,
-                    Score = s.Key.Score,
-                    Succeeded = s.Key.Succeeded,
-                    Quality = s.Last().Quality
+                    MinEpisode = s.Episode,
+                    MaxEpisode = s.Episode,
+                    Episode = s.Episode,
+                    Moves = s.Moves,
+                    Score = s.Score,
+                    Succeeded = s.Succeeded,
+                    Quality = s.Quality
                 });
 
             //trainingSessions = selection.OrderBy(e => e.MinEpisode).ToList();
-            trainingSessions = selection.OrderByDescending(s => s.Score).ThenBy(m => m.Moves).ThenBy(e => e.MinEpisode).ToList();
+            trainingSessions = selection.OrderByDescending(s => s.Succeeded).ThenByDescending(s => s.Score).ThenByDescending(m => m.Moves).ThenByDescending(e => e.MinEpisode).ToList();
             SelectedSession = trainingSessions.FirstOrDefault();
 
             _isChecking = false;
             return Task.CompletedTask;
         }
 
-        private UserDefinedMaze GetTestMaze()
+        private MazeBase GetTestMaze()
         {
-            var maze = new UserDefinedMaze();
-            maze.Rows = _maze.Rows;
-            maze.Columns = _maze.Columns;
-            maze.Rewards = _maze.Rewards;
-            maze.ObservationSpace = _maze.ObservationSpace;
+            var maze = new MazeBase(
+                _maze.Columns,
+                _maze.Rows,
+                _maze.StartPosition,
+                _maze.GoalPosition,
+                _maze.DiscountRate,
+                _maze.LearningRate);
+            maze.RewardsTable = _maze.RewardsTable;
+            maze.StatesTable = _maze.StatesTable;
             maze.AdditionalRewards = _maze.AdditionalRewards;
-            maze.StartPosition = _maze.StartPosition;
-            maze.GoalPosition = _maze.GoalPosition;
 
-            maze.AgentCompletedMazeEventHandler += Maze_AgentCompletedMazeEventHandler;
+            maze.AgentCompleted += Maze_AgentCompleted;
 
             return maze;
         }
 
-        private void Maze_AgentCompletedMazeEventHandler(object sender, AgentCompletedMazeEventArgs e)
+        private void Maze_AgentCompleted(object sender, QLearning.Core.AgentCompletedEventArgs e)
         {
             _moves += e.Moves;
             _score += e.Rewards;

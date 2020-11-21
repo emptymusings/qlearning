@@ -68,7 +68,7 @@ namespace QLearningMaze.Ui.Forms
                     if (position == maze.GoalPosition)
                         space.SetGoal(true);
 
-                    var customReward = maze.GetAdditionalRewards().Where(x => x.Position == position).FirstOrDefault();
+                    var customReward = maze.GetAdditionalRewards().Where(x => x.State == position).FirstOrDefault();
 
                     if (customReward != null)
                     {

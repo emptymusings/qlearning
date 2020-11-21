@@ -39,7 +39,15 @@
 
             if (response.ToLower() == "c")
             {
-                maze = MazeFactory.CreateMaze(MazeTypes.UserDefined);
+                maze = MazeFactory.CreateMaze(
+                    4,
+                    4,
+                    0,
+                    0,
+                    0.5,
+                    0.5,
+                    5000);
+                
                 SetupMaze(maze);
             }
             else if (response.ToLower() == "l")
@@ -63,7 +71,7 @@
             maze.GoalPosition = PromptPosition(maze.Rows * maze.Columns, "goal", maze.GoalPosition);
             maze.DiscountRate = PromptRate(maze.DiscountRate, "discount");
             maze.LearningRate = PromptRate(maze.LearningRate, "learning");
-            maze.MaxEpisodes = PromptEpisodes(maze.MaxEpisodes);
+            maze.NumberOfTrainingEpisodes = PromptEpisodes(maze.NumberOfTrainingEpisodes);
 
             PromptWalls(maze);
 
@@ -84,7 +92,7 @@
             }
             else
             {
-                IMaze maze = MazeUtilities.LoadObject<UserDefinedMaze>(mazeName);
+                IMaze maze = MazeUtilities.LoadObject<MazeBase>(mazeName);
                 string response;
 
                 Console.Write("Do you want to make modifications to the maze (Y/N)? ");
@@ -270,7 +278,7 @@
         static void RunMaze(IMaze maze)
         {
             Console.WriteLine($"Running maze from cell {maze.StartPosition} to {maze.GoalPosition}");
-            maze.RunMaze();
+            maze.RunAgent(maze.StartPosition);
             Console.WriteLine();
 
         }

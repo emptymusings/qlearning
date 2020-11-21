@@ -13,38 +13,25 @@ namespace QLearningMaze.Core
     public class MazeFactory
     {
         public static IMaze CreateMaze(
-            MazeTypes mazeType = MazeTypes.Undefined,
-            int rows = 4,
-            int columns = 4,
-            int startPosition = 0,
-            int goalPosition = 0,
-            double discountRate = 0.5,
-            double learningRate = 0.5,
-            int maxEpisodes = 1000)
+            int rows,
+            int columns,
+            int startPosition,
+            int goalPosition,
+            double discountRate,
+            double learningRate,
+            int trainingEpisodes)
         {
-            switch(mazeType)
-            {
-                case MazeTypes.OriginalMaze:
-                    return new OriginalMaze(
-                        rows,
-                        columns,
-                        startPosition,
-                        goalPosition,
-                        discountRate,
-                        learningRate,
-                        maxEpisodes);
-                case MazeTypes.UserDefined:
-                    return new UserDefinedMaze(
-                        rows,
-                        columns,
-                        startPosition,
-                        goalPosition,
-                        discountRate,
-                        learningRate,
-                        maxEpisodes);
-                default:
-                    throw new ArgumentOutOfRangeException("MazeType");
-            }
+            var maze = new MazeBase(
+                columns,
+                rows,
+                startPosition,
+                goalPosition,
+                discountRate,
+                learningRate);
+
+            maze.NumberOfTrainingEpisodes = trainingEpisodes;
+
+            return maze;
         }
     }
 }
