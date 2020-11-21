@@ -17,6 +17,7 @@
         private bool _needsRetrain = false;
         private List<QLearning.Core.CustomObjective> _additionalRewards = new List<QLearning.Core.CustomObjective>();
         private TrainingSessionSelector _trainingSessionSelector = null;
+        private List<MazeObstruction> _walls = new List<MazeObstruction>();
 
         public MazeMain()
         {
@@ -99,7 +100,7 @@
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                obstructionsList.Items.Clear();
+                _walls.Clear();
                 mazeSpace.Enabled = false;
                 _maze = MazeUtilities.LoadObject<MazeBase>(dlg.FileName);
                                 
@@ -285,9 +286,7 @@
 
             foreach (var obstruction in _maze.Obstructions)
             {
-                var lvi = new ListViewItem(obstruction.BetweenSpace.ToString());
-                lvi.SubItems.Add(obstruction.AndSpace.ToString());
-                obstructionsList.Items.Add(lvi);
+                _walls.Add(new MazeObstruction { BetweenSpace = obstruction.BetweenSpace, AndSpace = obstruction.AndSpace });
             }
 
             _additionalRewards = _maze.AdditionalRewards;
@@ -325,82 +324,36 @@
                 _maze.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
             }
 
-            foreach (ListViewItem lvi in obstructionsList.Items)
+            foreach (var wall in _walls)
             {
-                _maze.AddObstruction(Convert.ToInt32(lvi.Text), Convert.ToInt32(lvi.SubItems[1].Text));
+                _maze.AddObstruction(wall.BetweenSpace, wall.AndSpace);
             }
-
-        }
-
-        private void addObstructionButton_Click(object sender, EventArgs e)
-        {
-            int between;
-            int and;
-
-            if (string.IsNullOrWhiteSpace(betweenText.Text) ||
-                !int.TryParse(betweenText.Text, out between))
-            {
-                MessageBox.Show("Invalid 'Between' value");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(andText.Text) ||
-                !int.TryParse(andText.Text, out and))
-            {
-                MessageBox.Show("Invalid 'and' value");
-                return;
-            }
-
-            AddObstruction(between, and);
         }
 
         private void AddObstruction(int between, int and)
         {
-            var lvi = new ListViewItem(between.ToString());
-            lvi.SubItems.Add(and.ToString());
-
-            obstructionsList.Items.Add(lvi);
+            _walls.Add(new MazeObstruction { BetweenSpace = between, AndSpace = and });
             _maze.AddObstruction(between, and);
-            betweenText.Text = null;
-            andText.Text = null;
-
+            
             _needsRetrain = true;
         }
 
-        private void removeObstructionButton_Click(object sender, EventArgs e)
-        {
-            if (obstructionsList.SelectedItems.Count == 0)
-                return;
-
-            int between = Convert.ToInt32(obstructionsList.SelectedItems[0].Text);
-            int and = Convert.ToInt32(obstructionsList.SelectedItems[0].SubItems[0].Text);
-
-            obstructionsList.Items.Remove(obstructionsList.SelectedItems[0]);
-            RemoveObstruction(between, and);
-        }
-
-        private void RemoveObstruction(int between, int and)
+        private void RemoveObstructionFromMaze(int between, int and)
         {
             _maze.RemoveObstruction(between, and);
             
-            for (int i = obstructionsList.Items.Count - 1; i >= 0; i--)
-            {
-                if (
-                    (obstructionsList.Items[i].Text == between.ToString() && obstructionsList.Items[i].SubItems[1].Text == and.ToString()) ||
-                    (obstructionsList.Items[i].Text == and.ToString() && obstructionsList.Items[i].SubItems[1].Text == between.ToString())
-                    )
-                {
-                    obstructionsList.Items.Remove(obstructionsList.Items[i]);
-                }
-            }
-
             _needsRetrain = true;
+        }
+
+        private MazeObstruction GetWallObstruction(int between, int and)
+        {
+            return _walls.Where(b => (b.BetweenSpace == between && b.AndSpace == and) || (b.AndSpace == between && b.BetweenSpace == and)).FirstOrDefault();            
         }
 
         private void clearObstructionsButton_Click(object sender, EventArgs e)
         {
-            obstructionsList.Items.Clear();
-            
+            _walls.Clear();
+                        
             for (int i = _maze.Obstructions.Count - 1; i >= 0; --i)
             {
                 var wall = _maze.Obstructions[i];
@@ -409,11 +362,6 @@
 
             RespawnMaze();
             _needsRetrain = true;
-        }
-
-        private void respawnButton_Click(object sender, EventArgs e)
-        {
-            RespawnMaze();
         }
 
         private void trainMazeButton_Click(object sender, EventArgs e)
@@ -683,20 +631,14 @@
             }
 
             RemoveObstructionsFromList(between, and);
-            RemoveObstruction(between, and);
+            RemoveObstructionFromMaze(between, and);
             _needsRetrain = true;
         }
 
         private void RemoveObstructionsFromList(int between, int and)
         {
-            foreach (ListViewItem item in obstructionsList.Items)
-            {
-                if ((item.Text == between.ToString() && item.SubItems[1].Text == and.ToString()) ||
-                    (item.Text == and.ToString() && item.SubItems[1].Text == between.ToString()))
-                {
-                    obstructionsList.Items.Remove(item);
-                }
-            }
+            var wall = GetWallObstruction(between, and);
+            if (wall != null) _walls.Remove(wall);
         }
 
         private void rewardsButton_Click(object sender, EventArgs e)

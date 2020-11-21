@@ -9,6 +9,10 @@
 
     public partial class MazeBase : QLearningMutliObjectiveBase, IMaze
     {
+        private int _objectivesMoves = 0;
+        private double _objectiveRewards = 0;
+        private IMaze _objectiveMaze;
+
         public MazeBase() 
         {
             SetupStandardValues();
@@ -252,5 +256,78 @@
         {
             return AdditionalRewards;
         }
+
+        public override void Train()
+        {
+            AssignPriorityToRewards();
+            base.Train();
+        }
+
+        private void AssignPriorityToRewards()
+        {
+            foreach(var reward in AdditionalRewards)
+            {
+                _objectivesMoves = 0;
+                RunToObjective(reward, StartPosition, reward.State);
+                var startToReward = _objectivesMoves;
+
+                RunToObjective(reward, reward.State, GoalPosition);
+                var rewardToGoal = _objectivesMoves;
+
+                reward.MovesFromGoal = rewardToGoal;
+                reward.MovesFromStart = startToReward;
+                reward.Priority = startToReward;
+            }
+        }
+
+        protected override IOrderedEnumerable<CustomObjective> GetPrioritizedObjectives()
+        {
+            return AdditionalRewards.OrderBy(s => s.MovesFromStart).ThenByDescending(g => g.MovesFromGoal);
+            //return prioritizeRewards.OrderBy(l => l.Value);
+        }
+
+        protected virtual void RunToObjective(CustomObjective reward, int startPosition, int goalPosition)
+        {
+            _objectiveMaze = new MazeBase(
+                    Columns,
+                    Rows,
+                    StartPosition,
+                    goalPosition,
+                    DiscountRate,
+                    LearningRate);
+            _objectiveMaze.NumberOfTrainingEpisodes = 1000;
+            _objectiveMaze.Obstructions = Obstructions;
+            _objectiveMaze.ObjectiveReward = reward.Value;
+
+            try
+            {
+                _objectiveMaze.Train();
+            }
+            catch (Exception ex)
+            {
+                _objectivesMoves = 999;
+                _objectiveRewards = -999;
+            }
+
+            _objectiveMaze.AgentCompleted += Maze_AgentCompleted;
+
+            try
+            {
+                _objectiveMaze.RunAgent(startPosition);
+            }
+            catch
+            {
+                _objectivesMoves = 9999;
+                _objectiveRewards = -9999;
+            }
+
+        }
+
+        private void Maze_AgentCompleted(object sender, AgentCompletedEventArgs e)
+        {
+            _objectiveRewards = e.Rewards;
+            _objectivesMoves = e.Moves;
+        }
     }
+
 }
