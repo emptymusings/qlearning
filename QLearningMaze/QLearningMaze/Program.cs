@@ -12,7 +12,7 @@
         static void Main(string[] args)
         {
             string response;
-            IMazeOld maze = InitializeMaze();
+            IMaze maze = InitializeMaze();
             
             if (maze == null)
                 Main(args);
@@ -29,9 +29,9 @@
                 Main(args);
         }
 
-        static IMazeOld InitializeMaze()
+        static IMaze InitializeMaze()
         {
-            IMazeOld maze = null;
+            IMaze maze = null;
             _promptSave = true;
 
             Console.Write("Do you want to (C)reate a new maze or (L)oad a Maze (C/L)? ");
@@ -39,7 +39,15 @@
 
             if (response.ToLower() == "c")
             {
-                maze = MazeFactory.CreateMazeOld(MazeTypes.UserDefined);
+                maze = MazeFactory.CreateMaze(
+                    4,
+                    4,
+                    0,
+                    0,
+                    0.5,
+                    0.5,
+                    5000);
+                
                 SetupMaze(maze);
             }
             else if (response.ToLower() == "l")
@@ -55,7 +63,7 @@
             return maze;
         }
 
-        static void SetupMaze(IMazeOld maze)
+        static void SetupMaze(IMaze maze)
         {
             maze.Rows = PromptDimension("rows", maze.Rows);
             maze.Columns = PromptDimension("columns", maze.Columns);
@@ -63,14 +71,14 @@
             maze.GoalPosition = PromptPosition(maze.Rows * maze.Columns, "goal", maze.GoalPosition);
             maze.DiscountRate = PromptRate(maze.DiscountRate, "discount");
             maze.LearningRate = PromptRate(maze.LearningRate, "learning");
-            maze.MaxEpisodes = PromptEpisodes(maze.MaxEpisodes);
+            maze.NumberOfTrainingEpisodes = PromptEpisodes(maze.NumberOfTrainingEpisodes);
 
             PromptWalls(maze);
 
             TrainMaze(maze);
         }
 
-        static IMazeOld LoadMaze()
+        static IMaze LoadMaze()
         {
             Console.Write("Type the name of the maze you want to load: ");
             string mazeName = Console.ReadLine();
@@ -84,7 +92,7 @@
             }
             else
             {
-                IMazeOld maze = MazeUtilities.LoadObject<UserDefinedMaze>(mazeName);
+                IMaze maze = MazeUtilities.LoadObject<MazeBase>(mazeName);
                 string response;
 
                 Console.Write("Do you want to make modifications to the maze (Y/N)? ");
@@ -103,7 +111,7 @@
             }
         }
 
-        static void TrainMaze(IMazeOld maze)
+        static void TrainMaze(IMaze maze)
         {
             maze.Train();
             Console.WriteLine();
@@ -229,7 +237,7 @@
             return result;
         }
 
-        static void PromptWalls(IMazeOld maze)
+        static void PromptWalls(IMaze maze)
         {
             Console.Write("Would you like to add a wall in the maze (Y/N)? ");
             var entry = Console.ReadLine();
@@ -267,15 +275,15 @@
             return result;
         }
 
-        static void RunMaze(IMazeOld maze)
+        static void RunMaze(IMaze maze)
         {
             Console.WriteLine($"Running maze from cell {maze.StartPosition} to {maze.GoalPosition}");
-            maze.RunMaze();
+            maze.RunAgent(maze.StartPosition);
             Console.WriteLine();
 
         }
 
-        static void SaveMaze(IMazeOld maze)
+        static void SaveMaze(IMaze maze)
         {
             string response;
 
