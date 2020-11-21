@@ -106,7 +106,7 @@
             this.progressLabel.Name = "progressLabel";
             this.progressLabel.Size = new System.Drawing.Size(133, 32);
             this.progressLabel.TabIndex = 2;
-            this.progressLabel.Text = "Analyzing...";
+            this.progressLabel.Text = "Initializing...";
             // 
             // trainingProgressBar
             // 
