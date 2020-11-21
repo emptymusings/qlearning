@@ -26,7 +26,20 @@ namespace QLearning
             Console.WriteLine("End demo");
             Console.ReadLine();
         }
-        static void Print(double[][] Q) { . . }
+        static void Print(double[][] Q)
+        {
+            int ns = Q.Length;
+            Console.WriteLine("[0] [1] . . [11]");
+            for (int i = 0; i < ns; ++i)
+            {
+                for (int j = 0; j < ns; ++j)
+                {
+                    Console.Write(Q[i][j].ToString("F2") + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
         static int[][] CreateMaze(int ns)
         {
             int[][] FT = new int[ns][];
