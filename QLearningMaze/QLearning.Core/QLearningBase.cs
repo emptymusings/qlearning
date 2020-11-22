@@ -250,10 +250,9 @@
                 {
                     done = true;
                 }
-                else
+                else if (state == previousState)
                 {
-                    if (state == previousState)
-                        state = _random.Next(0, _numberOfStates);
+                    state = _random.Next(0, _numberOfStates);
                 }
             }
 
