@@ -45,7 +45,7 @@
         public int Rows { get; set; }
         public int StartPosition { get; set; }
 
-        private int _goalPosition;
+        private int _goalPosition = -1;
 
         public int GoalPosition
         {
