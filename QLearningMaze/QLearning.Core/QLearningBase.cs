@@ -310,13 +310,19 @@
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        protected virtual int GetPreferredNextAction(int state)
+        protected virtual int GetPreferredNextAction(int state, int[] excludedActions = null)
         {
             int preferredNext = -1;
             double max = double.MinValue;
             
             for (int i = 0; i < this.QualityTable[state].Length; ++i)
             {
+                if (excludedActions != null &&
+                    excludedActions.Contains(i))
+                {
+                    continue;
+                }
+
                 if (this.QualityTable[state][i] > max &&
                     QualityTable[state][i] != 0)
                 {
