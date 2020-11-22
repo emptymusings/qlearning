@@ -13,7 +13,6 @@ namespace QLearningMaze.Ui.Forms
     public partial class TrainingProgress : Form
     {
         private IMaze _maze;
-        private bool _trainingInProgress = false;
         int _successfulRuns = 0;
         double _averageMoves = 0;
         double _averageScore = 0;
