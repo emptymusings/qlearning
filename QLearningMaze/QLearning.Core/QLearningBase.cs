@@ -163,17 +163,20 @@
             Train(false);
         }
 
+        protected virtual void Initialize()
+        {
+            InitializeStatesTable();
+            InitializeQualityTable();
+            InitializeRewardsTable();
+            InitializeSaveFolder();
+        }
+
         /// <summary>
         /// Performs the training necessary to populate the Q-Table
         /// </summary>
         public virtual void Train(bool overrideBaseEvents)
         {
-            InitializeStatesTable();
-            InitializeQualityTable();
-            InitializeRewardsTable();
-
-            InitializeSaveFolder();
-
+            Initialize();
             double epsilon = 1;
 
             EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
@@ -184,13 +187,21 @@
             if (!overrideBaseEvents)
                 OnTrainingStateChanged(true);
 
+            RunTrainingSet(epsilon, overrideBaseEvents);
+
+            if (!overrideBaseEvents)
+                OnTrainingStateChanged(false);
+        }
+
+        protected virtual void RunTrainingSet(double epsilon, bool overrideBaseEvents)
+        {
             for (int episode = 0; episode < NumberOfTrainingEpisodes; ++episode)
             {
                 var episodeResults = RunTrainingEpisode(epsilon, overrideBaseEvents);
                 var state = episodeResults.finalState;
                 var moves = episodeResults.moves;
 
-                if (ObjectiveStates.Contains(state) &&
+                if (IsTerminalState(state, moves) &&
                     (1 + episode) % QualitySaveFrequency == 0)
                 {
                     SaveQualityForEpisode(episode + 1, moves);
@@ -201,9 +212,6 @@
                 if (!overrideBaseEvents)
                     OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, moves, _accumulatedEpisodeRewards, ObjectiveStates.Contains(state));
             }
-
-            if (!overrideBaseEvents)
-                OnTrainingStateChanged(false);
         }
 
         protected virtual double GetEpsilonDecayValue()
@@ -232,9 +240,8 @@
             while (!done)
             {
                 moves++;
-                var nextActionSet = GetGreedyNextAction(state, epsilon);
+                var nextActionSet = GetNextAction(state, epsilon);
                 int nextAction = nextActionSet.nextAction;
-                bool usedGreed = nextActionSet.usedGreedy;
                 var oldQuality = QualityTable[state][nextAction];
 
                 CalculateQValue(state, nextAction);
@@ -245,13 +252,13 @@
                 if (!overrideBaseEvents)
                     OnTrainingAgentStateChanged(nextAction, state, moves, _accumulatedEpisodeRewards, QualityTable[state][nextAction], oldQuality);
 
-                if (ObjectiveStates.Contains(state) ||
-                    moves > MaximumAllowedMoves)
+                if (IsTerminalState(state, nextAction, moves))
                 {
                     done = true;
                 }
                 else if (state == previousState)
                 {
+                    // Check for repeated actions, and adjust if happening
                     state = _random.Next(0, _numberOfStates);
                 }
             }
@@ -259,12 +266,23 @@
             return (state, moves);
         }
 
+        protected virtual bool IsTerminalState(int state, int moves)
+        {
+            return ObjectiveStates.Contains(state % StatesPerPhase) ||
+                    (MaximumAllowedMoves > 0 && moves > MaximumAllowedMoves);
+        }
+
+        protected virtual bool IsTerminalState(int state, int action, int moves)
+        {
+            return IsTerminalState(state, moves) && action == ObjectiveAction;
+        }
+
         /// <summary>
         /// Get the next action to take from the current state
         /// </summary>
         /// <param name="state">The state in which the agent currently resides</param>
         /// <param name="epsilon"></param>
-        protected virtual (int nextAction, bool usedGreedy) GetGreedyNextAction(int state, double epsilon)
+        protected virtual (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
         {
             double randRand = _random.NextDouble();
             int nextAction = -1;
@@ -320,16 +338,6 @@
             int count = possibleNextStates.Count;
             int index = _random.Next(0, count);
 
-            //List<int> possibleNextStates = StatesTable[state].ToList();
-            //int index = _random.Next(0, possibleNextStates.Count);
-
-            //while (StatesTable[state][index] < 0)
-            //{
-            //    index = _random.Next(0, possibleNextStates.Count);
-            //}
-
-            //return index;
-
             if (possibleNextStates.Count > 0)
                 return possibleNextStates[index];
             else
@@ -366,8 +374,9 @@
             var selectedNextState = forecaster.selectedNextState;
             
             var r = RewardsTable[state][action];
+
             var newQuality = QualityTable[state][action] + (LearningRate * (r + (DiscountRate * maxQ) - QualityTable[state][action]));
-            var oldQuality = QualityTable[state][action];
+            
             // I have found a couple of Q-Value formulas.  Aside form some rounding issues, this and the formula below it are identical
             //double similarQFormula = ((1 - LearningRate) * QualityTable[state][action]) + (LearningRate * (r + (DiscountRate * maxQ))); 
 
@@ -382,10 +391,10 @@
         protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int nextState)
         {
             double maxQ = double.MinValue;
+
+
             List<int> possNextNextActions = GetPossibleNextActions(nextState);
             int selectedNextState = -1;
-
-            double max = QualityTable[nextState].Cast<double>().Max();
 
             for (int i = 0; i < possNextNextActions.Count; ++i)
             {
@@ -402,7 +411,7 @@
                 }
             }
 
-            
+
             return (selectedNextState, maxQ);
         }
 
@@ -509,8 +518,7 @@
                 if (!overrideBaseEvents)
                     OnAgentStateChanged(fromState, moves, _accumulatedEpisodeRewards);
 
-                if (ObjectiveStates.Contains((fromState % StatesPerPhase)) &&
-                    action == ObjectiveAction)
+                if (IsTerminalState(fromState, action, moves))
                 {
                     done = true;
                 }
