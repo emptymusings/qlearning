@@ -263,10 +263,17 @@
             base.Train();
         }
 
-        private void AssignPriorityToRewards()
+        protected virtual void AssignPriorityToRewards()
         {
             foreach(var reward in AdditionalRewards)
             {
+                if (reward.Value < 0)
+                {
+                    reward.DistanceFromStart = 9999;
+                    reward.Priority = -1;
+                    continue;
+                }
+
                 _objectivesMoves = 0;
                 RunToObjective(reward, StartPosition, reward.State);
                 var startToReward = _objectivesMoves;
@@ -274,16 +281,14 @@
                 RunToObjective(reward, reward.State, GoalPosition);
                 var rewardToGoal = _objectivesMoves;
 
-                reward.MovesFromGoal = rewardToGoal;
-                reward.MovesFromStart = startToReward;
-                reward.Priority = startToReward;
+                reward.DistanceFromEnd = rewardToGoal;
+                reward.DistanceFromStart = startToReward;
             }
         }
 
         protected override IOrderedEnumerable<CustomObjective> GetPrioritizedObjectives()
         {
-            return AdditionalRewards.OrderBy(s => s.MovesFromStart).ThenByDescending(g => g.MovesFromGoal);
-            //return prioritizeRewards.OrderBy(l => l.Value);
+            return AdditionalRewards.OrderBy(s => s.DistanceFromStart).ThenByDescending(g => g.DistanceFromEnd);
         }
 
         protected virtual void RunToObjective(CustomObjective reward, int startPosition, int goalPosition)

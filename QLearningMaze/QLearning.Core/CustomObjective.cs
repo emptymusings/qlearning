@@ -10,7 +10,7 @@ namespace QLearning.Core
         public double Value { get; set; }
         public bool IsRequired { get; set; } = true;
         public int Priority { get; set; }
-        public int MovesFromStart { get; set; }
-        public int MovesFromGoal { get; set; }
+        public int DistanceFromStart { get; set; }
+        public int DistanceFromEnd { get; set; }
     }
 }
