@@ -130,6 +130,8 @@
                 
         private void RespawnMaze()
         {
+            if (_overrideRespawn) return;
+
             var newSpace = new MazeSpace();
 
             SetMazeValuesFromForm();
