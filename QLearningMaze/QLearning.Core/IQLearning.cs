@@ -47,6 +47,5 @@ namespace QLearning.Core
         void Train();
         void RunAgent(int fromState, bool overrideBaseEvents);
         void RunAgent(int fromState);
-        int GetNextState(int state, int action);
     }
 }

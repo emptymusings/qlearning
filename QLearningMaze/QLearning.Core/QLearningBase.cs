@@ -527,11 +527,5 @@
             if (!overrideBaseEvents)
                 OnAgentCompleted(moves, _accumulatedEpisodeRewards, (ObjectiveStates.Contains(fromState)));
         }
-
-        public virtual int GetNextState(int state, int action)
-        {
-            return StatesTable[state][action];
-        }
-
     }
 }
