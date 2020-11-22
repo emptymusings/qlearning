@@ -245,13 +245,15 @@
                 if (!overrideBaseEvents)
                     OnTrainingAgentStateChanged(nextAction, state, moves, _accumulatedEpisodeRewards, QualityTable[state][nextAction], oldQuality);
 
-                if (state == previousState)
-                    state = _random.Next(0, _numberOfStates);
-
                 if (ObjectiveStates.Contains(state) ||
                     moves > MaximumAllowedMoves)
                 {
                     done = true;
+                }
+                else
+                {
+                    if (state == previousState)
+                        state = _random.Next(0, _numberOfStates);
                 }
             }
 

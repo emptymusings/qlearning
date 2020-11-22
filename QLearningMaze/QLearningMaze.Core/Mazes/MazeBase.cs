@@ -49,7 +49,7 @@
         public int Rows { get; set; }
         public int StartPosition { get; set; }
 
-        private int _goalPosition;
+        private int _goalPosition = -1;
 
         public int GoalPosition
         {
@@ -288,6 +288,7 @@
 
         protected virtual void RunToObjective(CustomObjective reward, int startPosition, int goalPosition)
         {
+            int runs = 0;
             _objectiveMaze = new MazeBase(
                     Columns,
                     Rows,
@@ -297,7 +298,10 @@
                     LearningRate);
             _objectiveMaze.NumberOfTrainingEpisodes = 1000;
             _objectiveMaze.Obstructions = Obstructions;
-            _objectiveMaze.ObjectiveReward = reward.Value;
+            _objectiveMaze.ObjectiveReward = reward.Value * 10;
+            _objectiveMaze.MaximumAllowedMoves = 1000;
+            _objectiveMaze.MaximumAllowedBacktracks = 3;
+            _objectiveMaze.TrainingEpisodes = new List<TrainingSession>();
 
             try
             {
@@ -315,7 +319,7 @@
             {
                 _objectiveMaze.RunAgent(startPosition);
             }
-            catch
+            catch (Exception ex)
             {
                 _objectivesMoves = 9999;
                 _objectiveRewards = -9999;
