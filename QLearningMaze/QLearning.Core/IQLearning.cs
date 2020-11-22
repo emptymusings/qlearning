@@ -91,12 +91,11 @@ namespace QLearning.Core
         /// </summary>
         double EpsilonDecayEnd { get; set; }
         /// <summary>
-        /// Gets or Sets the states in which additional/custom rewards (or punishments) exist
+        /// Gets or Sets the states in which terminal states exist
         /// </summary>
         List<int> ObjectiveStates { get; set; }
         /// <summary>
-        /// Gets or Sets the specific action to be taken when acquiring a custom objective.  Generally, the only result of the state/action pairs for this
-        /// should lead the agent to another phase
+        /// Gets or Sets the specific action to be taken when reaching a terminal state to reach completion.
         /// </summary>
         int ObjectiveAction { get; set; }
         /// <summary>
