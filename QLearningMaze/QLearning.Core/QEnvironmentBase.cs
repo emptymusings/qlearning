@@ -73,6 +73,19 @@
         public virtual int MaximumAllowedBacktracks { get; set; } = -1;
         public virtual int NumberOfTrainingEpisodes { get; set; }
         public virtual List<TrainingSession> TrainingEpisodes { get; set; }
+        public virtual TrainingSession BestTrainingSession
+        {
+            get
+            {
+                if (TrainingEpisodes == null ||
+                    TrainingEpisodes.Count == 0)
+                {
+                    return null;
+                }
+
+                return TrainingEpisodes.OrderByDescending(r => r.Score).FirstOrDefault();
+            }
+        }
         public virtual int QualitySaveFrequency { get; set; } = 100;
         public virtual int StatesPerPhase { get; set; }
 

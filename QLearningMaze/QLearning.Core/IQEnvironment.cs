@@ -124,6 +124,10 @@ namespace QLearning.Core
         /// </summary>
         List<TrainingSession> TrainingEpisodes { get; set; }
         /// <summary>
+        /// Gets the best session from a training set, based on total score
+        /// </summary>
+        TrainingSession BestTrainingSession { get; }
+        /// <summary>
         /// Gets or Sets the frequency (in episodes) in which Quality values will be saved
         /// </summary>
         int QualitySaveFrequency { get; set; }
