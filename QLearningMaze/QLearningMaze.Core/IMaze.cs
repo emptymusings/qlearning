@@ -5,7 +5,7 @@
     using System.Text;
     using QLearning.Core;
 
-    public interface IMaze : IQLearningMultiObjective
+    public interface IMaze : IQEnvironmentMultiObjective
     {
         /// <summary>
         /// Gets or Sets the number of columns in the maze

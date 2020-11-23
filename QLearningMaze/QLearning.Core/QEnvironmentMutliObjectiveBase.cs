@@ -5,19 +5,19 @@
     using System.Text;
     using System.Linq;
 
-    public abstract class QLearningMutliObjectiveBase : QLearningBase, IQLearningMultiObjective
+    public abstract class QEnvironmentMutliObjectiveBase : QEnvironmentBase, IQEnvironmentMultiObjective
     {
         public virtual int GetRewardAction { get; set; } = -1;
         public virtual int PrioritizeFromState { get; set; }
         
-        public QLearningMutliObjectiveBase() { }
+        public QEnvironmentMutliObjectiveBase() { }
 
-        public QLearningMutliObjectiveBase(int numberOfStates, int numberOfActions)
+        public QEnvironmentMutliObjectiveBase(int numberOfStates, int numberOfActions)
             : base(numberOfStates, numberOfActions)
         {
         }
 
-        public QLearningMutliObjectiveBase(
+        public QEnvironmentMutliObjectiveBase(
             int numberOfStates,
             int numberOfActions,
             double learningRate,

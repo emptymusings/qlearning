@@ -4,7 +4,7 @@ using System.Text;
 
 namespace QLearning.Core
 {
-    public interface IQLearning
+    public interface IQEnvironment
     {
         /// <summary>
         /// Occurs as the State Table's initializion is about to start

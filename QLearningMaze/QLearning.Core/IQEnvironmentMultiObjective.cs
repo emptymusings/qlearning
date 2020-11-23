@@ -4,7 +4,7 @@ using System.Text;
 
 namespace QLearning.Core
 {
-    public interface IQLearningMultiObjective : IQLearning
+    public interface IQEnvironmentMultiObjective : IQEnvironment
     {
         /// <summary>
         /// Gets or Sets a list of custom rewards

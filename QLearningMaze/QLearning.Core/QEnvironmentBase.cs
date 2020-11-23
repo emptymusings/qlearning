@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    public abstract partial class QLearningBase : IQLearning
+    public abstract partial class QEnvironmentBase : IQEnvironment
     {
         private Random _random = new Random();
         private double _accumulatedEpisodeRewards;
@@ -14,15 +14,15 @@
         protected int _numberOfStates;
         protected int _numberOfActions;
         
-        public QLearningBase() { }
+        public QEnvironmentBase() { }
 
-        public QLearningBase(int numberOfStates, int numberOfActions)
+        public QEnvironmentBase(int numberOfStates, int numberOfActions)
         {
             _numberOfStates = numberOfStates;
             _numberOfActions = numberOfActions;
         }
 
-        public QLearningBase(
+        public QEnvironmentBase(
             int numberOfStates,
             int numberOfActions,
             double learningRate,
@@ -383,7 +383,9 @@
 
             var newQuality = QualityTable[state][action] + (LearningRate * (r + (DiscountRate * maxQ) - QualityTable[state][action]));
             
-            // I have found a couple of Q-Value formulas.  Aside form some rounding issues, this and the formula below it are identical
+            // Below is the original Q-Function as found in the example.  It produces results that are only slightly different than the 
+            // newQuality Q-Function (presumably rounding errors), but I opted for newQuality because it is more commonly referred to 
+            // in reference documents
             //double similarQFormula = ((1 - LearningRate) * QualityTable[state][action]) + (LearningRate * (r + (DiscountRate * maxQ))); 
 
 

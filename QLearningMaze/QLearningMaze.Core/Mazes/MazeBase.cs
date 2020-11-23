@@ -7,7 +7,7 @@
     using Mazes;
     using System.Linq;
 
-    public partial class MazeBase : QLearningMutliObjectiveBase, IMaze
+    public partial class MazeBase : QEnvironmentMutliObjectiveBase, IMaze
     {
         public MazeBase() 
         {

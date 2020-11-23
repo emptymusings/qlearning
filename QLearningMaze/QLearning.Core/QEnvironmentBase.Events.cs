@@ -4,7 +4,7 @@ using System.Text;
 
 namespace QLearning.Core
 {
-    public abstract partial class QLearningBase : IQLearning
+    public abstract partial class QEnvironmentBase : IQEnvironment
     {
         public event EventHandler StateTableCreating;
         public event EventHandler StateTableCreated;
