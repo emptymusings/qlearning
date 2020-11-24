@@ -5,55 +5,44 @@
     using System.Text;
     using System.Linq;
 
-    public abstract class QEnvironmentMutliObjectiveBase : QEnvironmentBase, IQEnvironmentMultiObjective
+    public abstract class QEnvironmentMutliObjectiveBaseNew : QEnvironmentBaseNew, IQEnvironmentMultiObjectiveNew
     {
         public virtual int GetRewardAction { get; set; } = -1;
         public virtual int PrioritizeFromState { get; set; }
         
-        public QEnvironmentMutliObjectiveBase() { }
+        public QEnvironmentMutliObjectiveBaseNew() { }
 
-        public QEnvironmentMutliObjectiveBase(int numberOfStates, int numberOfActions)
+        public QEnvironmentMutliObjectiveBaseNew(int numberOfStates, int numberOfActions)
             : base(numberOfStates, numberOfActions)
         {
         }
 
-        public QEnvironmentMutliObjectiveBase(
+        public QEnvironmentMutliObjectiveBaseNew(
             int numberOfStates,
             int numberOfActions,
-            double learningRate,
-            double discountRate,
             string qualitySaveDirectory,
             double objectiveReward,
             int objectiveAction,
-            List<int> objectiveStates,
-            int maximumAllowedMoves = 1000,
-            int maximumAllowedBacktracks = -1)
+            List<int> objectiveStates)
             : base(
                   numberOfActions,
                   numberOfStates,
-                  learningRate,
-                  discountRate,
                   qualitySaveDirectory,
                   objectiveReward,
                   objectiveAction,
-                  objectiveStates,
-                  maximumAllowedMoves,
-                  maximumAllowedBacktracks)
+                  objectiveStates)
         {
             
         }
 
         public List<CustomObjective> AdditionalRewards { get; set; } = new List<CustomObjective>();
 
-        private void SetPhaseSize()
+        protected virtual void SetPhaseSize()
         {
-            if (StatesPerPhase <= 0)
-            {
-                StatesPerPhase = StatesTable.Length;
-            }
+            StatesPerPhase = StatesTable.Length;
         }
 
-        public override void InitializeRewardsTable(bool overrideBaseEvents)
+        protected override void InitializeRewardsTable(bool overrideBaseEvents)
         {
             if (!overrideBaseEvents)
                 OnRewardTableCreating();

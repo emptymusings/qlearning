@@ -9,12 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using QLearning.Core;
 namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingSessionSelector : Form
     {
-        private IMaze _maze;
+        private IAgent<IMazeNew> _agent;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -22,10 +22,11 @@ namespace QLearningMaze.Ui.Forms
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(IMaze maze)
+        public TrainingSessionSelector(IAgent<IMazeNew> agent)
         {
             InitializeComponent();
-            _maze = maze;
+            _agent = agent;
+            _agent.AgentCompleted += Maze_AgentCompleted;
         }
 
         private delegate void ShowResultsHandler();
@@ -46,6 +47,7 @@ namespace QLearningMaze.Ui.Forms
             SelectedSession = trainingSessions.Where(s => s.Episode == episode).FirstOrDefault();
 
             this.DialogResult = DialogResult.OK;
+            _agent.AgentCompleted -= Maze_AgentCompleted;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -100,7 +102,7 @@ namespace QLearningMaze.Ui.Forms
 
         private Task RunTests()
         {
-            var sessions = TrainingSession.GetTrainingSessions(_maze.QualitySaveDirectory).OrderBy(e => e.Episode).ToList();
+            var sessions = QLearningMaze.Core.TrainingSession.GetTrainingSessions(_agent.Environment.QualitySaveDirectory).OrderBy(e => e.Episode).ToList();
             var maze = GetTestMaze();
 
             for (int i = sessions.Count - 1; i >= 0; --i)
@@ -120,10 +122,10 @@ namespace QLearningMaze.Ui.Forms
 
                 try
                 {
-                    maze.RunAgent(maze.StartPosition);
+                    _agent.RunAgent(maze.StartPosition);
                     session.Succeeded = true;
                 }
-                catch
+                catch (Exception ex)
                 {
                     //sessions.RemoveAt(i);
                     session.Succeeded = false;                    
@@ -163,20 +165,19 @@ namespace QLearningMaze.Ui.Forms
             return Task.CompletedTask;
         }
 
-        private MazeBase GetTestMaze()
+        private MazeBaseNew GetTestMaze()
         {
-            var maze = new MazeBase(
-                _maze.Columns,
-                _maze.Rows,
-                _maze.StartPosition,
-                _maze.GoalPosition,
-                _maze.DiscountRate,
-                _maze.LearningRate);
-            maze.RewardsTable = _maze.RewardsTable;
-            maze.StatesTable = _maze.StatesTable;
-            maze.AdditionalRewards = _maze.AdditionalRewards;
+            var maze = new MazeBaseNew(
+                _agent.Environment.Columns,
+                _agent.Environment.Rows,
+                _agent.Environment.StartPosition,
+                _agent.Environment.GoalPosition,
+                _agent.Environment.ObjectiveReward);
+            maze.RewardsTable = _agent.Environment.RewardsTable;
+            maze.StatesTable = _agent.Environment.StatesTable;
+            maze.AdditionalRewards = _agent.Environment.AdditionalRewards;
 
-            maze.AgentCompleted += Maze_AgentCompleted;
+            
 
             return maze;
         }
@@ -206,7 +207,7 @@ namespace QLearningMaze.Ui.Forms
         }
     }
 
-    public class TrainingSessionEx : TrainingSession
+    public class TrainingSessionEx : QLearningMaze.Core.TrainingSession
     {
         public int MinEpisode { get; set; }
         public int MaxEpisode { get; set; }

@@ -4,55 +4,15 @@ using System.Text;
 
 namespace QLearning.Core
 {
-    public abstract partial class QEnvironmentBase : IQEnvironment
+    public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
+        where TEnvironment : IQEnvironmentNew
     {
-        public event EventHandler StateTableCreating;
-        public event EventHandler StateTableCreated;
-        public event EventHandler RewardTableCreating;
-        public event EventHandler RewardTableCreated;
-        public event EventHandler QualityTableCreating;
-        public event EventHandler QualityTableCreated;
         public event EventHandler<AgentStateChangedEventArgs> AgentStateChanged;
         public event EventHandler<TrainingAgentStateChangedEventArgs> TrainingAgentStateChanged;
         public event EventHandler<TrainingEpisodeCompletedEventArgs> TrainingEpisodeCompleted;
         public event EventHandler<bool> TrainingStateChanged;
         public event EventHandler<AgentCompletedEventArgs> AgentCompleted;
 
-        protected virtual void OnStateTableCreating()
-        {
-            EventHandler handler = StateTableCreating;
-            handler?.Invoke(this, new EventArgs());
-        }
-
-        protected virtual void OnStateTableCreated()
-        {
-            EventHandler handler = StateTableCreated;
-            handler?.Invoke(this, new EventArgs());
-        }
-
-        protected virtual void OnRewardTableCreating()
-        {
-            EventHandler handler = RewardTableCreating;
-            handler?.Invoke(this, new EventArgs());
-        }
-
-        protected virtual void OnRewardTableCreated()
-        {
-            EventHandler handler = RewardTableCreated;
-            handler?.Invoke(this, new EventArgs());
-        }
-
-        protected virtual void OnQualityTableCreating()
-        {
-            EventHandler handler = QualityTableCreating;
-            handler?.Invoke(this, new EventArgs());
-        }
-
-        protected virtual void OnQualityTableCreated()
-        {
-            EventHandler handler = QualityTableCreated;
-            handler?.Invoke(this, new EventArgs());
-        }
 
         protected virtual void OnAgentStateChanged(int newState, int movesMade, double rewardsEarned)
         {

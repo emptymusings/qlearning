@@ -11,9 +11,9 @@ namespace QLearningMaze.Ui.Forms
 {
     public partial class Rewards : Form
     {
-        private IMaze _maze;
+        private IMazeNew _maze;
 
-        public Rewards(IMaze maze)
+        public Rewards(IMazeNew maze)
         {
             InitializeComponent();
             _maze = maze;

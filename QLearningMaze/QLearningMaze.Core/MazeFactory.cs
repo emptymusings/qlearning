@@ -12,24 +12,19 @@ namespace QLearningMaze.Core
     }
     public class MazeFactory
     {
-        public static IMaze CreateMaze(
+        public static IMazeNew CreateMaze(
             int rows,
             int columns,
             int startPosition,
             int goalPosition,
-            double discountRate,
-            double learningRate,
-            int trainingEpisodes)
+            double goalValue)
         {
-            var maze = new MazeBase(
+            var maze = new MazeBaseNew(
                 columns,
                 rows,
                 startPosition,
                 goalPosition,
-                discountRate,
-                learningRate);
-
-            maze.NumberOfTrainingEpisodes = trainingEpisodes;
+                goalValue);
 
             return maze;
         }

@@ -5,47 +5,34 @@
     using System.Collections.Generic;
     using System.IO;
 
-    public abstract partial class QEnvironmentBase : IQEnvironment
+    public abstract partial class QEnvironmentBaseNew : IQEnvironmentNew
     {
-        private Random _random = new Random();
-        private double _accumulatedEpisodeRewards;
-        private double _epsilonDecayValue;
-
+        protected Random _random = new Random();
         protected int _numberOfStates;
         protected int _numberOfActions;
         
-        public QEnvironmentBase() { }
+        public QEnvironmentBaseNew() { }
 
-        public QEnvironmentBase(int numberOfStates, int numberOfActions)
+        public QEnvironmentBaseNew(int numberOfStates, int numberOfActions)
         {
             _numberOfStates = numberOfStates;
             _numberOfActions = numberOfActions;
         }
 
-        public QEnvironmentBase(
+        public QEnvironmentBaseNew(
             int numberOfStates,
             int numberOfActions,
-            double learningRate,
-            double discountRate,
             string qualitySaveDirectory,
             double objectiveReward,
             int objectiveAction,
-            List<int> objectiveStates,
-            int maxEpisodes,
-            int maximumAllowedMoves = 1000,
-            int maximumAllowedBacktracks = -1)
+            List<int> objectiveStates)
         {
             _numberOfActions = numberOfActions;
             _numberOfStates = numberOfStates;
-            LearningRate = learningRate;
-            DiscountRate = discountRate;
             QualitySaveDirectory = qualitySaveDirectory;
             ObjectiveReward = objectiveReward;
             ObjectiveAction = objectiveAction;
             ObjectiveStates = objectiveStates;
-            NumberOfTrainingEpisodes = maxEpisodes;
-            MaximumAllowedMoves = maximumAllowedMoves;
-            MaximumAllowedBacktracks = maximumAllowedBacktracks;
         }
 
         public virtual int NumberOfStates
@@ -68,33 +55,33 @@
         public virtual List<int> ObjectiveStates { get; set; } = new List<int>();
         public virtual int ObjectiveAction { get; set; }
         public virtual int MaximumAllowedMoves { get; set; } = 100000;
-        public virtual double ObjectiveReward { get; set; }
+        public virtual double ObjectiveReward { get; set; } = 1;
         public virtual string QualitySaveDirectory { get; set; }
-        public virtual int MaximumAllowedBacktracks { get; set; } = -1;
-        public virtual int NumberOfTrainingEpisodes { get; set; }
-        public virtual List<TrainingSession> TrainingEpisodes { get; set; }
-        public virtual TrainingSession BestTrainingSession
-        {
-            get
-            {
-                if (TrainingEpisodes == null ||
-                    TrainingEpisodes.Count == 0)
-                {
-                    return null;
-                }
-
-                return TrainingEpisodes.OrderByDescending(r => r.Score).FirstOrDefault();
-            }
-        }
         public virtual int QualitySaveFrequency { get; set; } = 100;
         public virtual int StatesPerPhase { get; set; }
 
-        public virtual void InitializeStatesTable()
+        public virtual void Initialize()
+        {
+            InitializeStatesTable();
+            InitializeQualityTable();
+            InitializeRewardsTable();
+            InitializeSaveFolder();
+        }
+
+        public virtual void Initialize(bool overrideBaseEvents)
+        {
+            InitializeStatesTable(overrideBaseEvents);
+            InitializeQualityTable(overrideBaseEvents);
+            InitializeRewardsTable(overrideBaseEvents);
+            InitializeSaveFolder();
+        }
+
+        protected virtual void InitializeStatesTable()
         {
             InitializeStatesTable(false);
         }
 
-        public virtual void InitializeStatesTable(bool overrideBaseEvents)
+        protected virtual void InitializeStatesTable(bool overrideBaseEvents)
         {
             if (!overrideBaseEvents)
                 OnStateTableCreating();
@@ -115,12 +102,12 @@
                 OnStateTableCreated();
         }
 
-        public virtual void InitializeRewardsTable()
+        protected virtual void InitializeRewardsTable()
         {
             InitializeRewardsTable(false);
         }
 
-        public virtual void InitializeRewardsTable(bool overrideBaseEvents)
+        protected virtual void InitializeRewardsTable(bool overrideBaseEvents)
         {
             if (!overrideBaseEvents)
                 OnRewardTableCreating();
@@ -140,12 +127,12 @@
                 OnRewardTableCreated();
         }
 
-        public virtual void InitializeQualityTable()
+        protected virtual void InitializeQualityTable()
         {
             InitializeQualityTable(false);
         }
 
-        public virtual void InitializeQualityTable(bool overrideBaseEvents)
+        protected virtual void InitializeQualityTable(bool overrideBaseEvents)
         {
             if (!overrideBaseEvents)
                 OnQualityTableCreating();
@@ -171,62 +158,6 @@
             throw new InvalidOperationException($"Attempting action {action} from state {state} returned an invalid value");
         }
 
-        public virtual void Train()
-        {
-            Train(false);
-        }
-
-        protected virtual void Initialize()
-        {
-            InitializeStatesTable();
-            InitializeQualityTable();
-            InitializeRewardsTable();
-            InitializeSaveFolder();
-        }
-
-        /// <summary>
-        /// Performs the training necessary to populate the Q-Table
-        /// </summary>
-        public virtual void Train(bool overrideBaseEvents)
-        {
-            Initialize();
-            double epsilon = 1;
-
-            EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
-            _epsilonDecayValue = GetEpsilonDecayValue(epsilon);
-
-            TrainingEpisodes = new List<TrainingSession>();
-
-            if (!overrideBaseEvents)
-                OnTrainingStateChanged(true);
-
-            RunTrainingSet(epsilon, overrideBaseEvents);
-
-            if (!overrideBaseEvents)
-                OnTrainingStateChanged(false);
-        }
-
-        protected virtual void RunTrainingSet(double epsilon, bool overrideBaseEvents)
-        {
-            for (int episode = 0; episode < NumberOfTrainingEpisodes; ++episode)
-            {
-                var episodeResults = RunTrainingEpisode(epsilon, overrideBaseEvents);
-                var state = episodeResults.finalState;
-                var moves = episodeResults.moves;
-
-                if (IsTerminalState(state, moves) &&
-                    (1 + episode) % QualitySaveFrequency == 0)
-                {
-                    SaveQualityForEpisode(episode + 1, moves);
-                }
-
-                epsilon = DecayEpsilon(episode, epsilon);
-
-                if (!overrideBaseEvents)
-                    OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, moves, _accumulatedEpisodeRewards, ObjectiveStates.Contains(state));
-            }
-        }
-
         protected virtual double GetEpsilonDecayValue()
         {
             return 1 / (EpsilonDecayEnd - EpsilonDecayStart);
@@ -237,55 +168,13 @@
             return epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
         }
 
-        /// <summary>
-        /// Maneuvers the agent through a training episode
-        /// </summary>
-        /// <param name="epsilon">The "greedy strategy" epsilon value that will help determine whether to perform a random or a known action</param>
-        protected virtual (int finalState, int moves) RunTrainingEpisode(double epsilon, bool overrideBaseEvents)
-        {
-            int moves = 0;
-            int previousState = -1;
-            bool done = false;
-            int state = _random.Next(0, NumberOfStates);
-
-            _accumulatedEpisodeRewards = 0;
-
-            while (!done)
-            {
-                moves++;
-                var nextActionSet = GetNextAction(state, epsilon);
-                int nextAction = nextActionSet.nextAction;
-                var oldQuality = QualityTable[state][nextAction];
-
-                CalculateQValue(state, nextAction);
-
-                previousState = state;
-                state = StatesTable[state][nextAction];
-
-                if (!overrideBaseEvents)
-                    OnTrainingAgentStateChanged(nextAction, state, moves, _accumulatedEpisodeRewards, QualityTable[state][nextAction], oldQuality);
-
-                if (IsTerminalState(state, nextAction, moves))
-                {
-                    done = true;
-                }
-                else if (state == previousState)
-                {
-                    // Check for repeated actions, and adjust if happening
-                    state = _random.Next(0, _numberOfStates);
-                }
-            }
-
-            return (state, moves);
-        }
-
-        protected virtual bool IsTerminalState(int state, int moves)
+        public virtual bool IsTerminalState(int state, int moves)
         {
             return ObjectiveStates.Contains(state % StatesPerPhase) ||
                     (MaximumAllowedMoves > 0 && moves > MaximumAllowedMoves);
         }
 
-        protected virtual bool IsTerminalState(int state, int action, int moves)
+        public virtual bool IsTerminalState(int state, int action, int moves)
         {
             return IsTerminalState(state, moves) && action == ObjectiveAction;
         }
@@ -295,7 +184,7 @@
         /// </summary>
         /// <param name="state">The state in which the agent currently resides</param>
         /// <param name="epsilon"></param>
-        protected virtual (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
+        public virtual (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
         {
             double randRand = _random.NextDouble();
             int nextAction = -1;
@@ -323,7 +212,7 @@
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        protected virtual int GetPreferredNextAction(int state, int[] excludedActions = null)
+        public virtual int GetPreferredNextAction(int state, int[] excludedActions = null)
         {
             int preferredNext = -1;
             double max = double.MinValue;
@@ -350,7 +239,7 @@
         /// <summary>
         /// Selects the agent's next action randomly based on its current state
         /// </summary>
-        protected virtual int GetRandomNextAction(int state)
+        public virtual int GetRandomNextAction(int state)
         {
             List<int> possibleNextStates = GetPossibleNextActions(state);
 
@@ -382,7 +271,7 @@
             return result;
         }
 
-        protected virtual void CalculateQValue(int state, int action)
+        public virtual void CalculateQValue(int state, int action, double learningRate, double discountRate)
         {
             int nextState = StatesTable[state][action];
 
@@ -394,7 +283,7 @@
             
             var r = RewardsTable[state][action];
 
-            var newQuality = QualityTable[state][action] + (LearningRate * (r + (DiscountRate * maxQ) - QualityTable[state][action]));
+            var newQuality = QualityTable[state][action] + (learningRate * (r + (discountRate * maxQ) - QualityTable[state][action]));
             
             // Below is the original Q-Function as found in the example.  It produces results that are only slightly different than the 
             // newQuality Q-Function (presumably rounding errors), but I opted for newQuality because it is more commonly referred to 
@@ -403,7 +292,6 @@
 
 
             QualityTable[state][action] = newQuality;
-            _accumulatedEpisodeRewards += r;
         }
 
         /// <summary>
@@ -455,98 +343,20 @@
             }
         }
 
-        protected virtual void SaveQualityForEpisode(int episode, int moves)
+        public virtual TrainingSession SaveQualityForEpisode(int episode, int moves, double score)
         {
             var trainingEpisode = new TrainingSession
             {
                 Episode = episode,
                 Moves = moves,
-                Score = _accumulatedEpisodeRewards,
+                Score = score,
                 Quality = QualityTable
             };
 
-            TrainingEpisodes.Add(trainingEpisode);
             Utilities.SaveObject($@"{QualitySaveDirectory}\Episode_{episode}_{DateTime.Now.ToString("HH_mm_ss")}.json", trainingEpisode);
+
+            return trainingEpisode;
         }
 
-        /// <summary>
-        /// Decays the epsilon value so that as training progesses, known values will be more likely to be used
-        /// </summary>
-        protected virtual double DecayEpsilon(int episode, double epsilon)
-        {
-            if (EpsilonDecayEnd >= episode &&
-                   episode >= EpsilonDecayStart)
-            {
-                epsilon -= _epsilonDecayValue;
-            }
-
-            return epsilon;
-        }
-
-        public virtual void RunAgent(int fromState)
-        {
-            RunAgent(fromState, false);
-        }
-
-        public virtual void RunAgent(int fromState, bool overrideBaseEvents)
-        {
-            int action = -1;
-            int nextState;
-            int moves = 0;
-            int previousState = -1;
-            int numberOfBacktracks = 0;
-            bool done = false;
-
-            _accumulatedEpisodeRewards = 0;
-
-            while (!done)
-            {
-                if (QualityTable == null)
-                    throw new InvalidOperationException($"The Q-table has not been initialized.  Train the agent first");
-
-                action = GetPreferredNextAction(fromState);
-                nextState = StatesTable[fromState][action];
-
-                if (StatesTable[fromState][action] < 0)
-                {
-                    throw new InvalidOperationException($"I guess I didn't learn very well.  Please try training again (perhaps adjusing the learning rate, discount rate, and/or episode count)");
-                }
-
-                _accumulatedEpisodeRewards += RewardsTable[fromState][action];
-                moves++;
-
-                if (moves > MaximumAllowedMoves)
-                {
-                    throw new InvalidOperationException($"Something's gone wrong, I've wandered around far too many times");
-                }
-
-                if (nextState == previousState)
-                {
-                    if (MaximumAllowedBacktracks >= 0 &&
-                        numberOfBacktracks > MaximumAllowedBacktracks)
-                    {
-                        throw new InvalidOperationException($"The agent has exceeded the maximum number of backtracks: {MaximumAllowedBacktracks}");
-                    }
-                    else
-                    {
-                        numberOfBacktracks++;
-                    }
-                }
-
-                previousState = fromState;
-                fromState = nextState;
-
-                if (!overrideBaseEvents)
-                    OnAgentStateChanged(fromState, moves, _accumulatedEpisodeRewards);
-
-                if (IsTerminalState(fromState, action, moves))
-                {
-                    done = true;
-                }
-            }
-
-            if (!overrideBaseEvents)
-                OnAgentCompleted(moves, _accumulatedEpisodeRewards, (ObjectiveStates.Contains(fromState)));
-        }
     }
 }
