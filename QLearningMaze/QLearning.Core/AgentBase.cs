@@ -6,7 +6,7 @@
     using System.Linq;
 
     public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
-        where TEnvironment : IQEnvironmentNew
+        where TEnvironment : IQEnvironment
     {
         private Random _random = new Random();
         private double _epsilonDecayValue;

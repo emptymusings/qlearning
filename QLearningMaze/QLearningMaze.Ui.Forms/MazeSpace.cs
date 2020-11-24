@@ -17,7 +17,7 @@ namespace QLearningMaze.Ui.Forms
         public List<ObservationSpaceRow> Rows { get; set; } = new List<ObservationSpaceRow>();
         public static ObservationSpace ActiveSpace { get; set; }
 
-        public void CreateMazeControls(IMazeNew maze)
+        public void CreateMazeControls(IMaze maze)
         {
             this.SuspendLayout();
             Rows.Clear();
@@ -42,7 +42,7 @@ namespace QLearningMaze.Ui.Forms
             this.ResumeLayout();
         }
 
-        private List<ObservationSpaceRow> CreateRowControls(IMazeNew maze)
+        private List<ObservationSpaceRow> CreateRowControls(IMaze maze)
         {
             int position = 0;
             int rowNumber = 0;
@@ -92,7 +92,7 @@ namespace QLearningMaze.Ui.Forms
             return rows;
         }
 
-        private void DrawWalls(IMazeNew maze, int position, ObservationSpace space)
+        private void DrawWalls(IMaze maze, int position, ObservationSpace space)
         {
             var walls = maze.Obstructions.Where(x => x.BetweenSpace == position || x.AndSpace == position);
 

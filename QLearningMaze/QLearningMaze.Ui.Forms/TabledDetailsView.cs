@@ -18,10 +18,10 @@ namespace QLearningMaze.Ui.Forms
             StateSpace
         }
 
-        private IMazeNew _maze;
+        private IMaze _maze;
         private ValueTypes _valueType;
 
-        public TabledDetailsView(IMazeNew maze, ValueTypes valueType)
+        public TabledDetailsView(IMaze maze, ValueTypes valueType)
         {
             InitializeComponent();
             _maze = maze;

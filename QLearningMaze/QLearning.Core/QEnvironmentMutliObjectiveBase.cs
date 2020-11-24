@@ -20,40 +20,30 @@
         public QEnvironmentMutliObjectiveBase(
             int numberOfStates,
             int numberOfActions,
-            double learningRate,
-            double discountRate,
             string qualitySaveDirectory,
             double objectiveReward,
             int objectiveAction,
-            List<int> objectiveStates,
-            int maximumAllowedMoves = 1000,
-            int maximumAllowedBacktracks = -1)
+            List<int> objectiveStates)
             : base(
                   numberOfActions,
                   numberOfStates,
-                  learningRate,
-                  discountRate,
                   qualitySaveDirectory,
                   objectiveReward,
                   objectiveAction,
-                  objectiveStates,
-                  maximumAllowedMoves,
-                  maximumAllowedBacktracks)
+                  objectiveStates)
         {
             
         }
 
         public List<CustomObjective> AdditionalRewards { get; set; } = new List<CustomObjective>();
 
-        private void SetPhaseSize()
+        protected virtual void SetPhaseSize()
         {
             if (StatesPerPhase <= 0)
-            {
                 StatesPerPhase = StatesTable.Length;
-            }
         }
 
-        public override void InitializeRewardsTable(bool overrideBaseEvents)
+        protected override void InitializeRewardsTable(bool overrideBaseEvents)
         {
             if (!overrideBaseEvents)
                 OnRewardTableCreating();
@@ -93,6 +83,9 @@
                 }
                 else
                 {
+                    if (objective.State + rewardPriority > RewardsTable.Length)
+                        continue;
+
                     SetObjectiveActionNextState(objective.State + rewardPriority);
                     RewardsTable[objective.State + rewardPriority][GetRewardAction] = objective.Value;
                     rewardPriority += StatesPerPhase;

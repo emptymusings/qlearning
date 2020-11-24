@@ -5,7 +5,7 @@
     using System.Text;
 
     public interface IAgent<TEnvironment>
-        where TEnvironment : IQEnvironmentNew
+        where TEnvironment : IQEnvironment
     {
         /// <summary>
         /// Occurs as the agent's current state has changed

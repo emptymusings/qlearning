@@ -5,7 +5,7 @@ using System.Text;
 namespace QLearning.Core
 {
     public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
-        where TEnvironment : IQEnvironmentNew
+        where TEnvironment : IQEnvironment
     {
         public event EventHandler<AgentStateChangedEventArgs> AgentStateChanged;
         public event EventHandler<TrainingAgentStateChangedEventArgs> TrainingAgentStateChanged;

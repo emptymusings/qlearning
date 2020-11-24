@@ -11,8 +11,8 @@
 
     public partial class MazeMain : Form
     {
-        private MazeBaseNew _maze = new MazeBaseNew(1, 1, 0, 0, 200);
-        private IAgent<MazeBaseNew> _agent;
+        private MazeBase _maze = new MazeBase(1, 1, 0, 0, 200);
+        private IAgent<MazeBase> _agent;
         
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
@@ -33,7 +33,7 @@
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
 
-            _agent = new AgentBase<MazeBaseNew>(
+            _agent = new AgentBase<MazeBase>(
                 _maze,
                 0.5,
                 0.5,
@@ -113,8 +113,8 @@
                 obstructionsList.Items.Clear();
                 mazeSpace.Enabled = false;
 
-                var deserialized = MazeUtilities.LoadObject<AgentBase<MazeBaseNew>>(dlg.FileName);
-                _agent = MazeUtilities.LoadObject<AgentBase<MazeBaseNew>>(dlg.FileName);
+                var deserialized = MazeUtilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
+                _agent = MazeUtilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
                 _maze = _agent.Environment;
                 _maze.ObjectiveReward = 200;
                 _agent.AgentStateChanged += Maze_AgentStateChanged;
