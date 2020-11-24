@@ -8,12 +8,13 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using QLearning.Core;
+using QLearningMaze.Core.Mazes;
 
 namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingProgress : Form
     {
-        private IAgent<IMazeNew> _agent;
+        private IAgent<MazeBaseNew> _agent;
         int _successfulRuns = 0;
         double _averageMoves = 0;
         double _averageScore = 0;
@@ -30,7 +31,7 @@ namespace QLearningMaze.Ui.Forms
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
 
-        public TrainingProgress(IAgent<IMazeNew> agent)
+        public TrainingProgress(IAgent<MazeBaseNew> agent)
         {
             InitializeComponent();
             _agent = agent;

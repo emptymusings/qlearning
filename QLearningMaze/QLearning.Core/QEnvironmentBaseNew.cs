@@ -48,13 +48,8 @@
         public virtual int[][] StatesTable { get; set; }
         public virtual double[][] RewardsTable { get; set; }
         public virtual double[][] QualityTable { get; set; }
-        public virtual double EpsilonDecayStart { get; set; } = 1;
-        public virtual double EpsilonDecayEnd { get; set; }
-        public virtual double LearningRate { get; set; }
-        public virtual double DiscountRate { get; set; }
         public virtual List<int> ObjectiveStates { get; set; } = new List<int>();
         public virtual int ObjectiveAction { get; set; }
-        public virtual int MaximumAllowedMoves { get; set; } = 100000;
         public virtual double ObjectiveReward { get; set; } = 1;
         public virtual string QualitySaveDirectory { get; set; }
         public virtual int QualitySaveFrequency { get; set; } = 100;
@@ -158,25 +153,15 @@
             throw new InvalidOperationException($"Attempting action {action} from state {state} returned an invalid value");
         }
 
-        protected virtual double GetEpsilonDecayValue()
-        {
-            return 1 / (EpsilonDecayEnd - EpsilonDecayStart);
-        }
-
-        protected virtual double GetEpsilonDecayValue(double epsilon)
-        {
-            return epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
-        }
-
-        public virtual bool IsTerminalState(int state, int moves)
+        public virtual bool IsTerminalState(int state, int moves, int maximumAllowedMoves)
         {
             return ObjectiveStates.Contains(state % StatesPerPhase) ||
-                    (MaximumAllowedMoves > 0 && moves > MaximumAllowedMoves);
+                    (maximumAllowedMoves > 0 && moves > maximumAllowedMoves);
         }
 
-        public virtual bool IsTerminalState(int state, int action, int moves)
+        public virtual bool IsTerminalState(int state, int action, int moves, int maximumAllowedMoves)
         {
-            return IsTerminalState(state, moves) && action == ObjectiveAction;
+            return IsTerminalState(state, moves, maximumAllowedMoves) && action == ObjectiveAction;
         }
 
         /// <summary>

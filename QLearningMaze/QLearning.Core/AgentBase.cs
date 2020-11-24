@@ -11,6 +11,8 @@
         private Random _random = new Random();
         private double _epsilonDecayValue;
 
+        public AgentBase() { }
+
         public AgentBase(
             TEnvironment environment,
             double learningRate,
@@ -89,6 +91,7 @@
                     throw new InvalidOperationException($"The Q-table has not been initialized.  Train the agent first");
 
                 action = Environment.GetPreferredNextAction(fromState);
+
                 nextState = Environment.StatesTable[fromState][action];
 
                 if (Environment.StatesTable[fromState][action] < 0)
@@ -123,7 +126,7 @@
                 if (!overrideBaseEvents)
                     OnAgentStateChanged(fromState, Moves, Score);
 
-                if (Environment.IsTerminalState(fromState, action, Moves))
+                if (Environment.IsTerminalState(fromState, action, Moves, MaximumAllowedMoves))
                 {
                     done = true;
                 }
@@ -170,7 +173,7 @@
                 var state = episodeResults.finalState;
                 var moves = episodeResults.moves;
 
-                if (Environment.IsTerminalState(state, moves) &&
+                if (Environment.IsTerminalState(state, moves, MaximumAllowedMoves) &&
                     (1 + episode) % Environment.QualitySaveFrequency == 0)
                 {
                     var trainingEpisode = Environment.SaveQualityForEpisode(episode + 1, moves, Score);
@@ -209,7 +212,7 @@
                 if (!overrideBaseEvents)
                     OnTrainingAgentStateChanged(nextAction, state, Moves, Score, Environment.QualityTable[state][nextAction], oldQuality);
 
-                if (Environment.IsTerminalState(state, nextAction, Moves))
+                if (Environment.IsTerminalState(state, nextAction, Moves, MaximumAllowedMoves))
                 {
                     done = true;
                 }

@@ -11,8 +11,8 @@
 
     public partial class MazeMain : Form
     {
-        private IMazeNew _maze = new MazeBaseNew(1, 1, 0, 0, 200);
-        private IAgent<IMazeNew> _agent;
+        private MazeBaseNew _maze = new MazeBaseNew(1, 1, 0, 0, 200);
+        private IAgent<MazeBaseNew> _agent;
         
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
@@ -33,7 +33,7 @@
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
 
-            _agent = new AgentBase<IMazeNew>(
+            _agent = new AgentBase<MazeBaseNew>(
                 _maze,
                 0.5,
                 0.5,
@@ -112,12 +112,11 @@
             {
                 obstructionsList.Items.Clear();
                 mazeSpace.Enabled = false;
-                _maze = MazeUtilities.LoadObject<MazeBaseNew>(dlg.FileName);
-                _agent.Environment = _maze;
-                                
-                //_maze.ObjectiveReward = 200;
-                _agent.MaximumAllowedMoves = _maze.NumberOfStates;
-                _agent.MaximumAllowedBacktracks = 3;
+
+                var deserialized = MazeUtilities.LoadObject<AgentBase<MazeBaseNew>>(dlg.FileName);
+                _agent = MazeUtilities.LoadObject<AgentBase<MazeBaseNew>>(dlg.FileName);
+                _maze = _agent.Environment;
+                _maze.ObjectiveReward = 200;
                 _agent.AgentStateChanged += Maze_AgentStateChanged;
                 _agent.AgentCompleted += Maze_AgentCompleted;
                 _agent.TrainingAgentStateChanged += Maze_TrainingAgentStateChanged;
@@ -136,7 +135,7 @@
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                MazeUtilities.SaveObject(dlg.FileName, _maze);
+                MazeUtilities.SaveObject(dlg.FileName, _agent);
             }
         }
                 

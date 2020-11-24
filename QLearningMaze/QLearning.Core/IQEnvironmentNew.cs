@@ -90,8 +90,8 @@ namespace QLearning.Core
         
         int GetPreferredNextAction(int state, int[] excludedActions = null);
         int GetRandomNextAction(int state);
-        bool IsTerminalState(int state, int moves);
-        bool IsTerminalState(int state, int action, int moves);
+        bool IsTerminalState(int state, int moves, int maximumAllowedMoves);
+        bool IsTerminalState(int state, int action, int moves, int maximumAllowedMoves);
         TrainingSession SaveQualityForEpisode(int episode, int moves, double score);
         (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon);
         void CalculateQValue(int state, int nextAction, double learningRate, double discountRate);

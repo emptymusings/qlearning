@@ -10,11 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using QLearning.Core;
+using QLearningMaze.Core.Mazes;
+
 namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingSessionSelector : Form
     {
-        private IAgent<IMazeNew> _agent;
+        private IAgent<MazeBaseNew> _agent;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -22,7 +24,7 @@ namespace QLearningMaze.Ui.Forms
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(IAgent<IMazeNew> agent)
+        public TrainingSessionSelector(IAgent<MazeBaseNew> agent)
         {
             InitializeComponent();
             _agent = agent;

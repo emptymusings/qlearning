@@ -7,19 +7,20 @@
     using Mazes;
     using System.Linq;
 
-    public partial class MazeBaseNew : QEnvironmentMutliObjectiveBaseNew, IMazeNew
+    public partial class MazeBase : QEnvironmentMutliObjectiveBase, IMaze
     {
-        public MazeBaseNew() 
+        public MazeBase() 
         {
             SetupStandardValues();
         }
 
-        public MazeBaseNew(
+        public MazeBase(
             int columns, 
             int rows, 
             int startPosition,
             int goalPosition, 
-            double goalValue)
+            double discountRate,
+            double learningRate)
             : base((columns * rows), Enum.GetNames(typeof(Actions)).Length)
         {
             Columns = columns;
@@ -27,39 +28,21 @@
             StatesPerPhase = columns * rows;
             StartPosition = startPosition;
             GoalPosition = goalPosition;
-            ObjectiveReward = goalValue;
+            LearningRate = learningRate;
+            DiscountRate = discountRate;
             SetupStandardValues();
         }
 
         private void SetupStandardValues()
         {
+            MaximumAllowedBacktracks = 3; 
             _numberOfActions = Enum.GetNames(typeof(Actions)).Length;
             ObjectiveAction = (int)Actions.CompleteRun;
             GetRewardAction = (int)Actions.GetCustomReward;
         }
 
-        private int _columns;
-        public int Columns 
-        {
-            get => _columns;
-            set
-            {
-                _columns = value;
-                StatesPerPhase = _columns * Rows;
-            }
-        }
-
-        private int _rows;
-
-        public int Rows
-        {
-            get => _rows;
-            set
-            {
-                _rows = value;
-                StatesPerPhase = Columns * _rows;
-            }
-        }
+        public int Columns { get; set; }
+        public int Rows { get; set; }
         public int StartPosition { get; set; }
 
         private int _goalPosition = -1;
@@ -82,7 +65,7 @@
         public double MovementPunishement { get; set; } = -1;
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
 
-        protected override void InitializeStatesTable()
+        public override void InitializeStatesTable()
         {
             if (AdditionalRewards == null)
                 AdditionalRewards = new List<CustomObjective>();
@@ -122,16 +105,16 @@
             return (AdditionalRewards.Where(v => v.Value > 0).Count() + 1);
         }
 
-        protected override void InitializeRewardsTable()
+        public override void InitializeRewardsTable()
         {
             OnRewardTableCreating();
 
-            //if (RewardsTable == null ||
-            //    RewardsTable.Length < NumberOfStates)
-            //{
-            //    RewardsTable = new double[NumberOfStates][];
-            //}
-            RewardsTable = new double[NumberOfStates][];
+            if (RewardsTable == null ||
+                RewardsTable.Length < NumberOfStates)
+            {
+                RewardsTable = new double[NumberOfStates][];
+            }
+
             // Create an initial rewards table for each possible state/action using -1 as the movement cost
             for (int i = 0; i < RewardsTable.Length; ++i)
             {
