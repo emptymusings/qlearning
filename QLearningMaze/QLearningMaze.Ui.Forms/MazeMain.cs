@@ -11,8 +11,7 @@
 
     public partial class MazeMain : Form
     {
-        private MazeBase _maze = new MazeBase(1, 1, 0, 0, 200);
-        private IAgent<MazeBase> _agent;
+        private IAgent<IMaze> _agent;
         
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
@@ -33,8 +32,8 @@
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
 
-            _agent = new AgentBase<MazeBase>(
-                _maze,
+            _agent = new AgentBase<IMaze>(
+                new MazeBase(1, 1, 0, 0, 200),
                 0.5,
                 0.5,
                 1000,
@@ -78,23 +77,23 @@
 
         private void RewardsMenuItem_Click(object sender, EventArgs e)
         {
-            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.Rewards);
+            var view = new TabledDetailsView(_agent.Environment, TabledDetailsView.ValueTypes.Rewards);
             view.Show();
         }
 
         private void QualityMenuItem_Click(object sender, EventArgs e)
         {
-            if (_maze.QualityTable == null) trainMazeButton_Click(sender, e);
+            if (_agent.Environment.QualityTable == null) trainMazeButton_Click(sender, e);
 
-            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.Quality);
+            var view = new TabledDetailsView(_agent.Environment, TabledDetailsView.ValueTypes.Quality);
             view.Show();
         }
 
         private void StatesMenuItem_Click(object sender, EventArgs e)
         {
-            if (_maze.StatesTable == null) trainMazeButton_Click(sender, e);
+            if (_agent.Environment.StatesTable == null) trainMazeButton_Click(sender, e);
 
-            var view = new TabledDetailsView(_maze, TabledDetailsView.ValueTypes.StateSpace);
+            var view = new TabledDetailsView(_agent.Environment, TabledDetailsView.ValueTypes.StateSpace);
             view.Show();
         }
 
@@ -113,10 +112,9 @@
                 obstructionsList.Items.Clear();
                 mazeSpace.Enabled = false;
 
-                var deserialized = MazeUtilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
-                _agent = MazeUtilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
-                _maze = _agent.Environment;
-                _maze.ObjectiveReward = 200;
+                var loaded = MazeUtilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
+                ConvertLoadedAgent(loaded);
+
                 _agent.AgentStateChanged += Maze_AgentStateChanged;
                 _agent.AgentCompleted += Maze_AgentCompleted;
                 _agent.TrainingAgentStateChanged += Maze_TrainingAgentStateChanged;
@@ -124,6 +122,27 @@
                 
                 _needsRetrain = true;
                 mazeSpace.Enabled = true;
+            }
+        }
+
+        private void ConvertLoadedAgent(AgentBase<MazeBase> loaded)
+        {
+            _agent = new AgentBase<IMaze>
+            {
+                DiscountRate = loaded.DiscountRate,
+                Environment = loaded.Environment,
+                EpsilonDecayEnd = loaded.EpsilonDecayEnd,
+                EpsilonDecayStart = loaded.EpsilonDecayStart,
+                LearningRate = loaded.LearningRate,
+                MaximumAllowedBacktracks = loaded.MaximumAllowedBacktracks,
+                MaximumAllowedMoves = loaded.MaximumAllowedMoves,
+                NumberOfTrainingEpisodes = loaded.NumberOfTrainingEpisodes,
+                TrainingEpisodes = loaded.TrainingEpisodes
+            };
+
+            if (_agent.Environment.ObjectiveReward == 0)
+            {
+                _agent.Environment.ObjectiveReward = 200;
             }
         }
 
@@ -146,7 +165,7 @@
             var newSpace = new MazeSpace();
 
             SetMazeValuesFromForm();
-            mazeSpace.CreateMazeControls(_maze);
+            mazeSpace.CreateMazeControls(_agent.Environment);
 
             foreach(var row in mazeSpace.Rows)
             {
@@ -192,7 +211,7 @@
 
         private void Maze_AgentStateChanged(object sender, QLearning.Core.AgentStateChangedEventArgs e)
         {
-            var newSpace = GetSpaceByPosition(e.NewState % _maze.StatesPerPhase);
+            var newSpace = GetSpaceByPosition(e.NewState % _agent.Environment.StatesPerPhase);
 
             if (newSpace != null)
             {
@@ -212,7 +231,7 @@
 
                 if (newSpace.rewardLabel.Visible == true)
                 {
-                    if (_maze.RewardsTable[e.NewState][(int)Actions.GetCustomReward] > -1)
+                    if (_agent.Environment.RewardsTable[e.NewState][(int)Actions.GetCustomReward] > -1)
                     {
                         newSpace.rewardLabel.Visible = false;
                     }
@@ -259,7 +278,7 @@
                 space.rewardLabel.Visible = true;
             }
 
-            var startSpace = GetSpaceByPosition(_maze.StartPosition);
+            var startSpace = GetSpaceByPosition(_agent.Environment.StartPosition);
             startSpace.SetActive();
             MazeSpace.ActiveSpace = startSpace;
             startSpace.Refresh();
@@ -268,7 +287,7 @@
 
             try
             {
-                _agent.RunAgent(_maze.StartPosition);
+                _agent.RunAgent(_agent.Environment.StartPosition);
             }
             catch (Exception ex)
             {
@@ -288,22 +307,22 @@
         {
             _overrideRespawn = true;
 
-            rowsText.Text = _maze.Rows.ToString();
-            columnsText.Text = _maze.Columns.ToString();
-            startPositionText.Text = _maze.StartPosition.ToString();
-            goalPositionText.Text = _maze.GoalPosition.ToString();
+            rowsText.Text = _agent.Environment.Rows.ToString();
+            columnsText.Text = _agent.Environment.Columns.ToString();
+            startPositionText.Text = _agent.Environment.StartPosition.ToString();
+            goalPositionText.Text = _agent.Environment.GoalPosition.ToString();
             discountRateText.Text = _agent.DiscountRate.ToString("0.##");
             learningRateText.Text = _agent.LearningRate.ToString("0.##");
             trainingEpisodesText.Text = _agent.NumberOfTrainingEpisodes.ToString();
 
-            foreach (var obstruction in _maze.Obstructions)
+            foreach (var obstruction in _agent.Environment.Obstructions)
             {
                 var lvi = new ListViewItem(obstruction.BetweenSpace.ToString());
                 lvi.SubItems.Add(obstruction.AndSpace.ToString());
                 obstructionsList.Items.Add(lvi);
             }
 
-            _additionalRewards = _maze.AdditionalRewards;
+            _additionalRewards = _agent.Environment.AdditionalRewards;
 
             _overrideRespawn = false;
 
@@ -322,25 +341,25 @@
 
                 foreach(var reward in _additionalRewards)
                 {
-                    _maze.AddReward(reward.State, reward.Value, (reward.IsRequired ? true : reward.Value >= 0));
+                    _agent.Environment.AddReward(reward.State, reward.Value, (reward.IsRequired ? true : reward.Value >= 0));
                 }
 
-                _additionalRewards = _maze.GetAdditionalRewards().ToList();
+                _additionalRewards = _agent.Environment.GetAdditionalRewards().ToList();
             }
             catch
             {
                 return;
             }
 
-            for (int i = _maze.Obstructions.Count - 1; i >= 0; i--)
+            for (int i = _agent.Environment.Obstructions.Count - 1; i >= 0; i--)
             {
-                var wall = _maze.Obstructions[i];
-                _maze.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
+                var wall = _agent.Environment.Obstructions[i];
+                _agent.Environment.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
             }
 
             foreach (ListViewItem lvi in obstructionsList.Items)
             {
-                _maze.AddObstruction(Convert.ToInt32(lvi.Text), Convert.ToInt32(lvi.SubItems[1].Text));
+                _agent.Environment.AddObstruction(Convert.ToInt32(lvi.Text), Convert.ToInt32(lvi.SubItems[1].Text));
             }
 
         }
@@ -373,7 +392,7 @@
             lvi.SubItems.Add(and.ToString());
 
             obstructionsList.Items.Add(lvi);
-            _maze.AddObstruction(between, and);
+            _agent.Environment.AddObstruction(between, and);
             betweenText.Text = null;
             andText.Text = null;
 
@@ -394,7 +413,7 @@
 
         private void RemoveObstruction(int between, int and)
         {
-            _maze.RemoveObstruction(between, and);
+            _agent.Environment.RemoveObstruction(between, and);
             
             for (int i = obstructionsList.Items.Count - 1; i >= 0; i--)
             {
@@ -414,10 +433,10 @@
         {
             obstructionsList.Items.Clear();
             
-            for (int i = _maze.Obstructions.Count - 1; i >= 0; --i)
+            for (int i = _agent.Environment.Obstructions.Count - 1; i >= 0; --i)
             {
-                var wall = _maze.Obstructions[i];
-                _maze.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
+                var wall = _agent.Environment.Obstructions[i];
+                _agent.Environment.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);
             }
 
             RespawnMaze();
@@ -490,7 +509,7 @@
 
             if (_trainingSessionSelector.ShowDialog() == DialogResult.OK)
             {
-                _maze.QualityTable = _trainingSessionSelector.SelectedSession.Quality;
+                _agent.Environment.QualityTable = _trainingSessionSelector.SelectedSession.Quality;
             }
         }
 
@@ -515,11 +534,11 @@
 
         private void rowsText_Leave(object sender, EventArgs e)
         {
-            if (_maze.Rows.ToString() != rowsText.Text &&
+            if (_agent.Environment.Rows.ToString() != rowsText.Text &&
                 MazeTextChanged(rowsText))
             {
                 clearObstructionsButton_Click(sender, e);
-                _maze.Rows = Convert.ToInt32(rowsText.Text);
+                _agent.Environment.Rows = Convert.ToInt32(rowsText.Text);
                 _needsRetrain = true;
                 RespawnMaze();
             }
@@ -528,11 +547,11 @@
 
         private void columnsText_Leave(object sender, EventArgs e)
         {
-            if (_maze.Columns.ToString() != columnsText.Text &&
+            if (_agent.Environment.Columns.ToString() != columnsText.Text &&
                 MazeTextChanged(columnsText))
             {
                 clearObstructionsButton_Click(sender, e);
-                _maze.Columns = Convert.ToInt32(columnsText.Text);
+                _agent.Environment.Columns = Convert.ToInt32(columnsText.Text);
                 _needsRetrain = true;
                 RespawnMaze();
             }
@@ -543,12 +562,12 @@
             int newStartPosition;
             int oldStartPosition;
 
-            if (_maze.StartPosition.ToString() != startPositionText.Text &&
+            if (_agent.Environment.StartPosition.ToString() != startPositionText.Text &&
                 MazeTextChanged(startPositionText, false))
             {
-                oldStartPosition = _maze.StartPosition;
+                oldStartPosition = _agent.Environment.StartPosition;
                 newStartPosition = Convert.ToInt32(startPositionText.Text);
-                _maze.StartPosition = newStartPosition;
+                _agent.Environment.StartPosition = newStartPosition;
                 GetSpaceByPosition(oldStartPosition).SetStart(false);
                 GetSpaceByPosition(newStartPosition).SetStart(true);
             }
@@ -559,12 +578,12 @@
             int newGoalPosition;
             int oldGoalPosition;
 
-            if (_maze.GoalPosition.ToString() != goalPositionText.Text &&
+            if (_agent.Environment.GoalPosition.ToString() != goalPositionText.Text &&
                 MazeTextChanged(goalPositionText))
             {
-                oldGoalPosition = _maze.GoalPosition;
+                oldGoalPosition = _agent.Environment.GoalPosition;
                 newGoalPosition = Convert.ToInt32(goalPositionText.Text);
-                _maze.GoalPosition = newGoalPosition;
+                _agent.Environment.GoalPosition = newGoalPosition;
                 GetSpaceByPosition(oldGoalPosition).SetGoal(false);
                 GetSpaceByPosition(newGoalPosition).SetGoal(true);
             }            
@@ -621,14 +640,14 @@
             {
                 case "topWall":
                     if (rowNumber == 0) return;
-                    andSpacePosition = space.Position - _maze.Columns;
+                    andSpacePosition = space.Position - _agent.Environment.Columns;
                     andSpace = GetSpaceByPosition(andSpacePosition);
                     space.topWall.Visible = true;
                     andSpace.bottomWall.Visible = true;
                     break;
                 case "bottomWall":
-                    if (rowNumber == _maze.Rows - 1) return;
-                    andSpacePosition = space.Position + _maze.Columns;
+                    if (rowNumber == _agent.Environment.Rows - 1) return;
+                    andSpacePosition = space.Position + _agent.Environment.Columns;
                     andSpace = GetSpaceByPosition(andSpacePosition);
                     space.bottomWall.Visible = true;
                     andSpace.topWall.Visible = true;
@@ -668,13 +687,13 @@
             switch (wallBox.Name)
             {
                 case "topWall":
-                    and = between - _maze.Columns;
+                    and = between - _agent.Environment.Columns;
                     andSpace = GetSpaceByPosition(and);
                     space.topWall.Visible = false;
                     andSpace.bottomWall.Visible = false;
                     break;
                 case "bottomWall":
-                    and = between + _maze.Columns;
+                    and = between + _agent.Environment.Columns;
                     andSpace = GetSpaceByPosition(and);
                     space.bottomWall.Visible = false;
                     andSpace.topWall.Visible = false;
@@ -714,12 +733,12 @@
 
         private void rewardsButton_Click(object sender, EventArgs e)
         {
-            var dlg = new Objectives(_maze);
+            var dlg = new Objectives(_agent.Environment);
             dlg.ShowDialog();
             
             if (dlg.RewardsChanged)
             {
-                _additionalRewards = _maze.AdditionalRewards;
+                _additionalRewards = _agent.Environment.AdditionalRewards;
                 RespawnMaze();
                 _needsRetrain = true;
             }

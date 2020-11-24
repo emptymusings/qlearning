@@ -14,7 +14,7 @@ namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingProgress : Form
     {
-        private IAgent<MazeBase> _agent;
+        private IAgent<IMaze> _agent;
         int _successfulRuns = 0;
         double _averageMoves = 0;
         double _averageScore = 0;
@@ -31,7 +31,7 @@ namespace QLearningMaze.Ui.Forms
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
 
-        public TrainingProgress(IAgent<MazeBase> agent)
+        public TrainingProgress(IAgent<IMaze> agent)
         {
             InitializeComponent();
             _agent = agent;

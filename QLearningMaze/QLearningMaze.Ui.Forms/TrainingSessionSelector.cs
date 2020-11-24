@@ -16,7 +16,7 @@ namespace QLearningMaze.Ui.Forms
 {
     public partial class TrainingSessionSelector : Form
     {
-        private IAgent<MazeBase> _agent;
+        private IAgent<IMaze> _agent;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -24,7 +24,7 @@ namespace QLearningMaze.Ui.Forms
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(IAgent<MazeBase> agent)
+        public TrainingSessionSelector(IAgent<IMaze> agent)
         {
             InitializeComponent();
             _agent = agent;
