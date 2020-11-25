@@ -157,7 +157,15 @@
 
             int goalToEnd = StatesPerPhase - (GoalPosition % StatesPerPhase);
             int finalGoalRewardState = NumberOfStates - goalToEnd;
-            RewardsTable[finalGoalRewardState][(int)Actions.CompleteRun] = ObjectiveReward;
+
+            int phase = 0;
+
+            while (phase < NumberOfStates)
+            {
+                RewardsTable[GoalPosition + phase][(int)Actions.CompleteRun] = ObjectiveReward * (((double)phase + StatesPerPhase) / (double)NumberOfStates);
+
+                phase += StatesPerPhase;
+            }
 
             OnRewardTableCreated();
         }
