@@ -33,9 +33,9 @@
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.useSessionButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
             this.SuspendLayout();
             // 
             // sesssionList
@@ -63,14 +63,14 @@
             // columnHeader5
             // 
             this.columnHeader5.Name = "columnHeader5";
-            this.columnHeader5.Text = "Episode";
-            this.columnHeader5.Width = 120;
+            this.columnHeader5.Text = "Min Episode";
+            this.columnHeader5.Width = 160;
             // 
             // columnHeader1
             // 
             this.columnHeader1.Name = "columnHeader1";
             this.columnHeader1.Text = "Max Episode";
-            this.columnHeader1.Width = 0;
+            this.columnHeader1.Width = 160;
             // 
             // columnHeader2
             // 
@@ -83,6 +83,12 @@
             this.columnHeader3.Name = "columnHeader3";
             this.columnHeader3.Text = "Score";
             this.columnHeader3.Width = 100;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Name = "columnHeader4";
+            this.columnHeader4.Text = "Succeeded";
+            this.columnHeader4.Width = 140;
             // 
             // useSessionButton
             // 
@@ -109,12 +115,6 @@
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Name = "columnHeader4";
-            this.columnHeader4.Text = "Succeeded";
-            this.columnHeader4.Width = 140;
             // 
             // TrainingSessionSelector
             // 

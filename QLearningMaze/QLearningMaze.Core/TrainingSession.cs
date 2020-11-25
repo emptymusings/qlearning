@@ -9,12 +9,12 @@ namespace QLearningMaze.Core
     {
         public static IEnumerable<TrainingSession> GetTrainingSessions()
         {
-            if (!Directory.Exists(MazeUtilities.TRAINING_SESSIONS_DIRECTORY))
+            if (!Directory.Exists(Utilities.TRAINING_SESSIONS_DIRECTORY))
             {
-                Directory.CreateDirectory(MazeUtilities.TRAINING_SESSIONS_DIRECTORY);
+                Directory.CreateDirectory(Utilities.TRAINING_SESSIONS_DIRECTORY);
             }
             
-            return GetTrainingSessions(MazeUtilities.TRAINING_SESSIONS_DIRECTORY);
+            return GetTrainingSessions(Utilities.TRAINING_SESSIONS_DIRECTORY);
         }
 
         public static IEnumerable<TrainingSession> GetTrainingSessions(string trainingSessionsDirectory)
@@ -23,7 +23,7 @@ namespace QLearningMaze.Core
             
             foreach(var file in Directory.GetFiles(trainingSessionsDirectory))
             {
-                results.Add(MazeUtilities.LoadObject<TrainingSession>(file));
+                results.Add(Utilities.LoadObject<TrainingSession>(file));
             }
 
             return results;   

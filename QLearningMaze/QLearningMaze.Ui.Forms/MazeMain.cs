@@ -112,8 +112,8 @@
                 obstructionsList.Items.Clear();
                 mazeSpace.Enabled = false;
 
-                var loaded = MazeUtilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
-                ConvertLoadedAgent(loaded);
+                var loaded = Core.Utilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
+                _agent = QLearningMaze.Core.Utilities.ConvertLoadedAgent(loaded);
 
                 _agent.AgentStateChanged += Maze_AgentStateChanged;
                 _agent.AgentCompleted += Maze_AgentCompleted;
@@ -125,27 +125,6 @@
             }
         }
 
-        private void ConvertLoadedAgent(AgentBase<MazeBase> loaded)
-        {
-            _agent = new AgentBase<IMaze>
-            {
-                DiscountRate = loaded.DiscountRate,
-                Environment = loaded.Environment,
-                EpsilonDecayEnd = loaded.EpsilonDecayEnd,
-                EpsilonDecayStart = loaded.EpsilonDecayStart,
-                LearningRate = loaded.LearningRate,
-                MaximumAllowedBacktracks = loaded.MaximumAllowedBacktracks,
-                MaximumAllowedMoves = loaded.MaximumAllowedMoves,
-                NumberOfTrainingEpisodes = loaded.NumberOfTrainingEpisodes,
-                TrainingEpisodes = loaded.TrainingEpisodes
-            };
-
-            if (_agent.Environment.ObjectiveReward == 0)
-            {
-                _agent.Environment.ObjectiveReward = 200;
-            }
-        }
-
         private void SaveMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
@@ -154,7 +133,7 @@
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                MazeUtilities.SaveObject(dlg.FileName, _agent);
+                Core.Utilities.SaveObject(dlg.FileName, _agent);
             }
         }
                 
