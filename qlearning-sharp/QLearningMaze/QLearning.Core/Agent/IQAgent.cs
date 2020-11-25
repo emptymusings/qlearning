@@ -5,7 +5,7 @@
     using Environment;
 
     public interface IQAgent<TEnvironment> : IAgent<TEnvironment>
-        where TEnvironment : IRLEnvironment
+        where TEnvironment : IQEnvironment
     {
         TEnvironment Environment { get; set; }
         /// <summary>

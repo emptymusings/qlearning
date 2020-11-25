@@ -1,11 +1,3 @@
-<<<<<<< HEAD:qlearning-sharp/QLearningMaze/QLearning.Core/QAgentBase.Events.cs
-﻿namespace QLearning.Core
-{
-    using System;
-
-    public partial class QAgentBase<TEnvironment> : IQAgent<TEnvironment>
-        where TEnvironment : IQEnvironment
-=======
 ﻿namespace QLearning.Core.Agent
 {
     using System;
@@ -13,7 +5,6 @@
 
     public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
         where TEnvironment : IRLEnvironment
->>>>>>> main:qlearning-sharp/QLearningMaze/QLearning.Core/Agent/AgentBase.Events.cs
     {
         public event EventHandler<AgentStateChangedEventArgs> AgentStateChanged;
         public event EventHandler<TrainingAgentStateChangedEventArgs> TrainingAgentStateChanged;

@@ -1,6 +1,7 @@
 ﻿namespace QLearningMaze.Core.Mazes
 {
     using QLearning.Core;
+    using QLearning.Core.Agent;
     using System;
     using System.Collections.Generic;
     using System.Linq;
