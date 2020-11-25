@@ -1,10 +1,11 @@
 ﻿namespace QLearningMaze.Core.Mazes
 {
     using QLearning.Core;
+    using QLearning.Core.Agent;
+    using QLearning.Core.Environment;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using QLearning.Core.Environment;
 
     public partial class MazeBase : QEnvironmentMutliObjectiveBase, IMaze
     {
