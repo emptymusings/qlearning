@@ -242,8 +242,7 @@
             entryPanel.Enabled = false;
             if (_needsRetrain)
             {
-                _agent.Train();
-                _needsRetrain = false;
+                Train();
             }
 
             foreach (var reward in _additionalRewards)
