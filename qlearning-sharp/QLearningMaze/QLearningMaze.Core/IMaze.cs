@@ -2,6 +2,7 @@
 {
     using QLearning.Core;
     using System.Collections.Generic;
+    using QLearning.Core.Environment;
 
     public interface IMaze : IQEnvironmentMultiObjective, IQEnvironment
     {

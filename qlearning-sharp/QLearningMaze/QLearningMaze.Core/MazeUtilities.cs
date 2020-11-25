@@ -2,7 +2,7 @@
 {
     using Mazes;
     using Newtonsoft.Json;
-    using QLearning.Core;
+    using QLearning.Core.Agent;
     using System.IO;
 
     public class MazeUtilities
