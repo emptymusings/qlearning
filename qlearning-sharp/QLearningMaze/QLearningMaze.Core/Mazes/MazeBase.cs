@@ -1,6 +1,7 @@
 ﻿namespace QLearningMaze.Core.Mazes
 {
     using QLearning.Core;
+    using QLearning.Core.Agent;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,6 +9,10 @@
 
     public partial class MazeBase : QEnvironmentMutliObjectiveBase, IMaze
     {
+        private int _objectivesMoves = 0;
+        private double _objectiveRewards = 0;
+        private MazeBase _objectiveMaze;
+
         public MazeBase() 
         {
             SetupStandardValues();
@@ -154,7 +159,15 @@
 
             int goalToEnd = StatesPerPhase - (GoalPosition % StatesPerPhase);
             int finalGoalRewardState = NumberOfStates - goalToEnd;
-            RewardsTable[finalGoalRewardState][(int)Actions.CompleteRun] = ObjectiveReward;
+
+            int phase = 0;
+
+            while (phase < NumberOfStates)
+            {
+                RewardsTable[GoalPosition + phase][(int)Actions.CompleteRun] = ObjectiveReward * (((double)phase + StatesPerPhase) / (double)NumberOfStates);
+
+                phase += StatesPerPhase;
+            }
 
             OnRewardTableCreated();
         }
@@ -268,5 +281,98 @@
         {
             return AdditionalRewards;
         }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            AssignPriorityToRewards();
+        }
+
+        protected virtual void AssignPriorityToRewards()
+        {
+            foreach(var reward in AdditionalRewards)
+            {
+                if (reward.Value < 0)
+                {
+                    reward.DistanceFromStart = 9999;
+                    reward.Priority = -1;
+                    continue;
+                }
+
+                _objectivesMoves = 0;
+                RunToObjective(reward, StartPosition, reward.State);
+                var startToReward = _objectivesMoves;
+
+                RunToObjective(reward, reward.State, GoalPosition);
+                var rewardToGoal = _objectivesMoves;
+
+                reward.DistanceFromEnd = rewardToGoal;
+                reward.DistanceFromStart = startToReward;
+            }
+        }
+
+        protected override IOrderedEnumerable<CustomObjective> GetPrioritizedObjectives()
+        {
+            return AdditionalRewards.OrderBy(s => s.DistanceFromStart).ThenByDescending(g => g.DistanceFromEnd);
+        }
+
+        protected virtual void RunToObjective(CustomObjective reward, int startPosition, int goalPosition)
+        {
+            int runs = 0;
+            double prioritizeLearningRate = 0.1;
+            double prioritizeDiscountRate = .95;
+            int prioritizeTrainingEpisodes = 5000;
+            int prioritizeMaximumMoves = 1000;
+            int priorizizeAllowedBacktracks = 3;
+
+            _objectiveMaze = new MazeBase(
+                Columns,
+                Rows,
+                startPosition,
+                goalPosition,
+                reward.Value * 10);
+
+            _objectiveMaze.Obstructions = Obstructions;
+            _objectiveMaze.ObjectiveReward = reward.Value * 10;
+            _objectiveMaze.QualitySaveFrequency = prioritizeTrainingEpisodes * 2;
+
+            IQAgent<MazeBase> tempAgent = new QAgentBase<MazeBase>(
+                _objectiveMaze,
+                prioritizeLearningRate,
+                prioritizeDiscountRate,
+                prioritizeTrainingEpisodes,
+                prioritizeMaximumMoves,
+                priorizizeAllowedBacktracks);            
+
+            try
+            {
+                tempAgent.Train();
+            }
+            catch (Exception ex)
+            {
+                _objectivesMoves = 999;
+                _objectiveRewards = -999;
+            }
+
+            tempAgent.AgentCompleted += Maze_AgentCompleted;
+
+            try
+            {
+                tempAgent.Run(startPosition);
+            }
+            catch (Exception ex)
+            {
+                _objectivesMoves = 9999;
+                _objectiveRewards = -9999;
+            }
+
+        }
+
+        private void Maze_AgentCompleted(object sender, AgentCompletedEventArgs e)
+        {
+            _objectiveRewards = e.Rewards;
+            _objectivesMoves = e.Moves;
+        }
     }
+
 }

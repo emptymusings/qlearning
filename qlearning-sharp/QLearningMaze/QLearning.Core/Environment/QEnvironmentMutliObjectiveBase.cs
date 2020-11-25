@@ -56,15 +56,23 @@
 
         public virtual void SetCustomObjectives()
         {
-            var prioritizedObjectives = AdditionalRewards.OrderByDescending((priority) =>
-                {
-                    int differential = (priority.State > PrioritizeFromState ? priority.State - PrioritizeFromState : PrioritizeFromState - priority.State);
-                    var value = (differential * -1) + priority.Value; // Hardcoded movement of -1 - look into more flexible approach
-
-                    return value;
-                });
+            var prioritizedObjectives = GetPrioritizedObjectives();
 
             SetCustomObjectives(prioritizedObjectives);
+        }
+
+        protected virtual IOrderedEnumerable<CustomObjective> GetPrioritizedObjectives()
+        {
+            // TODO: look into repalcing the literal movement number
+            var prioritizedObjectives = AdditionalRewards.OrderByDescending((priority) =>
+            {
+                int differential = (priority.State > PrioritizeFromState ? priority.State - PrioritizeFromState : PrioritizeFromState - priority.State);
+                var value = (differential * -1) + priority.Value; 
+
+                return value;
+            });
+
+            return prioritizedObjectives;
         }
 
         public virtual void SetCustomObjectives(IOrderedEnumerable<CustomObjective> prioritizedObjectives)

@@ -1,4 +1,4 @@
-﻿namespace QLearning.Core.Environment
+namespace QLearning.Core.Environment
 {
     using System.Collections.Generic;
 
