@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using QLearning.Core.Environment;
 
     public partial class MazeBase : QEnvironmentMutliObjectiveBase, IMaze
     {
