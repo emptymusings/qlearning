@@ -59,7 +59,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.rewardsLabel = new System.Windows.Forms.Label();
-            this.mazeSpace = new QLearningMaze.Ui.Forms.MazeSpaceNew();
+            this.mazeSpace = new QLearningMaze.Ui.Forms.MazeSpace();
             this.panel3 = new System.Windows.Forms.Panel();
             this.trainMazeButton = new System.Windows.Forms.Button();
             this.runMazeButton = new System.Windows.Forms.Button();
@@ -594,7 +594,7 @@
 
         private System.Windows.Forms.Panel entryPanel;
         private System.Windows.Forms.Panel panel2;
-        private MazeSpaceNew mazeSpace;
+        private MazeSpace mazeSpace;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button runMazeButton;
         private System.Windows.Forms.TextBox columnsText;

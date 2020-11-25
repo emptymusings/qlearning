@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QLearning.Core
+﻿namespace QLearning.Core
 {
+    using System;
+
     public abstract partial class QEnvironmentBase : IQEnvironment
     {
         public event EventHandler StateTableCreating;

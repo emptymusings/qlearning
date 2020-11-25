@@ -1,8 +1,6 @@
-﻿
-namespace QLearningMaze.Core
+﻿namespace QLearningMaze.Core
 {
     using Mazes;
-    using System;
 
     public enum MazeTypes
     {

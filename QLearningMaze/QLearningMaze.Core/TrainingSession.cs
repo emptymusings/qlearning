@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-namespace QLearningMaze.Core
+﻿namespace QLearningMaze.Core
 {
+    using System.Collections.Generic;
+    using System.IO;
+
     public class TrainingSession
     {
         public static IEnumerable<TrainingSession> GetTrainingSessions()

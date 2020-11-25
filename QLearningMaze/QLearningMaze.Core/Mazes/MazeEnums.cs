@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace QLearningMaze.Core.Mazes
+﻿namespace QLearningMaze.Core.Mazes
 {
     public enum Actions
     {

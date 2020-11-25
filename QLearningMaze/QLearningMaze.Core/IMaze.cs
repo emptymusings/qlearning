@@ -1,9 +1,7 @@
 ﻿namespace QLearningMaze.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using QLearning.Core;
+    using System.Collections.Generic;
 
     public interface IMaze : IQEnvironmentMultiObjective, IQEnvironment
     {

@@ -1,8 +1,8 @@
-﻿using System.Windows.Forms;
-using System.Collections.Generic;
-
-namespace QLearningMaze.Ui.Forms
+﻿namespace QLearningMaze.Ui.Forms
 {
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+
     public partial class ObservationSpaceRow : UserControl
     {
         public List<ObservationSpace> Spaces { get; set; } = new List<ObservationSpace>();

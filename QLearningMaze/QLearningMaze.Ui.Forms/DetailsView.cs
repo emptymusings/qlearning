@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
-using System.Globalization;
-using QLearningMaze.Core.Mazes;
-
-namespace QLearningMaze.Ui.Forms
+﻿namespace QLearningMaze.Ui.Forms
 {
+    using QLearningMaze.Core.Mazes;
+    using System.Data;
+    using System.Windows.Forms;
+
     public partial class DetailsView : UserControl
     {
         public DetailsView()

@@ -1,10 +1,9 @@
 ﻿namespace QLearningMaze.Core
 {
-    using Newtonsoft.Json;
-    using System.IO;
     using Mazes;
-    using System.Linq;
+    using Newtonsoft.Json;
     using QLearning.Core;
+    using System.IO;
 
     public class Utilities
     {

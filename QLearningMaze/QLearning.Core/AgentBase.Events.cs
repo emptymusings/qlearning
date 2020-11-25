@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QLearning.Core
+﻿namespace QLearning.Core
 {
+    using System;
+
     public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
         where TEnvironment : IQEnvironment
     {

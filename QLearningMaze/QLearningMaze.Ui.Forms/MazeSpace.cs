@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace QLearningMaze.Ui.Forms
+﻿namespace QLearningMaze.Ui.Forms
 {
     using Core;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using System.Windows.Forms;
 
     public partial class MazeSpace : UserControl
     {

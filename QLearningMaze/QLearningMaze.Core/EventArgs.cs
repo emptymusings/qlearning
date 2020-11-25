@@ -1,7 +1,6 @@
 ﻿namespace QLearningMaze.Core
 {
     using System;
-    using Mazes;
 
     public class TrainingEpisodeCompletedEventArgs : EventArgs
     {

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
 
     public interface IAgent<TEnvironment>
         where TEnvironment : IQEnvironment

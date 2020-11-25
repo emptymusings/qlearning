@@ -1,8 +1,6 @@
 ﻿namespace QLearning.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     public class TrainingEpisodeCompletedEventArgs : EventArgs
     {

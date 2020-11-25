@@ -1,9 +1,9 @@
 ﻿namespace QLearning.Core
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     public abstract partial class QEnvironmentBase : IQEnvironment
     {

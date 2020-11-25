@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QLearning.Core
+﻿namespace QLearning.Core
 {
+    using System.Collections.Generic;
+
     public interface IQEnvironmentMultiObjective : IQEnvironment
     {
         /// <summary>

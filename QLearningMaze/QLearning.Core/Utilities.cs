@@ -1,9 +1,7 @@
 ﻿namespace QLearning.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Newtonsoft.Json;
+    using System.Collections.Generic;
     using System.IO;
 
     public class Utilities
