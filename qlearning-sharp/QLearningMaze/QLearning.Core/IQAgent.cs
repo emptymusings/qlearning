@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IQAgent<TEnvironment>
+    public interface IQAgent<TEnvironment> : IAgent<TEnvironment>
         where TEnvironment : IRLEnvironment
     {
         /// <summary>
