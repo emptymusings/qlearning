@@ -1,4 +1,4 @@
-﻿namespace QLearning.Core
+﻿namespace QLearning.Core.Agent
 {
     public class TrainingSession
     {

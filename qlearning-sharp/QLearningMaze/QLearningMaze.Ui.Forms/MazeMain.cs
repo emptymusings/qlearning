@@ -1,7 +1,8 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
     using Core;
-    using QLearning.Core;
+    using QLearning.Core.Agent;
+    using QLearning.Core.Environment;
     using QLearningMaze.Core.Mazes;
     using System;
     using System.Collections.Generic;
@@ -16,7 +17,7 @@
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
         private bool _needsRetrain = false;
-        private List<QLearning.Core.CustomObjective> _additionalRewards = new List<QLearning.Core.CustomObjective>();
+        private List<CustomObjective> _additionalRewards = new List<CustomObjective>();
         private TrainingSessionSelector _trainingSessionSelector = null;
 
         public MazeMain()
@@ -315,7 +316,7 @@
                 if (_additionalRewards == null ||
                     _additionalRewards.Count == 0)
                 {
-                    _additionalRewards = new List<QLearning.Core.CustomObjective>();
+                    _additionalRewards = new List<CustomObjective>();
                 }
 
                 foreach(var reward in _additionalRewards)

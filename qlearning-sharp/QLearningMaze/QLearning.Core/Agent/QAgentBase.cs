@@ -1,10 +1,11 @@
-﻿namespace QLearning.Core
+﻿namespace QLearning.Core.Agent
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Environment;
 
-    public partial class QAgentBase<TEnvironment> : IQAgent<TEnvironment>
+    public partial class QAgentBase<TEnvironment> : AgentBase<TEnvironment>, IQAgent<TEnvironment>
         where TEnvironment : IQEnvironment
     {
         private Random _random = new Random();
@@ -202,7 +203,7 @@
                 int nextAction = nextActionSet.nextAction;
                 var oldQuality = Environment.QualityTable[state][nextAction];
 
-                Environment.CalculateQValue(state, nextAction, LearningRate, DiscountRate);
+                Environment.CalculateQuality(state, nextAction, LearningRate, DiscountRate);
 
                 var step = Environment.Step(state, nextAction);
 

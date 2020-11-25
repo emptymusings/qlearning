@@ -1,4 +1,4 @@
-﻿namespace QLearning.Core
+﻿namespace QLearning.Core.Environment
 {
     public class CustomObjective
     {

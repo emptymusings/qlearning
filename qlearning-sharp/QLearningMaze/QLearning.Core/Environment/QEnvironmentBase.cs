@@ -1,9 +1,10 @@
-﻿namespace QLearning.Core
+﻿namespace QLearning.Core.Environment
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Agent;
 
     public abstract partial class QEnvironmentBase : IQEnvironment
     {
@@ -264,7 +265,7 @@
             return result;
         }
 
-        public virtual void CalculateQValue(int state, int action, double learningRate, double discountRate)
+        public virtual void CalculateQuality(int state, int action, double learningRate, double discountRate)
         {
             var step = Step(state, action);
 
