@@ -69,13 +69,12 @@
         /// <summary>
         /// Runs the agent through the environment utilizing the Q-Table policies for the best action(s) to take from a given state
         /// </summary>
-        void RunAgent(int fromState);
+        void Run(int fromState);
         /// <summary>
         /// Runs the agent through the environment utilizing the Q-Table policies for the best action(s) to take from a given state
         /// </summary>
         /// <param name="fromState">The state from which the agent will start</param>
         /// <param name="overrideBaseEvents">Boolean value that determines whether to override events in this base class</param>
-        void RunAgent(int fromState, bool overrideBaseEvents);
-        void Step();
+        void Run(int fromState, bool overrideBaseEvents);
     }
 }

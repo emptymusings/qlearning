@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using QLearning.Core;
-using QLearningMaze.Core.Mazes;
 
 namespace QLearningMaze.Ui.Forms
 {
@@ -124,14 +123,12 @@ namespace QLearningMaze.Ui.Forms
 
                 try
                 {
-                    agent.RunAgent(agent.Environment.StartPosition);
+                    agent.Run(agent.Environment.StartPosition);
                     session.Succeeded = true;
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    //sessions.RemoveAt(i);
-                    session.Succeeded = false;                    
-                    //continue;
+                    session.Succeeded = false;                                     
                 }
 
                 session.Moves = _moves;

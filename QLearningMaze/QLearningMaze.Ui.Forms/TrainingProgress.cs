@@ -91,7 +91,7 @@ namespace QLearningMaze.Ui.Forms
             try
             {
                 _agent.AgentStateChanged += _maze_AgentStateChanged;
-                _agent.RunAgent(_agent.Environment.StartPosition);
+                _agent.Run(_agent.Environment.StartPosition);
             }
             catch 
             {

@@ -266,7 +266,7 @@
 
             try
             {
-                _agent.RunAgent(_agent.Environment.StartPosition);
+                _agent.Run(_agent.Environment.StartPosition);
             }
             catch (Exception ex)
             {

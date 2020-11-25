@@ -68,12 +68,12 @@
         public int MaximumAllowedBacktracks { get; set; }
         public double Score { get; set; }
 
-        public virtual void RunAgent(int fromState)
+        public virtual void Run(int fromState)
         {
-            RunAgent(fromState, false);
+            Run(fromState, false);
         }
 
-        public virtual void RunAgent(int fromState, bool overrideBaseEvents)
+        public virtual void Run(int fromState, bool overrideBaseEvents)
         {
 
             int action = -1;
@@ -137,11 +137,6 @@
 
             if (!overrideBaseEvents)
                 OnAgentCompleted(Moves, Score, (Environment.ObjectiveStates.Contains(fromState)));
-        }
-
-        public virtual void Step()
-        {
-            throw new NotImplementedException();
         }
 
         public virtual void Train()
