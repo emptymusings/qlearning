@@ -2,7 +2,7 @@
 {
     using System;
 
-    public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
+    public partial class QAgentBase<TEnvironment> : IQAgent<TEnvironment>
         where TEnvironment : IQEnvironment
     {
         public event EventHandler<AgentStateChangedEventArgs> AgentStateChanged;

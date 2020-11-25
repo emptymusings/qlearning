@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IQEnvironment
+    public interface IQEnvironment : IRLEnvironment
     {
         /// <summary>
         /// Occurs as the State Table's initializion is about to start
@@ -86,7 +86,8 @@
         /// </summary>
         /// <param name="overrideBaseEvents">Boolean value that determines whether to override events in this base class</param>
         void Initialize(bool overrideBaseEvents);
-        
+
+        (int newState, double reward, double quality) Step(int state, int action);
         int GetPreferredNextAction(int state, int[] excludedActions = null);
         int GetRandomNextAction(int state);
         bool IsTerminalState(int state, int moves, int maximumAllowedMoves);

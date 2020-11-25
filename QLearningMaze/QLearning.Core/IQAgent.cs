@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
 
-    public interface IAgent<TEnvironment>
-        where TEnvironment : IQEnvironment
+    public interface IQAgent<TEnvironment>
+        where TEnvironment : IRLEnvironment
     {
         /// <summary>
         /// Occurs as the agent's current state has changed

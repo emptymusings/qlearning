@@ -11,7 +11,7 @@
 
     public partial class MazeMain : Form
     {
-        private IAgent<IMaze> _agent;
+        private IQAgent<IMaze> _agent;
         
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
@@ -32,7 +32,7 @@
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
 
-            _agent = new AgentBase<IMaze>(
+            _agent = new QAgentBase<IMaze>(
                 new MazeBase(1, 1, 0, 0, 200),
                 0.5,
                 0.5,
@@ -112,8 +112,8 @@
                 obstructionsList.Items.Clear();
                 mazeSpace.Enabled = false;
 
-                var loaded = Core.Utilities.LoadObject<AgentBase<MazeBase>>(dlg.FileName);
-                _agent = QLearningMaze.Core.Utilities.ConvertLoadedAgent(loaded);
+                var loaded = Core.MazeUtilities.LoadObject<QAgentBase<MazeBase>>(dlg.FileName);
+                _agent = QLearningMaze.Core.MazeUtilities.ConvertLoadedAgent(loaded);
 
                 _agent.AgentStateChanged += Maze_AgentStateChanged;
                 _agent.AgentCompleted += Maze_AgentCompleted;
@@ -133,7 +133,7 @@
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                Core.Utilities.SaveObject(dlg.FileName, _agent);
+                Core.MazeUtilities.SaveObject(dlg.FileName, _agent);
             }
         }
                 

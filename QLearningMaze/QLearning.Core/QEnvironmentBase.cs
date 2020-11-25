@@ -192,6 +192,14 @@
             return (nextAction, usedGreedy);
         }
 
+        public virtual (int newState, double reward, double quality) Step(int state, int action)
+        {
+            return (
+                StatesTable[state][action],
+                RewardsTable[state][action],
+                QualityTable[state][action]);
+        }
+
         /// <summary>
         /// Selects the agent's next action based on the highest Q-Table's value for its current state
         /// </summary>
@@ -258,30 +266,17 @@
 
         public virtual void CalculateQValue(int state, int action, double learningRate, double discountRate)
         {
-            int nextState = StatesTable[state][action];
+            var step = Step(state, action);
 
-            if (!IsValidState(nextState)) ThrowInvalidActionException(state, action);
+            if (!IsValidState(step.newState)) ThrowInvalidActionException(state, action);
 
-            var forecaster = GetFuturePositionMaxQ(nextState);
+            var forecaster = GetFuturePositionMaxQ(step.newState);
             var maxQ = forecaster.maxQ;
-            var selectedNextState = forecaster.selectedNextState;
-            
-            var r = RewardsTable[state][action];
 
-            var newQuality = QualityTable[state][action] + (learningRate * (r + (discountRate * maxQ) - QualityTable[state][action]));
-            
-            // Below is the original Q-Function as found in the example.  It produces results that are only slightly different than the 
-            // newQuality Q-Function (presumably rounding errors), but I opted for newQuality because it is more commonly referred to 
-            // in reference documents
-            //double similarQFormula = ((1 - LearningRate) * QualityTable[state][action]) + (LearningRate * (r + (DiscountRate * maxQ))); 
+            QualityTable[state][action] += (learningRate * (step.reward + (discountRate * maxQ) - step.quality));
 
-
-            QualityTable[state][action] = newQuality;
         }
 
-        /// <summary>
-        /// Gets the maximum quality for future position based on the agent's state
-        /// </summary>
         protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int nextState)
         {
             double maxQ = double.MinValue;

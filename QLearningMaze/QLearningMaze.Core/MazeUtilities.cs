@@ -5,7 +5,7 @@
     using QLearning.Core;
     using System.IO;
 
-    public class Utilities
+    public class MazeUtilities
     {
         public static readonly string TRAINING_SESSIONS_DIRECTORY = Directory.GetCurrentDirectory() + $@"\TrainingSessions\";
 
@@ -21,9 +21,9 @@
             return loaded;
         }
 
-        public static IAgent<IMaze> ConvertLoadedAgent(AgentBase<MazeBase> loaded)
+        public static IQAgent<IMaze> ConvertLoadedAgent(QAgentBase<MazeBase> loaded)
         {
-            var converted = new AgentBase<IMaze>
+            var converted = new QAgentBase<IMaze>
             {
                 DiscountRate = loaded.DiscountRate,
                 Environment = loaded.Environment,

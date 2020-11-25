@@ -4,15 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
+    public partial class QAgentBase<TEnvironment> : IQAgent<TEnvironment>
         where TEnvironment : IQEnvironment
     {
         private Random _random = new Random();
         private double _epsilonDecayValue;
 
-        public AgentBase() { }
+        public QAgentBase() { }
 
-        public AgentBase(
+        public QAgentBase(
             TEnvironment environment,
             double learningRate,
             double discountRate,
@@ -91,15 +91,17 @@
 
                 action = Environment.GetPreferredNextAction(fromState);
 
-                nextState = Environment.StatesTable[fromState][action];
+                var stepValues = Environment.Step(fromState, action);
 
-                if (Environment.StatesTable[fromState][action] < 0)
+                nextState = stepValues.newState;
+
+                if (Environment.Step(fromState, action).newState < 0)
                 {
                     OnAgentCompleted(Moves, Score, (Environment.ObjectiveStates.Contains(fromState)));
                     throw new InvalidOperationException($"I guess I didn't learn very well.  Please try training again (perhaps adjusing the learning rate, discount rate, and/or episode count)");
                 }
 
-                Score += Environment.RewardsTable[fromState][action];
+                Score += stepValues.reward;
                 Moves++;
 
                 if (Moves > MaximumAllowedMoves)
@@ -201,13 +203,16 @@
                 var oldQuality = Environment.QualityTable[state][nextAction];
 
                 Environment.CalculateQValue(state, nextAction, LearningRate, DiscountRate);
-                Score += Environment.RewardsTable[state][nextAction];
+
+                var step = Environment.Step(state, nextAction);
+
+                Score += step.reward;
 
                 previousState = state;
-                state = Environment.StatesTable[state][nextAction];
+                state = step.newState;
 
                 if (!overrideBaseEvents)
-                    OnTrainingAgentStateChanged(nextAction, state, Moves, Score, Environment.QualityTable[state][nextAction], oldQuality);
+                    OnTrainingAgentStateChanged(nextAction, state, Moves, Score, step.quality, oldQuality);
 
                 if (Environment.IsTerminalState(state, nextAction, Moves, MaximumAllowedMoves))
                 {
