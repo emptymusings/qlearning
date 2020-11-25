@@ -337,21 +337,21 @@
 
             foreach (var wall in _walls)
             {
-                _maze.AddObstruction(wall.BetweenSpace, wall.AndSpace);
+                _agent.Environment.AddObstruction(wall.BetweenSpace, wall.AndSpace);
             }
         }
 
         private void AddObstruction(int between, int and)
         {
             _walls.Add(new MazeObstruction { BetweenSpace = between, AndSpace = and });
-            _maze.AddObstruction(between, and);
+            _agent.Environment.AddObstruction(between, and);
             
             _needsRetrain = true;
         }
 
         private void RemoveObstructionFromMaze(int between, int and)
         {
-            _maze.RemoveObstruction(between, and);
+            _agent.Environment.RemoveObstruction(between, and);
             
             _needsRetrain = true;
         }
@@ -365,7 +365,7 @@
         {
             _walls.Clear();
                         
-            for (int i = _maze.Obstructions.Count - 1; i >= 0; --i)
+            for (int i = _agent.Environment.Obstructions.Count - 1; i >= 0; --i)
             {
                 var wall = _agent.Environment.Obstructions[i];
                 _agent.Environment.RemoveObstruction(wall.BetweenSpace, wall.AndSpace);

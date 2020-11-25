@@ -49,7 +49,7 @@
             this.rowsText = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.mazeSpace = new QLearningMaze.Ui.Forms.MazeSpaceNew();
+            this.mazeSpace = new QLearningMaze.Ui.Forms.MazeSpace();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -111,7 +111,7 @@
             this.runMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.runMazeButton.Name = "runMazeButton";
             this.runMazeButton.Size = new System.Drawing.Size(150, 47);
-            this.runMazeButton.TabIndex = 15;
+            this.runMazeButton.TabIndex = 9;
             this.runMazeButton.Text = "Run Maze";
             this.runMazeButton.UseVisualStyleBackColor = true;
             this.runMazeButton.Click += new System.EventHandler(this.runMaze_Click);
@@ -122,7 +122,7 @@
             this.trainMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.trainMazeButton.Name = "trainMazeButton";
             this.trainMazeButton.Size = new System.Drawing.Size(150, 47);
-            this.trainMazeButton.TabIndex = 15;
+            this.trainMazeButton.TabIndex = 8;
             this.trainMazeButton.Text = "Train";
             this.trainMazeButton.UseVisualStyleBackColor = true;
             this.trainMazeButton.Click += new System.EventHandler(this.trainMazeButton_Click);
@@ -133,7 +133,7 @@
             this.rewardsButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.rewardsButton.Name = "rewardsButton";
             this.rewardsButton.Size = new System.Drawing.Size(150, 47);
-            this.rewardsButton.TabIndex = 12;
+            this.rewardsButton.TabIndex = 7;
             this.rewardsButton.Text = "Objectives";
             this.rewardsButton.UseVisualStyleBackColor = true;
             this.rewardsButton.Click += new System.EventHandler(this.rewardsButton_Click);
@@ -174,7 +174,7 @@
             this.discountRateText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.discountRateText.Name = "discountRateText";
             this.discountRateText.Size = new System.Drawing.Size(58, 39);
-            this.discountRateText.TabIndex = 4;
+            this.discountRateText.TabIndex = 2;
             this.discountRateText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.discountRateText.Leave += new System.EventHandler(this.discountRateText_Leave);
             // 
@@ -194,7 +194,7 @@
             this.learningRateText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.learningRateText.Name = "learningRateText";
             this.learningRateText.Size = new System.Drawing.Size(58, 39);
-            this.learningRateText.TabIndex = 5;
+            this.learningRateText.TabIndex = 3;
             this.learningRateText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.learningRateText.Leave += new System.EventHandler(this.learningRateText_Leave);
             // 
@@ -214,7 +214,7 @@
             this.startPositionText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.startPositionText.Name = "startPositionText";
             this.startPositionText.Size = new System.Drawing.Size(58, 39);
-            this.startPositionText.TabIndex = 2;
+            this.startPositionText.TabIndex = 4;
             this.startPositionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.startPositionText.Leave += new System.EventHandler(this.startPositionText_Leave);
             // 
@@ -234,7 +234,7 @@
             this.goalPositionText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.goalPositionText.Name = "goalPositionText";
             this.goalPositionText.Size = new System.Drawing.Size(58, 39);
-            this.goalPositionText.TabIndex = 3;
+            this.goalPositionText.TabIndex = 5;
             this.goalPositionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.goalPositionText.Leave += new System.EventHandler(this.goalPositionText_Leave);
             // 

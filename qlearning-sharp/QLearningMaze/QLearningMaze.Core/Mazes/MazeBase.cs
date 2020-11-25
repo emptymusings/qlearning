@@ -9,7 +9,7 @@
     {
         private int _objectivesMoves = 0;
         private double _objectiveRewards = 0;
-        private IMaze _objectiveMaze;
+        private MazeBase _objectiveMaze;
 
         public MazeBase() 
         {
@@ -272,10 +272,10 @@
             return AdditionalRewards;
         }
 
-        public override void Train()
+        public override void Initialize()
         {
+            base.Initialize();
             AssignPriorityToRewards();
-            base.Train();
         }
 
         protected virtual void AssignPriorityToRewards()
@@ -309,23 +309,34 @@
         protected virtual void RunToObjective(CustomObjective reward, int startPosition, int goalPosition)
         {
             int runs = 0;
+            double prioritizeLearningRate = 0.1;
+            double prioritizeDiscountRate = .95;
+            int prioritizeTrainingEpisodes = 5000;
+            int prioritizeMaximumMoves = 1000;
+            int priorizizeAllowedBacktracks = 3;
+
             _objectiveMaze = new MazeBase(
-                    Columns,
-                    Rows,
-                    StartPosition,
-                    goalPosition,
-                    DiscountRate,
-                    LearningRate);
-            _objectiveMaze.NumberOfTrainingEpisodes = 1000;
+                Columns,
+                Rows,
+                startPosition,
+                goalPosition,
+                reward.Value * 10);
+
             _objectiveMaze.Obstructions = Obstructions;
             _objectiveMaze.ObjectiveReward = reward.Value * 10;
-            _objectiveMaze.MaximumAllowedMoves = 1000;
-            _objectiveMaze.MaximumAllowedBacktracks = 3;
-            _objectiveMaze.TrainingEpisodes = new List<TrainingSession>();
+            _objectiveMaze.QualitySaveFrequency = prioritizeTrainingEpisodes * 2;
+
+            IQAgent<MazeBase> tempAgent = new QAgentBase<MazeBase>(
+                _objectiveMaze,
+                prioritizeLearningRate,
+                prioritizeDiscountRate,
+                prioritizeTrainingEpisodes,
+                prioritizeMaximumMoves,
+                priorizizeAllowedBacktracks);            
 
             try
             {
-                _objectiveMaze.Train();
+                tempAgent.Train();
             }
             catch (Exception ex)
             {
@@ -333,11 +344,11 @@
                 _objectiveRewards = -999;
             }
 
-            _objectiveMaze.AgentCompleted += Maze_AgentCompleted;
+            tempAgent.AgentCompleted += Maze_AgentCompleted;
 
             try
             {
-                _objectiveMaze.RunAgent(startPosition);
+                tempAgent.Run(startPosition);
             }
             catch (Exception ex)
             {
