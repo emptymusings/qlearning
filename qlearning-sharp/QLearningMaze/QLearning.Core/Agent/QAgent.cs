@@ -9,7 +9,7 @@
         where TEnvironment : IQEnvironment
     {
         private Random _random = new Random();
-        private double _epsilonDecayValue;
+        
 
         public QAgent() { }
 
@@ -47,6 +47,7 @@
         /// Gets or Sets the the episode in which epsilon (greedy strategy) decay will end.  Also used when calculating epsilon's decay value
         /// </summary>
         public double EpsilonDecayEnd { get; set; }
+        public double EpsilonDecayValue { get; set; } = -1;
         public virtual List<TrainingSession> TrainingEpisodes { get; set; }
         public virtual TrainingSession BestTrainingSession
         {
@@ -151,7 +152,7 @@
             double epsilon = 1;
 
             EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
-            _epsilonDecayValue = GetEpsilonDecayValue(epsilon);
+            EpsilonDecayValue = GetEpsilonDecayValue(epsilon);
 
             TrainingEpisodes = new List<TrainingSession>();
 
@@ -243,7 +244,14 @@
 
         protected virtual double GetEpsilonDecayValue(double epsilon)
         {
-            return epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
+            if (EpsilonDecayValue < 0)
+            {
+                return epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
+            }
+            else
+            {
+                return EpsilonDecayValue;
+            }
         }
 
 
@@ -255,7 +263,7 @@
             if (EpsilonDecayEnd >= episode &&
                    episode >= EpsilonDecayStart)
             {
-                epsilon -= _epsilonDecayValue;
+                epsilon -= EpsilonDecayValue;
             }
 
             return epsilon;

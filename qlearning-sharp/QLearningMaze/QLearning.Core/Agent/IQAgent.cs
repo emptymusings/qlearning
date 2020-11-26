@@ -25,6 +25,10 @@
         /// </summary>
         double EpsilonDecayEnd { get; set; }
         /// <summary>
+        /// Gets or Sets the decay rate of epsilon
+        /// </summary>
+        double EpsilonDecayValue { get; set; }
+        /// <summary>
         /// Gets or Sets the maximum amount of moves that the Agent can take before failing
         /// </summary>
         int MaximumAllowedMoves { get; set; }
