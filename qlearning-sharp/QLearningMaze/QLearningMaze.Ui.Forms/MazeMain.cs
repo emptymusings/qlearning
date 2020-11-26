@@ -669,24 +669,15 @@
 
         private void qLearningRadio_CheckedChanged(object sender, EventArgs e)
         {
-            SetLearningStyle();
-        }
-
-        private void sarsaRadio_CheckedChanged(object sender, EventArgs e)
-        {
-            SetLearningStyle();
-        }
-
-        private void SetLearningStyle()
-        {
             if (qLearningRadio.Checked)
             {
                 _agent.Environment.LearningType = LearningTypes.QLearning;
             }
-            else;
+            else
             {
                 _agent.Environment.LearningType = LearningTypes.SARSA;
             }
         }
+
     }
 }

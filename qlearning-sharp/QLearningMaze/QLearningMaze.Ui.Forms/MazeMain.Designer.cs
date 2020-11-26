@@ -435,7 +435,6 @@
             this.sarsaRadio.TabIndex = 1;
             this.sarsaRadio.Text = "SARSA";
             this.sarsaRadio.UseVisualStyleBackColor = true;
-            this.sarsaRadio.CheckedChanged += new System.EventHandler(this.sarsaRadio_CheckedChanged);
             // 
             // MazeMain
             // 
