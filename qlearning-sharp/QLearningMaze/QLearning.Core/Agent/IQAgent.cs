@@ -24,7 +24,13 @@
         /// Gets or Sets the the episode in which epsilon (greedy strategy) decay will end.  Also used when calculating epsilon's decay value
         /// </summary>
         double EpsilonDecayEnd { get; set; }
+        /// <summary>
+        /// Gets or Sets the maximum amount of moves that the Agent can take before failing
+        /// </summary>
         int MaximumAllowedMoves { get; set; }
+        /// <summary>
+        /// Gets or Sets the maximum amount of times the Agent may move back and forth between two spaces before failing
+        /// </summary>
         int MaximumAllowedBacktracks { get; set; }
         /// <summary>
         /// Gets or Sets the number of training episodes utilized to build the Quality table

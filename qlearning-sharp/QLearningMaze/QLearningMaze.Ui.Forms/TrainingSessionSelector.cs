@@ -165,7 +165,7 @@
 
         private IQAgent<IMaze> GetTestAgent()
         {
-            IQAgent<IMaze> agent = new QAgentBase<IMaze>
+            IQAgent<IMaze> agent = new QAgent<IMaze>
             {
                 DiscountRate = _agent.DiscountRate,
                 Environment = GetTestMaze(),

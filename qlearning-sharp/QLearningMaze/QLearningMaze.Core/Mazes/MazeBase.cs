@@ -336,7 +336,7 @@
             _objectiveMaze.ObjectiveReward = reward.Value * 10;
             _objectiveMaze.QualitySaveFrequency = prioritizeTrainingEpisodes * 2;
 
-            IQAgent<MazeBase> tempAgent = new QAgentBase<MazeBase>(
+            IQAgent<MazeBase> tempAgent = new QAgent<MazeBase>(
                 _objectiveMaze,
                 prioritizeLearningRate,
                 prioritizeDiscountRate,

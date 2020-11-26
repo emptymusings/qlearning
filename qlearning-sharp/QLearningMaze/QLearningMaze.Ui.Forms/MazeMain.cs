@@ -34,7 +34,7 @@
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
 
-            _agent = new QAgentBase<IMaze>(
+            _agent = new QAgent<IMaze>(
                 new MazeBase(1, 1, 0, 0, 200),
                 0.5,
                 0.5,
@@ -114,7 +114,7 @@
                 _walls.Clear();
                 mazeSpace.Enabled = false;
 
-                var loaded = Core.MazeUtilities.LoadObject<QAgentBase<MazeBase>>(dlg.FileName);
+                var loaded = Core.MazeUtilities.LoadObject<QAgent<MazeBase>>(dlg.FileName);
                 _agent = QLearningMaze.Core.MazeUtilities.ConvertLoadedAgent(loaded);
 
                 _agent.AgentStateChanged += Maze_AgentStateChanged;

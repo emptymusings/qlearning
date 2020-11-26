@@ -5,15 +5,15 @@
     using System.Linq;
     using Environment;
 
-    public partial class QAgentBase<TEnvironment> : AgentBase<TEnvironment>, IQAgent<TEnvironment>
+    public partial class QAgent<TEnvironment> : AgentBase<TEnvironment>, IQAgent<TEnvironment>
         where TEnvironment : IQEnvironment
     {
         private Random _random = new Random();
         private double _epsilonDecayValue;
 
-        public QAgentBase() { }
+        public QAgent() { }
 
-        public QAgentBase(
+        public QAgent(
             TEnvironment environment,
             double learningRate,
             double discountRate,
