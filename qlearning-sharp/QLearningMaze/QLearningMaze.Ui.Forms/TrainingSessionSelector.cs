@@ -98,7 +98,9 @@
 
         private Task RunTests()
         {
-            var sessions = QLearningMaze.Core.TrainingSession.GetTrainingSessions(_agent.Environment.QualitySaveDirectory).OrderBy(e => e.Episode).ToList();
+            var sessions = QLearningMaze.Core.TrainingSession
+                .GetTrainingSessions(_agent.Environment.QualitySaveDirectory)
+                .OrderBy(e => e.Episode).ToList();
 
             var agent = GetTestAgent();
             agent.AgentCompleted += Maze_AgentCompleted;
@@ -150,7 +152,7 @@
                     Moves = s.Key.Moves,
                     Score = s.Key.Score,
                     Succeeded = s.Key.Succeeded,
-                    Quality = s.Last().Quality
+                    Quality = s.First().Quality
                 });
 
             //trainingSessions = selection.OrderBy(e => e.MinEpisode).ToList();

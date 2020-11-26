@@ -63,13 +63,18 @@
             this.trainStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runMazeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qualityStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.qLearningRadio = new System.Windows.Forms.RadioButton();
+            this.sarsaRadio = new System.Windows.Forms.RadioButton();
             this.entryPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // entryPanel
             // 
+            this.entryPanel.Controls.Add(this.groupBox1);
             this.entryPanel.Controls.Add(this.rewardsLabel);
             this.entryPanel.Controls.Add(this.runMazeButton);
             this.entryPanel.Controls.Add(this.trainMazeButton);
@@ -397,6 +402,41 @@
             this.qualityStripMenuItem.Size = new System.Drawing.Size(294, 44);
             this.qualityStripMenuItem.Text = "Select &Quality";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.sarsaRadio);
+            this.groupBox1.Controls.Add(this.qLearningRadio);
+            this.groupBox1.Location = new System.Drawing.Point(1275, 13);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(438, 148);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Learning Style";
+            // 
+            // qLearningRadio
+            // 
+            this.qLearningRadio.AutoSize = true;
+            this.qLearningRadio.Checked = true;
+            this.qLearningRadio.Location = new System.Drawing.Point(7, 39);
+            this.qLearningRadio.Name = "qLearningRadio";
+            this.qLearningRadio.Size = new System.Drawing.Size(165, 36);
+            this.qLearningRadio.TabIndex = 0;
+            this.qLearningRadio.TabStop = true;
+            this.qLearningRadio.Text = "Q-Learning";
+            this.qLearningRadio.UseVisualStyleBackColor = true;
+            this.qLearningRadio.CheckedChanged += new System.EventHandler(this.qLearningRadio_CheckedChanged);
+            // 
+            // sarsaRadio
+            // 
+            this.sarsaRadio.AutoSize = true;
+            this.sarsaRadio.Location = new System.Drawing.Point(7, 96);
+            this.sarsaRadio.Name = "sarsaRadio";
+            this.sarsaRadio.Size = new System.Drawing.Size(115, 36);
+            this.sarsaRadio.TabIndex = 1;
+            this.sarsaRadio.Text = "SARSA";
+            this.sarsaRadio.UseVisualStyleBackColor = true;
+            this.sarsaRadio.CheckedChanged += new System.EventHandler(this.sarsaRadio_CheckedChanged);
+            // 
             // MazeMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
@@ -415,6 +455,8 @@
             this.panel2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -457,6 +499,9 @@
         private System.Windows.Forms.ToolStripMenuItem runMazeStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem qualityStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem statesMenuItem;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton sarsaRadio;
+        private System.Windows.Forms.RadioButton qLearningRadio;
     }
 }
 

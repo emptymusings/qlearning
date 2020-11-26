@@ -294,6 +294,7 @@
             discountRateText.Text = _agent.DiscountRate.ToString("0.##");
             learningRateText.Text = _agent.LearningRate.ToString("0.##");
             trainingEpisodesText.Text = _agent.NumberOfTrainingEpisodes.ToString();
+            qLearningRadio.Checked = _agent.Environment.LearningType == LearningTypes.QLearning;
 
             foreach (var obstruction in _agent.Environment.Obstructions)
             {
@@ -397,6 +398,7 @@
             }
             catch { }
 
+            _agent.State = _agent.Environment.StartPosition;
             var dlg = new TrainingProgress(_agent);
             this.Cursor = Cursors.WaitCursor;
             this.Enabled = false;
@@ -665,5 +667,26 @@
             }
         }
 
+        private void qLearningRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            SetLearningStyle();
+        }
+
+        private void sarsaRadio_CheckedChanged(object sender, EventArgs e)
+        {
+            SetLearningStyle();
+        }
+
+        private void SetLearningStyle()
+        {
+            if (qLearningRadio.Checked)
+            {
+                _agent.Environment.LearningType = LearningTypes.QLearning;
+            }
+            else;
+            {
+                _agent.Environment.LearningType = LearningTypes.SARSA;
+            }
+        }
     }
 }
