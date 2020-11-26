@@ -158,6 +158,8 @@
             if (!overrideBaseEvents)
                 OnTrainingStateChanged(true);
 
+            // This is to experiment with SARSA
+            //Environment.LearningType = LearningTypes.SARSA;
             RunTrainingSet(epsilon, overrideBaseEvents);
 
             if (!overrideBaseEvents)
@@ -192,29 +194,39 @@
             int previousState = -1;
             bool done = false;
             
+            // Start at a random state
             State = _random.Next(0, Environment.NumberOfStates);
 
             Score = 0;
 
             while (!done)
             {
-                Moves++;
+                // Determine the next action to take
                 var nextActionSet = Environment.GetNextAction(State, epsilon);
                 int nextAction = nextActionSet.nextAction;
                 var oldQuality = Environment.QualityTable[State][nextAction];
 
-                Environment.CalculateQuality(State, nextAction, LearningRate, DiscountRate);
+                // Update the quality table
+                if (Environment.LearningType == LearningTypes.QLearning)
+                {
+                    Environment.CalculateQLearning(State, nextAction, LearningRate, DiscountRate);
+                }
+                else
+                {
+                    Environment.CalculateSarsa(State, nextAction, LearningRate, DiscountRate, epsilon);
+                }
 
+                // Step to the next state using the assigned action
                 var step = Environment.Step(State, nextAction);
-
-                Score += step.reward;
 
                 previousState = State;
                 State = step.newState;
+                Moves++;
+                Score += step.reward;
 
                 if (!overrideBaseEvents)
                     OnTrainingAgentStateChanged(nextAction, State, Moves, Score, step.quality, oldQuality);
-
+                
                 if (Environment.IsTerminalState(State, nextAction, Moves, MaximumAllowedMoves))
                 {
                     done = true;

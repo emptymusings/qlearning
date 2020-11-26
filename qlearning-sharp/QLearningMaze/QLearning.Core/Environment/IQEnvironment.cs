@@ -30,8 +30,8 @@
         /// Occurs as the Quality Table's initializion has completed
         /// </summary>
         event EventHandler QualityTableCreated;
-        
-        
+
+        public LearningTypes LearningType { get; set; }
         /// <summary>
         /// Gets the number of States which an agent can occupy
         /// </summary>

@@ -36,6 +36,7 @@
             ObjectiveStates = objectiveStates;
         }
 
+        public virtual LearningTypes LearningType { get; set; } = LearningTypes.QLearning;
         public virtual int NumberOfStates
         {
             get
@@ -156,12 +157,16 @@
 
         public virtual bool IsTerminalState(int state, int moves, int maximumAllowedMoves)
         {
-            return ObjectiveStates.Contains(state % StatesPerPhase) ||
+            bool result = ObjectiveStates.Contains(state % StatesPerPhase) ||
                     (maximumAllowedMoves > 0 && moves > maximumAllowedMoves);
+            return result;
         }
 
         public virtual bool IsTerminalState(int state, int action, int moves, int maximumAllowedMoves)
         {
+            if (moves > maximumAllowedMoves)
+                return true;
+
             return IsTerminalState(state, moves, maximumAllowedMoves) && action == ObjectiveAction;
         }
 
@@ -265,7 +270,7 @@
             return result;
         }
 
-        public virtual void CalculateQuality(int state, int action, double learningRate, double discountRate)
+        public virtual void CalculateQLearning(int state, int action, double learningRate, double discountRate)
         {
             var step = Step(state, action);
 
@@ -276,6 +281,13 @@
 
             QualityTable[state][action] += (learningRate * (step.reward + (discountRate * maxQ) - step.quality));
 
+        }
+
+        public virtual void CalculateSarsa(int state, int action, double learningRate, double discountRate, double epsilon)
+        {
+            var step = Step(state, action);
+            var nextActionSet = GetNextAction(step.newState, epsilon);
+            QualityTable[state][action] += (learningRate * (step.reward + (discountRate * QualityTable[step.newState][nextActionSet.nextAction]) - QualityTable[state][action]));
         }
 
         protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int nextState)
