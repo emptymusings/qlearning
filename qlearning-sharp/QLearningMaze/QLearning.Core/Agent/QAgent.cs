@@ -77,7 +77,6 @@
         {
 
             int action = -1;
-            int nextState;
             int previousState = -1;
             int numberOfBacktracks = 0;
             bool done = false;
@@ -94,7 +93,7 @@
 
                 var stepValues = Environment.Step(fromState, action);
 
-                nextState = stepValues.newState;
+                State = stepValues.newState;
 
                 if (Environment.Step(fromState, action).newState < 0)
                 {
@@ -111,7 +110,7 @@
                     throw new InvalidOperationException($"Something's gone wrong, I've wandered around far too many times");
                 }
 
-                if (nextState == previousState)
+                if (State == previousState)
                 {
                     if (MaximumAllowedBacktracks >= 0 &&
                         numberOfBacktracks > MaximumAllowedBacktracks)
@@ -126,7 +125,7 @@
                 }
 
                 previousState = fromState;
-                fromState = nextState;
+                fromState = State;
 
                 if (!overrideBaseEvents)
                     OnAgentStateChanged(fromState, Moves, Score);
@@ -192,41 +191,42 @@
             Moves = 0;
             int previousState = -1;
             bool done = false;
-            int state = _random.Next(0, Environment.NumberOfStates);
+            
+            State = _random.Next(0, Environment.NumberOfStates);
 
             Score = 0;
 
             while (!done)
             {
                 Moves++;
-                var nextActionSet = Environment.GetNextAction(state, epsilon);
+                var nextActionSet = Environment.GetNextAction(State, epsilon);
                 int nextAction = nextActionSet.nextAction;
-                var oldQuality = Environment.QualityTable[state][nextAction];
+                var oldQuality = Environment.QualityTable[State][nextAction];
 
-                Environment.CalculateQuality(state, nextAction, LearningRate, DiscountRate);
+                Environment.CalculateQuality(State, nextAction, LearningRate, DiscountRate);
 
-                var step = Environment.Step(state, nextAction);
+                var step = Environment.Step(State, nextAction);
 
                 Score += step.reward;
 
-                previousState = state;
-                state = step.newState;
+                previousState = State;
+                State = step.newState;
 
                 if (!overrideBaseEvents)
-                    OnTrainingAgentStateChanged(nextAction, state, Moves, Score, step.quality, oldQuality);
+                    OnTrainingAgentStateChanged(nextAction, State, Moves, Score, step.quality, oldQuality);
 
-                if (Environment.IsTerminalState(state, nextAction, Moves, MaximumAllowedMoves))
+                if (Environment.IsTerminalState(State, nextAction, Moves, MaximumAllowedMoves))
                 {
                     done = true;
                 }
-                else if (state == previousState)
+                else if (State == previousState)
                 {
                     // Check for repeated actions, and adjust if happening
-                    state = _random.Next(0, Environment.NumberOfStates);
+                    State = _random.Next(0, Environment.NumberOfStates);
                 }
             }
 
-            return (state, Moves);
+            return (State, Moves);
         }
 
         protected virtual double GetEpsilonDecayValue(double epsilon)
