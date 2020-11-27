@@ -1,4 +1,7 @@
 {
+  "TrainingSessions": null,
+  "BestTrainingSession": null,
+  "MaximumAllowedBacktracks": -1,
   "Environment": {
     "Columns": 8,
     "Rows": 8,
@@ -189,27 +192,42 @@
       {
         "State": 9,
         "Value": 30.0,
-        "IsRequired": true
+        "IsRequired": true,
+        "Priority": 0,
+        "DistanceFromStart": 0,
+        "DistanceFromEnd": 0
       },
       {
         "State": 12,
         "Value": 30.0,
-        "IsRequired": true
+        "IsRequired": true,
+        "Priority": 0,
+        "DistanceFromStart": 0,
+        "DistanceFromEnd": 0
       },
       {
         "State": 57,
         "Value": 50.0,
-        "IsRequired": true
+        "IsRequired": true,
+        "Priority": 0,
+        "DistanceFromStart": 0,
+        "DistanceFromEnd": 0
       },
       {
         "State": 51,
         "Value": 50.0,
-        "IsRequired": true
+        "IsRequired": true,
+        "Priority": 0,
+        "DistanceFromStart": 0,
+        "DistanceFromEnd": 0
       },
       {
         "State": 7,
         "Value": 20.0,
-        "IsRequired": true
+        "IsRequired": true,
+        "Priority": 0,
+        "DistanceFromStart": 0,
+        "DistanceFromEnd": 0
       }
     ],
     "NumberOfStates": 384,
@@ -9436,8 +9454,6 @@
       ]
     ],
     "ObjectiveStates": [
-      38,
-      38,
       38
     ],
     "ObjectiveAction": 0,
@@ -9446,16 +9462,15 @@
     "QualitySaveFrequency": 10,
     "StatesPerPhase": 64
   },
-  "NumberOfTrainingEpisodes": 12500,
+  "LearningStyle": 0,
   "DiscountRate": 0.95,
   "LearningRate": 0.1,
   "EpsilonDecayStart": 1.0,
   "EpsilonDecayEnd": 0.0,
-  "TrainingEpisodes": null,
-  "BestTrainingSession": null,
+  "EpsilonDecayValue": -1.0,
+  "MaximumAllowedMoves": 1000,
+  "NumberOfTrainingEpisodes": 12500,
   "State": 0,
   "Moves": 0,
-  "MaximumAllowedMoves": 1000,
-  "MaximumAllowedBacktracks": -1,
   "Score": 0.0
 }

@@ -21,7 +21,7 @@
         /// <summary>
         /// Gets or Sets the position (state) in which the maze ends
         /// </summary>
-        int GoalPosition { get; set; }
+        int GoalPosition { get; }
         /// <summary>
         /// Gets or Sets any obstructions (walls) preventing movement of the agent between states
         /// </summary>
@@ -53,5 +53,7 @@
         /// Gets a list of all custom rewards/objectives
         /// </summary>
         List<CustomObjective> GetAdditionalRewards();
+
+        void SetGoalPosition(int position);
     }
 }

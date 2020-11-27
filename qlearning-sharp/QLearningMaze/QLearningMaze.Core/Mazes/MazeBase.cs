@@ -30,8 +30,8 @@
             Rows = rows;
             StatesPerPhase = columns * rows;
             StartPosition = startPosition;
-            GoalPosition = goalPosition;
             ObjectiveReward = goalValue;
+            SetGoalPosition(goalPosition);
             SetupStandardValues();
         }
 
@@ -71,21 +71,31 @@
         public int GoalPosition
         {
             get { return _goalPosition; }
-            set 
-            {
-                if (value != _goalPosition)
-                {
-                    _goalPosition = value;
+            //set 
+            //{
+            //    if (value != _goalPosition)
+            //    {
+            //        _goalPosition = value;
 
-                    ObjectiveStates.Clear();
-                    ObjectiveStates.Add(_goalPosition);
-                }
-            }
+            //        ObjectiveStates.Clear();
+            //        ObjectiveStates.Add(_goalPosition);
+            //    }
+            //}
         }
 
         public double MovementPunishement { get; set; } = -1;
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
 
+        public void SetGoalPosition(int position)
+        {
+            if (ObjectiveStates == null)
+            {
+                ObjectiveStates = new List<int>();
+            }
+
+            ObjectiveStates.Clear();
+            ObjectiveStates.Add(position);
+        }
         protected override void InitializeStatesTable()
         {
             if (AdditionalRewards == null)
@@ -130,12 +140,8 @@
         {
             OnRewardTableCreating();
 
-            //if (RewardsTable == null ||
-            //    RewardsTable.Length < NumberOfStates)
-            //{
-            //    RewardsTable = new double[NumberOfStates][];
-            //}
             RewardsTable = new double[NumberOfStates][];
+
             // Create an initial rewards table for each possible state/action using -1 as the movement cost
             for (int i = 0; i < RewardsTable.Length; ++i)
             {

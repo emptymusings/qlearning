@@ -1,4 +1,7 @@
 {
+  "TrainingSessions": null,
+  "BestTrainingSession": null,
+  "MaximumAllowedBacktracks": -1,
   "Environment": {
     "Columns": 6,
     "Rows": 6,
@@ -3126,8 +3129,6 @@
       ]
     ],
     "ObjectiveStates": [
-      5,
-      5,
       5
     ],
     "ObjectiveAction": 0,
@@ -3136,16 +3137,15 @@
     "QualitySaveFrequency": 10,
     "StatesPerPhase": 36
   },
-  "NumberOfTrainingEpisodes": 25000,
+  "LearningStyle": 0,
   "DiscountRate": 0.95,
   "LearningRate": 0.1,
   "EpsilonDecayStart": 1.0,
   "EpsilonDecayEnd": 0.0,
-  "TrainingEpisodes": null,
-  "BestTrainingSession": null,
+  "EpsilonDecayValue": -1.0,
+  "MaximumAllowedMoves": 1000,
+  "NumberOfTrainingEpisodes": 25000,
   "State": 0,
   "Moves": 0,
-  "MaximumAllowedMoves": 1000,
-  "MaximumAllowedBacktracks": -1,
   "Score": 0.0
 }

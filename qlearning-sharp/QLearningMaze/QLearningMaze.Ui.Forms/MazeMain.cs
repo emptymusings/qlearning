@@ -521,7 +521,7 @@
             {
                 oldGoalPosition = _agent.Environment.GoalPosition;
                 newGoalPosition = Convert.ToInt32(goalPositionText.Text);
-                _agent.Environment.GoalPosition = newGoalPosition;
+                _agent.Environment.SetGoalPosition(newGoalPosition);
                 GetSpaceByPosition(oldGoalPosition).SetGoal(false);
                 GetSpaceByPosition(newGoalPosition).SetGoal(true);
             }            
