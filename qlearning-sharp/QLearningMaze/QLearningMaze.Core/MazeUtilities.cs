@@ -33,7 +33,7 @@
                 MaximumAllowedBacktracks = loaded.MaximumAllowedBacktracks,
                 MaximumAllowedMoves = loaded.MaximumAllowedMoves,
                 NumberOfTrainingEpisodes = loaded.NumberOfTrainingEpisodes,
-                TrainingEpisodes = loaded.TrainingEpisodes
+                TrainingSessions = loaded.TrainingSessions
             };
 
             if (converted.Environment.ObjectiveReward == 0)

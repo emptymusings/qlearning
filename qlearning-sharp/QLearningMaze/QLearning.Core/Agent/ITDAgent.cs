@@ -15,7 +15,7 @@
         /// <summary>
         /// Gets or sets a list of stored successful training episodes
         /// </summary>
-        List<TrainingSession> TrainingEpisodes { get; set; }
+        IList<TrainingSession> TrainingSessions { get; set; }
         /// <summary>
         /// Gets the best session from a training set, based on total score
         /// </summary>

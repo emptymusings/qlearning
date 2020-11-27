@@ -30,18 +30,18 @@
         }
 
         
-        public virtual List<TrainingSession> TrainingEpisodes { get; set; }
+        public virtual IList<TrainingSession> TrainingSessions { get; set; }
         public virtual TrainingSession BestTrainingSession
         {
             get
             {
-                if (TrainingEpisodes == null ||
-                    TrainingEpisodes.Count == 0)
+                if (TrainingSessions == null ||
+                    TrainingSessions.Count == 0)
                 {
                     return null;
                 }
 
-                return TrainingEpisodes.OrderByDescending(r => r.Score).FirstOrDefault();
+                return TrainingSessions.OrderByDescending(r => r.Score).FirstOrDefault();
             }
         }
         public int MaximumAllowedBacktracks { get; set; }
@@ -131,7 +131,7 @@
             EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
             EpsilonDecayValue = GetEpsilonDecayValue(epsilon);
 
-            TrainingEpisodes = new List<TrainingSession>();
+            TrainingSessions = new List<TrainingSession>();
 
             if (!overrideBaseEvents)
                 OnTrainingStateChanged(true);
@@ -154,7 +154,7 @@
                     (1 + episode) % Environment.QualitySaveFrequency == 0)
                 {
                     var trainingEpisode = Environment.SaveQualityForEpisode(episode + 1, moves, Score);
-                    TrainingEpisodes.Add(trainingEpisode);
+                    TrainingSessions.Add(trainingEpisode);
                 }
 
                 epsilon = DecayEpsilon(episode, epsilon);
