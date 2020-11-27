@@ -13,7 +13,7 @@
 
     public partial class MazeMain : Form
     {
-        private IQAgent<IMaze> _agent;
+        private ITDAgent<IMaze> _agent;
         
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
@@ -35,7 +35,7 @@
             runMazeStripMenuItem.Click += RunMazeStripMenuItem_Click;
             qualityStripMenuItem.Click += QualityStripMenuItem_Click;
 
-            _agent = new QAgent<IMaze>(
+            _agent = new TDAgent<IMaze>(
                 new MazeBase(1, 1, 0, 0, 200),
                 0.5,
                 0.5,
@@ -115,7 +115,7 @@
                 _walls.Clear();
                 mazeSpace.Enabled = false;
 
-                var loaded = Core.MazeUtilities.LoadObject<QAgent<MazeBase>>(dlg.FileName);
+                var loaded = Core.MazeUtilities.LoadObject<TDAgent<MazeBase>>(dlg.FileName);
                 _agent = QLearningMaze.Core.MazeUtilities.ConvertLoadedAgent(loaded);
 
                 _agent.AgentStateChanged += Maze_AgentStateChanged;

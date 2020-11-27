@@ -12,7 +12,7 @@
 
     public partial class TrainingSessionSelector : Form
     {
-        private IQAgent<IMaze> _agent;
+        private ITDAgent<IMaze> _agent;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -20,7 +20,7 @@
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(IQAgent<IMaze> agent)
+        public TrainingSessionSelector(ITDAgent<IMaze> agent)
         {
             InitializeComponent();
             _agent = agent;
@@ -165,9 +165,9 @@
             return Task.CompletedTask;
         }
 
-        private IQAgent<IMaze> GetTestAgent()
+        private ITDAgent<IMaze> GetTestAgent()
         {
-            IQAgent<IMaze> agent = new QAgent<IMaze>
+            ITDAgent<IMaze> agent = new TDAgent<IMaze>
             {
                 DiscountRate = _agent.DiscountRate,
                 Environment = GetTestMaze(),

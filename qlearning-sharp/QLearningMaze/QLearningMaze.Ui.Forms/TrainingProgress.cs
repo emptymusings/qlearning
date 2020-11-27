@@ -9,7 +9,7 @@
     
     public partial class TrainingProgress : Form
     {
-        private IQAgent<IMaze> _agent;
+        private ITDAgent<IMaze> _agent;
         int _successfulRuns = 0;
         double _averageMoves = 0;
         double _averageScore = 0;
@@ -26,7 +26,7 @@
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
 
-        public TrainingProgress(IQAgent<IMaze> agent)
+        public TrainingProgress(ITDAgent<IMaze> agent)
         {
             InitializeComponent();
             _agent = agent;

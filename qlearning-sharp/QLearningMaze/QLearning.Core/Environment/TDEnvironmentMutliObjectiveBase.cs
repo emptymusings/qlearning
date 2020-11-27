@@ -3,19 +3,19 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public abstract class QEnvironmentMutliObjectiveBase : QEnvironmentBase, IQEnvironmentMultiObjective
+    public abstract class TDEnvironmentMutliObjectiveBase : TDEnvironmentBase, ITDEnvironmentMultiObjective
     {
         public virtual int GetRewardAction { get; set; } = -1;
         public virtual int PrioritizeFromState { get; set; }
         
-        public QEnvironmentMutliObjectiveBase() { }
+        public TDEnvironmentMutliObjectiveBase() { }
 
-        public QEnvironmentMutliObjectiveBase(int numberOfStates, int numberOfActions)
+        public TDEnvironmentMutliObjectiveBase(int numberOfStates, int numberOfActions)
             : base(numberOfStates, numberOfActions)
         {
         }
 
-        public QEnvironmentMutliObjectiveBase(
+        public TDEnvironmentMutliObjectiveBase(
             int numberOfStates,
             int numberOfActions,
             string qualitySaveDirectory,

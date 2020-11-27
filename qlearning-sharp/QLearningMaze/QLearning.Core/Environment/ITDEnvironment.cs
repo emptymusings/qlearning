@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Agent;
 
-    public interface IQEnvironment : IRLEnvironment
+    public interface ITDEnvironment : IRLEnvironment
     {
         /// <summary>
         /// Occurs as the State Table's initializion is about to start

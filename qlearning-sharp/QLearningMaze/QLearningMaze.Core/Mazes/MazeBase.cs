@@ -7,7 +7,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public partial class MazeBase : QEnvironmentMutliObjectiveBase, IMaze
+    public partial class MazeBase : TDEnvironmentMutliObjectiveBase, IMaze
     {
         private int _objectivesMoves = 0;
         private double _objectiveRewards = 0;
@@ -335,7 +335,7 @@
             _objectiveMaze.ObjectiveReward = reward.Value * 10;
             _objectiveMaze.QualitySaveFrequency = prioritizeTrainingEpisodes * 2;
 
-            IQAgent<MazeBase> tempAgent = new QAgent<MazeBase>(
+            ITDAgent<MazeBase> tempAgent = new TDAgent<MazeBase>(
                 _objectiveMaze,
                 prioritizeLearningRate,
                 prioritizeDiscountRate,

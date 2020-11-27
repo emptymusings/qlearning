@@ -6,21 +6,21 @@
     using System.Linq;
     using Agent;
 
-    public abstract partial class QEnvironmentBase : IQEnvironment
+    public abstract partial class TDEnvironmentBase : ITDEnvironment
     {
         protected Random _random = new Random();
         protected int _numberOfStates;
         protected int _numberOfActions;
         
-        public QEnvironmentBase() { }
+        public TDEnvironmentBase() { }
 
-        public QEnvironmentBase(int numberOfStates, int numberOfActions)
+        public TDEnvironmentBase(int numberOfStates, int numberOfActions)
         {
             _numberOfStates = numberOfStates;
             _numberOfActions = numberOfActions;
         }
 
-        public QEnvironmentBase(
+        public TDEnvironmentBase(
             int numberOfStates,
             int numberOfActions,
             string qualitySaveDirectory,

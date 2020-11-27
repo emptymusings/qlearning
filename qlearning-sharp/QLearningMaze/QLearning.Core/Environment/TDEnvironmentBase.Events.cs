@@ -2,7 +2,7 @@
 {
     using System;
 
-    public abstract partial class QEnvironmentBase : IQEnvironment
+    public abstract partial class TDEnvironmentBase : ITDEnvironment
     {
         public event EventHandler StateTableCreating;
         public event EventHandler StateTableCreated;

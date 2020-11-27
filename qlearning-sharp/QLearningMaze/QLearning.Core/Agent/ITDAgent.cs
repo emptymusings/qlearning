@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using Environment;
 
-    public interface IQAgent<TEnvironment> : IAgent<TEnvironment>
-        where TEnvironment : IQEnvironment
+    public interface ITDAgent<TEnvironment> : IAgent<TEnvironment>
+        where TEnvironment : ITDEnvironment
     {
         
         /// <summary>

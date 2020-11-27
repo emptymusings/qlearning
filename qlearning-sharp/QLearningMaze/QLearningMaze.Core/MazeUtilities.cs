@@ -21,9 +21,9 @@
             return loaded;
         }
 
-        public static IQAgent<IMaze> ConvertLoadedAgent(QAgent<MazeBase> loaded)
+        public static ITDAgent<IMaze> ConvertLoadedAgent(TDAgent<MazeBase> loaded)
         {
-            var converted = new QAgent<IMaze>
+            var converted = new TDAgent<IMaze>
             {
                 DiscountRate = loaded.DiscountRate,
                 Environment = loaded.Environment,
