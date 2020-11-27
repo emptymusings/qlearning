@@ -318,7 +318,6 @@
 
         protected virtual void RunToObjective(CustomObjective reward, int startPosition, int goalPosition)
         {
-            int runs = 0;
             double prioritizeLearningRate = 0.1;
             double prioritizeDiscountRate = .95;
             int prioritizeTrainingEpisodes = 5000;
@@ -348,7 +347,7 @@
             {
                 tempAgent.Train();
             }
-            catch (Exception ex)
+            catch
             {
                 _objectivesMoves = 999;
                 _objectiveRewards = -999;
@@ -360,7 +359,7 @@
             {
                 tempAgent.Run(startPosition);
             }
-            catch (Exception ex)
+            catch
             {
                 _objectivesMoves = 9999;
                 _objectiveRewards = -9999;

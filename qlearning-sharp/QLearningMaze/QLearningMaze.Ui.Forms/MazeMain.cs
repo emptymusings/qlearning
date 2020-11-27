@@ -1,6 +1,7 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
     using Core;
+    using QLearning.Core;
     using QLearning.Core.Agent;
     using QLearning.Core.Environment;
     using QLearningMaze.Core.Mazes;
@@ -294,7 +295,15 @@
             discountRateText.Text = _agent.DiscountRate.ToString("0.##");
             learningRateText.Text = _agent.LearningRate.ToString("0.##");
             trainingEpisodesText.Text = _agent.NumberOfTrainingEpisodes.ToString();
-            qLearningRadio.Checked = _agent.Environment.LearningType == LearningTypes.QLearning;
+
+            if (_agent.LearningStyle == LearningStyles.QLearning)
+            {
+                qLearningRadio.Checked = true;
+            }
+            else
+            {
+                sarsaRadio.Checked = true;
+            }
 
             foreach (var obstruction in _agent.Environment.Obstructions)
             {
@@ -671,11 +680,11 @@
         {
             if (qLearningRadio.Checked)
             {
-                _agent.Environment.LearningType = LearningTypes.QLearning;
+                _agent.LearningStyle = LearningStyles.QLearning;
             }
             else
             {
-                _agent.Environment.LearningType = LearningTypes.SARSA;
+                _agent.LearningStyle = LearningStyles.SARSA;
             }
         }
 

@@ -179,6 +179,12 @@
                 NumberOfTrainingEpisodes = _agent.NumberOfTrainingEpisodes
             };
 
+
+            if (agent.MaximumAllowedBacktracks < 0)
+            {
+                agent.MaximumAllowedBacktracks = 3;
+            }
+
             return agent;
         }
 

@@ -29,25 +29,7 @@
             MaximumAllowedBacktracks = maximumAllowedBacktracks;
         }
 
-        public TEnvironment Environment { get; set; }
-        public int NumberOfTrainingEpisodes { get; set; }
-        /// <summary>
-        /// Gets or Sets the Discount Rate, or Discount Factor, used in the Q-Learning formula (aka gamma)
-        /// </summary>
-        public double DiscountRate { get; set; }
-        /// <summary>
-        /// Gets or Sets the Learning Rate used in the Q-Learning formula (aka alpha)
-        /// </summary>
-        public double LearningRate { get; set; }
-        /// <summary>
-        /// Gets or Sets the episode in which epsilon (greedy strategy) decay will start.  Also used when calculating epsilon's decay value
-        /// </summary>
-        public double EpsilonDecayStart { get; set; }
-        /// <summary>
-        /// Gets or Sets the the episode in which epsilon (greedy strategy) decay will end.  Also used when calculating epsilon's decay value
-        /// </summary>
-        public double EpsilonDecayEnd { get; set; }
-        public double EpsilonDecayValue { get; set; } = -1;
+        
         public virtual List<TrainingSession> TrainingEpisodes { get; set; }
         public virtual TrainingSession BestTrainingSession
         {
@@ -62,19 +44,14 @@
                 return TrainingEpisodes.OrderByDescending(r => r.Score).FirstOrDefault();
             }
         }
-
-        public int State { get; set; }
-        public int Moves { get; set; }
-        public int MaximumAllowedMoves { get; set; }
         public int MaximumAllowedBacktracks { get; set; }
-        public double Score { get; set; }
 
-        public virtual void Run(int fromState)
+        public override void Run(int fromState)
         {
             Run(fromState, false);
         }
 
-        public virtual void Run(int fromState, bool overrideBaseEvents)
+        public override void Run(int fromState, bool overrideBaseEvents)
         {
 
             int action = -1;
@@ -141,12 +118,12 @@
                 OnAgentCompleted(Moves, Score, (Environment.ObjectiveStates.Contains(fromState)));
         }
 
-        public virtual void Train()
+        public override void Train()
         {
             Train(false);
         }
 
-        public virtual void Train(bool overrideBaseEvents)
+        public override void Train(bool overrideBaseEvents)
         {
             Environment.Initialize();
             double epsilon = 1;
@@ -159,8 +136,6 @@
             if (!overrideBaseEvents)
                 OnTrainingStateChanged(true);
 
-            // This is to experiment with SARSA
-            //Environment.LearningType = LearningTypes.SARSA;
             RunTrainingSet(epsilon, overrideBaseEvents);
 
             if (!overrideBaseEvents)
@@ -208,7 +183,7 @@
                 var oldQuality = Environment.QualityTable[State][nextAction];
 
                 // Update the quality table
-                if (Environment.LearningType == LearningTypes.QLearning)
+                if (LearningStyle == LearningStyles.QLearning)
                 {
                     Environment.CalculateQLearning(State, nextAction, LearningRate, DiscountRate);
                 }

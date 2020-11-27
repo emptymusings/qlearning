@@ -38,7 +38,7 @@
 
             if (converted.Environment.ObjectiveReward == 0)
             {
-                converted.Environment.ObjectiveReward = 200;
+                converted.Environment.ObjectiveReward = 20;
             }
 
             return converted;

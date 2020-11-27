@@ -3,7 +3,7 @@ namespace QLearning.Core.Agent
     using System;
     using Environment;
 
-    public partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
+    public abstract partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
         where TEnvironment : IRLEnvironment
     {
         public event EventHandler<AgentStateChangedEventArgs> AgentStateChanged;
@@ -42,5 +42,6 @@ namespace QLearning.Core.Agent
             EventHandler<AgentCompletedEventArgs> handler = AgentCompleted;
             handler?.Invoke(this, new AgentCompletedEventArgs(moves, rewards, success));
         }
+
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLearning.Core.Environment
+namespace QLearning.Core
 {
-    public enum LearningTypes
+    public enum LearningStyles
     {
         QLearning,
         SARSA

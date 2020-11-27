@@ -30,6 +30,14 @@
         {
             InitializeComponent();
             _agent = agent;
+            
+            if (_agent.MaximumAllowedBacktracks < 0)
+            {
+                _agent.MaximumAllowedBacktracks = 3;
+            }
+
+            _showEvery = _agent.NumberOfTrainingEpisodes/5;
+
             //_maze = agent.Environment;
             _agent.TrainingEpisodeCompleted += _maze_TrainingEpisodeCompleted;
             _totalMoves = 0;

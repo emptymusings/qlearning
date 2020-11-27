@@ -36,7 +36,6 @@
             ObjectiveStates = objectiveStates;
         }
 
-        public virtual LearningTypes LearningType { get; set; } = LearningTypes.QLearning;
         public virtual int NumberOfStates
         {
             get
@@ -273,12 +272,8 @@
         public virtual void CalculateQLearning(int state, int action, double learningRate, double discountRate)
         {
             var step = Step(state, action);
-
-            if (!IsValidState(step.newState)) ThrowInvalidActionException(state, action);
-
             var forecaster = GetFuturePositionMaxQ(step.newState);
             var maxQ = forecaster.maxQ;
-
             QualityTable[state][action] += (learningRate * (step.reward + (discountRate * maxQ) - step.quality));
 
         }
@@ -287,7 +282,8 @@
         {
             var step = Step(state, action);
             var nextActionSet = GetNextAction(step.newState, epsilon);
-            QualityTable[state][action] += (learningRate * (step.reward + (discountRate * QualityTable[step.newState][nextActionSet.nextAction]) - QualityTable[state][action]));
+            var newQ = QualityTable[step.newState][nextActionSet.nextAction];
+            QualityTable[state][action] += (learningRate * (step.reward + (discountRate * newQ) - step.quality));
         }
 
         protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int nextState)

@@ -466,7 +466,6 @@
         private System.Windows.Forms.Panel entryPanel;
         private System.Windows.Forms.Panel panel2;
         private MazeSpace mazeSpace;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button runMazeButton;
         private System.Windows.Forms.TextBox columnsText;
         private System.Windows.Forms.Label label2;
