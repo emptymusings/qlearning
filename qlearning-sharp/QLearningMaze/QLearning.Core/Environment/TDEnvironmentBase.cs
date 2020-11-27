@@ -144,6 +144,16 @@
                 OnQualityTableCreated();
         }
 
+        public virtual void AddObjective(int state)
+        {
+            if (ObjectiveStates == null) ObjectiveStates = new List<int>();
+
+            if (!ObjectiveStates.Contains(state))
+            {
+                ObjectiveStates.Add(state);
+            }
+        }
+
         protected virtual bool IsValidState(int state)
         {
             return state >= 0;

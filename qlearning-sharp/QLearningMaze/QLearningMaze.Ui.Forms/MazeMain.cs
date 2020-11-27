@@ -122,7 +122,7 @@
                 _agent.AgentCompleted += Maze_AgentCompleted;
                 _agent.TrainingAgentStateChanged += Maze_TrainingAgentStateChanged;
                 SetFormValuesFromMaze();
-                
+
                 _needsRetrain = true;
                 mazeSpace.Enabled = true;
             }
@@ -295,6 +295,9 @@
             discountRateText.Text = _agent.DiscountRate.ToString("0.##");
             learningRateText.Text = _agent.LearningRate.ToString("0.##");
             trainingEpisodesText.Text = _agent.NumberOfTrainingEpisodes.ToString();
+
+
+            _agent.Environment.AddObjective(_agent.Environment.GoalPosition);
 
             if (_agent.LearningStyle == LearningStyles.QLearning)
             {
@@ -521,7 +524,7 @@
             {
                 oldGoalPosition = _agent.Environment.GoalPosition;
                 newGoalPosition = Convert.ToInt32(goalPositionText.Text);
-                _agent.Environment.SetGoalPosition(newGoalPosition);
+                _agent.Environment.AddObjective(newGoalPosition);
                 GetSpaceByPosition(oldGoalPosition).SetGoal(false);
                 GetSpaceByPosition(newGoalPosition).SetGoal(true);
             }            

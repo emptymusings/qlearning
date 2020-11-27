@@ -54,6 +54,5 @@
         /// </summary>
         List<CustomObjective> GetAdditionalRewards();
 
-        void SetGoalPosition(int position);
     }
 }

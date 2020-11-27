@@ -138,6 +138,7 @@
         /// at random, or to be greedy and use a known value</param>
         /// <returns></returns>
         (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon);
-        
+
+        void AddObjective(int state);
     }
 }

@@ -71,16 +71,14 @@
         public int GoalPosition
         {
             get { return _goalPosition; }
-            //set 
-            //{
-            //    if (value != _goalPosition)
-            //    {
-            //        _goalPosition = value;
-
-            //        ObjectiveStates.Clear();
-            //        ObjectiveStates.Add(_goalPosition);
-            //    }
-            //}
+            set
+            {
+                if (value != _goalPosition)
+                {
+                    _goalPosition = value;
+                    base.AddObjective(_goalPosition);
+                }
+            }
         }
 
         public double MovementPunishement { get; set; } = -1;
