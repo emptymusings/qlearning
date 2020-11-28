@@ -1253,6 +1253,7 @@
       ]
     ],
     "ObjectiveStates": [
+      47,
       47
     ],
     "ObjectiveAction": 0,
@@ -1261,15 +1262,15 @@
     "QualitySaveFrequency": 100,
     "StatesPerPhase": 48
   },
-  "LearningStyle": 0,
+  "LearningStyle": 1,
   "DiscountRate": 0.85,
   "LearningRate": 0.1,
   "EpsilonDecayStart": 0.0,
   "EpsilonDecayEnd": 5000.0,
-  "EpsilonDecayValue": 0.0002,
+  "EpsilonDecayValue": -1.0,
   "MaximumAllowedMoves": 1000,
   "NumberOfTrainingEpisodes": 10000,
-  "State": 47,
-  "Moves": 18,
-  "Score": 183.0
+  "State": 0,
+  "Moves": 0,
+  "Score": 0.0
 }

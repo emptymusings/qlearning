@@ -6,7 +6,8 @@
     using System.Drawing;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-    
+    using System.Linq;
+
     public partial class TrainingProgress : Form
     {
         private ITDAgent<IMaze> _agent;
@@ -16,7 +17,7 @@
         double _totalMoves = 0;
         double _totalScore = 0;
         double _percentComplete = 0;
-
+        private int _episodeStartSpace;
         private int _showEvery = 2500;
         private MazeSpace _mazeSpace;
         private int _movementPause = 100;
@@ -30,14 +31,14 @@
         {
             InitializeComponent();
             _agent = agent;
-            
+
             if (_agent.MaximumAllowedBacktracks < 0)
             {
                 _agent.MaximumAllowedBacktracks = 3;
             }
 
             _showEvery = _agent.NumberOfTrainingEpisodes/5;
-
+            
             //_maze = agent.Environment;
             _agent.TrainingEpisodeCompleted += _maze_TrainingEpisodeCompleted;
             _totalMoves = 0;
@@ -74,6 +75,7 @@
             if ((e.CurrentEpisode + 1) % _showEvery == 0 &&
                 e.CurrentEpisode > 1)
             {
+                _episodeStartSpace = e.StartPoint;
                 RenderTraining();
             }
         }
@@ -82,6 +84,8 @@
         {
             _mazeSpace = new MazeSpace();
             _mazeSpace.CreateMazeControls(_agent.Environment);
+            _mazeSpace.GetSpaceByPosition(_agent.Environment.StartPosition).SetStart(false);
+            _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agent.Environment.StatesPerPhase).SetStart(true);
             Form frm = new Form();
             frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);
             frm.Controls.Add(_mazeSpace);
@@ -94,7 +98,7 @@
             try
             {
                 _agent.AgentStateChanged += _maze_AgentStateChanged;
-                _agent.Run(_agent.Environment.StartPosition);
+                _agent.Run(_episodeStartSpace);
             }
             catch 
             {
@@ -126,6 +130,16 @@
                 }
 
                 MazeSpace.ActiveSpace = newSpace;
+
+                var start = _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agent.Environment.StatesPerPhase);
+                start.SetInactive();
+                start.Invalidate();
+
+                if (_agent.Environment.RewardsTable[e.NewState][_agent.Environment.GetRewardAction] > 0)
+                {
+                    newSpace.SetReward(false);
+                }
+
                 newSpace.SetActive();
                 newSpace.Invalidate();
                 _mazeSpace.Invalidate();

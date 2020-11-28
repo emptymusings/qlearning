@@ -140,5 +140,7 @@
         (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon);
 
         void AddObjective(int state);
+
+        double[][] CopyQuality();
     }
 }

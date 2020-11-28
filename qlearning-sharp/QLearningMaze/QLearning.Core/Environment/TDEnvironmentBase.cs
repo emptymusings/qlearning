@@ -349,7 +349,7 @@
                 Episode = episode,
                 Moves = moves,
                 Score = score,
-                Quality = QualityTable
+                Quality = CopyQuality()
             };
 
             Utilities.SaveObject($@"{QualitySaveDirectory}\Episode_{episode}_{DateTime.Now.ToString("HH_mm_ss")}.json", trainingEpisode);
@@ -357,5 +357,24 @@
             return trainingEpisode;
         }
 
+
+        public virtual double[][] CopyQuality()
+        {
+            double[][] result;
+
+            result = new double[QualityTable.Length][];
+
+            for (int i = 0; i < QualityTable.Length; ++i)
+            {
+                result[i] = new double[QualityTable[i].Length];
+
+                for (int j = 0; j < QualityTable[i].Length; ++j)
+                {
+                    result[i][j] = QualityTable[i][j];
+                }
+            }
+
+            return result;
+        }
     }
 }

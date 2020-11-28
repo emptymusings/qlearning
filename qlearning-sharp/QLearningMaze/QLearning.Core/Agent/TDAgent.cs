@@ -9,7 +9,7 @@
         where TEnvironment : ITDEnvironment
     {
         private Random _random = new Random();
-        
+        private int _trainingEpisodeStartPoint;
 
         public TDAgent() { }
 
@@ -160,7 +160,7 @@
                 epsilon = DecayEpsilon(episode, epsilon);
 
                 if (!overrideBaseEvents)
-                    OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, moves, Score, Environment.ObjectiveStates.Contains(state % Environment.StatesPerPhase));
+                    OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, _trainingEpisodeStartPoint, moves, Score, Environment.ObjectiveStates.Contains(state % Environment.StatesPerPhase));
             }
         }
 
@@ -172,7 +172,7 @@
             
             // Start at a random state
             State = _random.Next(0, Environment.NumberOfStates);
-
+            _trainingEpisodeStartPoint = State;
             Score = 0;
 
             while (!done)

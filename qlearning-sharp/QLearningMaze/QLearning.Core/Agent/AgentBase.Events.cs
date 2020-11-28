@@ -25,10 +25,10 @@ namespace QLearning.Core.Agent
             handler?.Invoke(this, new TrainingAgentStateChangedEventArgs(action, newState, movesMade, rewardsEarned, newQuality, oldQuality));
         }
 
-        protected virtual void OnTrainingEpisodeCompleted(int currentEpisode, int totalEpisodes, int totalMoves, double totalScore, bool succeeded)
+        protected virtual void OnTrainingEpisodeCompleted(int currentEpisode, int totalEpisodes, int startPoint, int totalMoves, double totalScore, bool succeeded)
         {
             EventHandler<TrainingEpisodeCompletedEventArgs> handler = TrainingEpisodeCompleted;
-            handler?.Invoke(this, new TrainingEpisodeCompletedEventArgs(currentEpisode, totalEpisodes, totalMoves, totalScore, succeeded));
+            handler?.Invoke(this, new TrainingEpisodeCompletedEventArgs(currentEpisode, totalEpisodes, startPoint, totalMoves, totalScore, succeeded));
         }
 
         protected virtual void OnTrainingStateChanged(bool isTraining)
