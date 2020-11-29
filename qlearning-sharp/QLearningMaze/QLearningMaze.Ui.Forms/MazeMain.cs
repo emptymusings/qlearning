@@ -2,8 +2,8 @@
 {
     using Core;
     using QLearning.Core;
-    using QLearning.Core.Agent;
     using QLearning.Core.Environment;
+    using QLearningMaze.Core.Agent;
     using QLearningMaze.Core.Mazes;
     using System;
     using System.Collections.Generic;
@@ -14,8 +14,8 @@
 
     public partial class MazeMain : Form
     {
-        private ITDAgent<IMaze> _agentPrimary;
-        private ITDAgent<IMaze> _agentSecondary;
+        private MazeAgent _agentPrimary;
+        private MazeAgent _agentSecondary;
         
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
@@ -45,14 +45,13 @@
 
         private void InitializeAgents()
         {
-            InitializeAgent(ref _agentPrimary);
-            InitializeAgent(ref _agentSecondary);
+            _agentPrimary = InitializeAgent();
+            _agentSecondary = InitializeAgent();
         }
 
-        private void InitializeAgent(ref ITDAgent<IMaze> agent)
+        private MazeAgent InitializeAgent()
         {
-            agent = new TDAgent<IMaze>(
-                new MazeBase(1, 1, 0, 0, 200),
+            var agent = new MazeAgent(
                 0.5,
                 0.5,
                 1000,
@@ -60,20 +59,16 @@
                 3);
 
             AgentSubscribeEvents(agent);
+            return agent;
         }
 
-        private void AgentSubscribeEvents(ITDAgent<IMaze> agent)
+        private void AgentSubscribeEvents(MazeAgent agent)
         {
             agent.AgentStateChanged += Maze_AgentStateChanged;
             agent.AgentCompleted += Maze_AgentCompleted;
-
-            if (agent == _agentPrimary)
-            {
-                agent.TrainingAgentStateChanged += Maze_TrainingAgentStateChanged;
-            }
         }
 
-        private void AgentUnsubscribeEvents(ITDAgent<IMaze> agent)
+        private void AgentUnsubscribeEvents(MazeAgent agent)
         {
             agent.AgentStateChanged -= Maze_AgentStateChanged;
             agent.AgentCompleted -= Maze_AgentCompleted;
@@ -100,12 +95,6 @@
             double newQuality = e.NewQuality;
             double oldQuality = e.OldQuality;
 
-        }
-        private void Maze_TrainingAgentStateChanged(object sender, QLearning.Core.TrainingAgentStateChangedEventArgs e)
-        {
-            int newState = e.NewState;
-            double newQuality = e.NewQuality;
-            double oldQuality = e.OldQuality;
         }
 
         private void RewardsMenuItem_Click(object sender, EventArgs e)
@@ -145,7 +134,7 @@
                 _walls.Clear();
                 mazeSpace.Enabled = false;
 
-                var loaded = MazeUtilities.LoadObject<TDAgent<MazeBase>>(dlg.FileName);
+                var loaded = MazeUtilities.LoadObject<MazeAgent>(dlg.FileName);
                 _agentPrimary = MazeUtilities.ConvertLoadedAgent(loaded);
                 _agentSecondary = MazeUtilities.ConvertLoadedAgent(loaded);
                 _agentSecondary.Environment = MazeUtilities.CopyEnvironment(loaded.Environment);
@@ -207,7 +196,7 @@
             }
             else
             {
-                var agent = (ITDAgent<IMaze>)sender;
+                var agent = (MazeAgent)sender;
 
                 var newSpace = GetSpaceByPosition(e.NewState % agent.Environment.StatesPerPhase);
 
@@ -264,7 +253,7 @@
             }
             else
             {
-                var agent = (ITDAgent<IMaze>)sender;
+                var agent = (MazeAgent)sender;
                 Label rewardsLabel;
                 string prefix;
 
@@ -345,7 +334,7 @@
             Cursor = Cursors.Default;
         }
 
-        private Task RunAgentAsync(ITDAgent<IMaze> agent)
+        private Task RunAgentAsync(MazeAgent agent)
         {
             try
             {
@@ -488,6 +477,7 @@
             if (Convert.ToInt32(trainingEpisodesText.Text) != _agentPrimary.NumberOfTrainingEpisodes)
             {
                 _agentPrimary.NumberOfTrainingEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
+                _agentSecondary.NumberOfTrainingEpisodes = _agentPrimary.NumberOfTrainingEpisodes;
             }
 
             try

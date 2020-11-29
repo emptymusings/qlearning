@@ -1,6 +1,7 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
     using QLearning.Core.Agent;
+    using QLearningMaze.Core.Agent;
     using QLearningMaze.Core.Mazes;
     using System;
     using System.Drawing;
@@ -10,8 +11,8 @@
 
     public partial class TrainingProgress : Form
     {
-        private ITDAgent<IMaze> _agentPrimary;
-        private ITDAgent<IMaze> _agentSecondary;
+        private MazeAgent _agentPrimary;
+        private MazeAgent _agentSecondary;
         int _successfulRuns = 0;
         double _averageMoves = 0;
         double _averageScore = 0;
@@ -28,7 +29,7 @@
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
 
-        public TrainingProgress(ITDAgent<IMaze> agentPrimary, ITDAgent<IMaze> agentSecondary)
+        public TrainingProgress(MazeAgent agentPrimary, MazeAgent agentSecondary)
         {
             InitializeComponent();
             _agentPrimary = agentPrimary;
@@ -160,6 +161,11 @@
 
         private Task RunAgentTrainingSessions()
         {
+            if (_agentPrimary.LearningStyle == QLearning.Core.LearningStyles.QLearning)
+                _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.SARSA;
+            else
+                _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.QLearning;
+
             Task[] tasks = new Task[]
             {
                 TrainingTask(),

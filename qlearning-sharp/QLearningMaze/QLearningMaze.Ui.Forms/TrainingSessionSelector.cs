@@ -12,7 +12,7 @@
 
     public partial class TrainingSessionSelector : Form
     {
-        private ITDAgent<IMaze> _agent;
+        private ITDAgent<MazeBase> _agent;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -20,7 +20,7 @@
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(ITDAgent<IMaze> agent)
+        public TrainingSessionSelector(ITDAgent<MazeBase> agent)
         {
             InitializeComponent();
             _agent = agent;

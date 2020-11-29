@@ -3,6 +3,7 @@
     using Mazes;
     using Newtonsoft.Json;
     using QLearning.Core.Agent;
+    using Agent;
     using System.IO;
 
     public class MazeUtilities
@@ -21,9 +22,9 @@
             return loaded;
         }
 
-        public static ITDAgent<IMaze> ConvertLoadedAgent(TDAgent<MazeBase> loaded)
+        public static MazeAgent ConvertLoadedAgent(MazeAgent loaded)
         {
-            var converted = new TDAgent<IMaze>
+            var converted = new MazeAgent
             {
                 DiscountRate = loaded.DiscountRate,
                 Environment = loaded.Environment,
@@ -44,7 +45,7 @@
             return converted;
         }
 
-        public static IMaze CopyEnvironment(MazeBase environment)
+        public static MazeBase CopyEnvironment(MazeBase environment)
         {
             var converted = new MazeBase
             {
