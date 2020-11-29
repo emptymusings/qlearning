@@ -1,4 +1,4 @@
-﻿namespace QLearningMaze.Core
+﻿namespace QLearningMaze.Core.Mazes
 {
     using QLearning.Core;
     using System.Collections.Generic;

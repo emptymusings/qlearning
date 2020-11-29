@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Folder Include="assets\TrainingSession\" />
+    <Folder Include="Agent\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -43,5 +43,32 @@
 
             return converted;
         }
+
+        public static IMaze CopyEnvironment(MazeBase environment)
+        {
+            var converted = new MazeBase
+            {
+                AdditionalRewards = environment.AdditionalRewards,
+                Columns = environment.Columns,
+                GetRewardAction = environment.GetRewardAction,
+                GoalPosition = environment.GoalPosition,
+                MovementPunishement = environment.MovementPunishement,
+                ObjectiveAction = environment.ObjectiveAction,
+                ObjectiveReward = environment.ObjectiveReward,
+                ObjectiveStates = environment.ObjectiveStates,
+                Obstructions = environment.Obstructions,
+                PrioritizeFromState = environment.PrioritizeFromState,
+                QualitySaveDirectory = environment.QualitySaveDirectory,
+                QualitySaveFrequency = environment.QualitySaveFrequency,
+                QualityTable = environment.CopyQuality(),
+                RewardsTable = environment.RewardsTable,
+                Rows = environment.Rows,
+                StartPosition = environment.StartPosition,
+                StatesPerPhase = environment.StatesPerPhase,
+                StatesTable = environment.StatesTable
+            };
+
+            return converted;
+        }
     }
 }

@@ -30,7 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MazeMain));
             this.entryPanel = new System.Windows.Forms.Panel();
-            this.rewardsLabel = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.sarsaRadio = new System.Windows.Forms.RadioButton();
+            this.qLearningRadio = new System.Windows.Forms.RadioButton();
+            this.rewardsLabelPrimary = new System.Windows.Forms.Label();
             this.runMazeButton = new System.Windows.Forms.Button();
             this.trainMazeButton = new System.Windows.Forms.Button();
             this.rewardsButton = new System.Windows.Forms.Button();
@@ -63,19 +66,18 @@
             this.trainStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runMazeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qualityStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.qLearningRadio = new System.Windows.Forms.RadioButton();
-            this.sarsaRadio = new System.Windows.Forms.RadioButton();
+            this.rewardsLabelSecondary = new System.Windows.Forms.Label();
             this.entryPanel.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // entryPanel
             // 
+            this.entryPanel.Controls.Add(this.rewardsLabelSecondary);
             this.entryPanel.Controls.Add(this.groupBox1);
-            this.entryPanel.Controls.Add(this.rewardsLabel);
+            this.entryPanel.Controls.Add(this.rewardsLabelPrimary);
             this.entryPanel.Controls.Add(this.runMazeButton);
             this.entryPanel.Controls.Add(this.trainMazeButton);
             this.entryPanel.Controls.Add(this.rewardsButton);
@@ -97,22 +99,57 @@
             this.entryPanel.Location = new System.Drawing.Point(0, 40);
             this.entryPanel.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.entryPanel.Name = "entryPanel";
-            this.entryPanel.Size = new System.Drawing.Size(1775, 213);
+            this.entryPanel.Size = new System.Drawing.Size(1775, 274);
             this.entryPanel.TabIndex = 0;
             // 
-            // rewardsLabel
+            // groupBox1
             // 
-            this.rewardsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.rewardsLabel.Location = new System.Drawing.Point(1065, 148);
-            this.rewardsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.rewardsLabel.Name = "rewardsLabel";
-            this.rewardsLabel.Size = new System.Drawing.Size(678, 41);
-            this.rewardsLabel.TabIndex = 16;
-            this.rewardsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.groupBox1.Controls.Add(this.sarsaRadio);
+            this.groupBox1.Controls.Add(this.qLearningRadio);
+            this.groupBox1.Location = new System.Drawing.Point(1275, 13);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(438, 148);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Learning Style";
+            // 
+            // sarsaRadio
+            // 
+            this.sarsaRadio.AutoSize = true;
+            this.sarsaRadio.Location = new System.Drawing.Point(7, 96);
+            this.sarsaRadio.Name = "sarsaRadio";
+            this.sarsaRadio.Size = new System.Drawing.Size(115, 36);
+            this.sarsaRadio.TabIndex = 1;
+            this.sarsaRadio.Text = "SARSA";
+            this.sarsaRadio.UseVisualStyleBackColor = true;
+            // 
+            // qLearningRadio
+            // 
+            this.qLearningRadio.AutoSize = true;
+            this.qLearningRadio.Checked = true;
+            this.qLearningRadio.Location = new System.Drawing.Point(7, 39);
+            this.qLearningRadio.Name = "qLearningRadio";
+            this.qLearningRadio.Size = new System.Drawing.Size(165, 36);
+            this.qLearningRadio.TabIndex = 0;
+            this.qLearningRadio.TabStop = true;
+            this.qLearningRadio.Text = "Q-Learning";
+            this.qLearningRadio.UseVisualStyleBackColor = true;
+            this.qLearningRadio.CheckedChanged += new System.EventHandler(this.qLearningRadio_CheckedChanged);
+            // 
+            // rewardsLabelPrimary
+            // 
+            this.rewardsLabelPrimary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rewardsLabelPrimary.Location = new System.Drawing.Point(966, 148);
+            this.rewardsLabelPrimary.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rewardsLabelPrimary.Name = "rewardsLabelPrimary";
+            this.rewardsLabelPrimary.Size = new System.Drawing.Size(678, 41);
+            this.rewardsLabelPrimary.TabIndex = 16;
+            this.rewardsLabelPrimary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // runMazeButton
             // 
-            this.runMazeButton.Location = new System.Drawing.Point(388, 145);
+            this.runMazeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.runMazeButton.Location = new System.Drawing.Point(388, 206);
             this.runMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.runMazeButton.Name = "runMazeButton";
             this.runMazeButton.Size = new System.Drawing.Size(150, 47);
@@ -123,7 +160,8 @@
             // 
             // trainMazeButton
             // 
-            this.trainMazeButton.Location = new System.Drawing.Point(195, 145);
+            this.trainMazeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.trainMazeButton.Location = new System.Drawing.Point(195, 206);
             this.trainMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.trainMazeButton.Name = "trainMazeButton";
             this.trainMazeButton.Size = new System.Drawing.Size(150, 47);
@@ -134,7 +172,8 @@
             // 
             // rewardsButton
             // 
-            this.rewardsButton.Location = new System.Drawing.Point(13, 145);
+            this.rewardsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.rewardsButton.Location = new System.Drawing.Point(13, 206);
             this.rewardsButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.rewardsButton.Name = "rewardsButton";
             this.rewardsButton.Size = new System.Drawing.Size(150, 47);
@@ -287,10 +326,10 @@
             // 
             this.panel2.Controls.Add(this.mazeSpace);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 253);
+            this.panel2.Location = new System.Drawing.Point(0, 314);
             this.panel2.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1775, 686);
+            this.panel2.Size = new System.Drawing.Size(1775, 625);
             this.panel2.TabIndex = 1;
             // 
             // mazeSpace
@@ -301,7 +340,7 @@
             this.mazeSpace.Location = new System.Drawing.Point(0, 0);
             this.mazeSpace.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.mazeSpace.Name = "mazeSpace";
-            this.mazeSpace.Size = new System.Drawing.Size(1775, 686);
+            this.mazeSpace.Size = new System.Drawing.Size(1775, 625);
             this.mazeSpace.TabIndex = 0;
             this.mazeSpace.TabStop = false;
             // 
@@ -402,39 +441,15 @@
             this.qualityStripMenuItem.Size = new System.Drawing.Size(294, 44);
             this.qualityStripMenuItem.Text = "Select &Quality";
             // 
-            // groupBox1
+            // rewardsLabelSecondary
             // 
-            this.groupBox1.Controls.Add(this.sarsaRadio);
-            this.groupBox1.Controls.Add(this.qLearningRadio);
-            this.groupBox1.Location = new System.Drawing.Point(1275, 13);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(438, 148);
-            this.groupBox1.TabIndex = 17;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Learning Style";
-            // 
-            // qLearningRadio
-            // 
-            this.qLearningRadio.AutoSize = true;
-            this.qLearningRadio.Checked = true;
-            this.qLearningRadio.Location = new System.Drawing.Point(7, 39);
-            this.qLearningRadio.Name = "qLearningRadio";
-            this.qLearningRadio.Size = new System.Drawing.Size(165, 36);
-            this.qLearningRadio.TabIndex = 0;
-            this.qLearningRadio.TabStop = true;
-            this.qLearningRadio.Text = "Q-Learning";
-            this.qLearningRadio.UseVisualStyleBackColor = true;
-            this.qLearningRadio.CheckedChanged += new System.EventHandler(this.qLearningRadio_CheckedChanged);
-            // 
-            // sarsaRadio
-            // 
-            this.sarsaRadio.AutoSize = true;
-            this.sarsaRadio.Location = new System.Drawing.Point(7, 96);
-            this.sarsaRadio.Name = "sarsaRadio";
-            this.sarsaRadio.Size = new System.Drawing.Size(115, 36);
-            this.sarsaRadio.TabIndex = 1;
-            this.sarsaRadio.Text = "SARSA";
-            this.sarsaRadio.UseVisualStyleBackColor = true;
+            this.rewardsLabelSecondary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rewardsLabelSecondary.Location = new System.Drawing.Point(966, 209);
+            this.rewardsLabelSecondary.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rewardsLabelSecondary.Name = "rewardsLabelSecondary";
+            this.rewardsLabelSecondary.Size = new System.Drawing.Size(678, 41);
+            this.rewardsLabelSecondary.TabIndex = 18;
+            this.rewardsLabelSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MazeMain
             // 
@@ -451,11 +466,11 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.entryPanel.ResumeLayout(false);
             this.entryPanel.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -490,7 +505,7 @@
         private System.Windows.Forms.ToolStripMenuItem viewStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem qualityMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rewardsMenuItem;
-        private System.Windows.Forms.Label rewardsLabel;
+        private System.Windows.Forms.Label rewardsLabelPrimary;
         private System.Windows.Forms.Button rewardsButton;
         private System.Windows.Forms.ToolStripMenuItem mazeStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem trainStripMenuItem;
@@ -500,6 +515,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton sarsaRadio;
         private System.Windows.Forms.RadioButton qLearningRadio;
+        private System.Windows.Forms.Label rewardsLabelSecondary;
     }
 }
 
