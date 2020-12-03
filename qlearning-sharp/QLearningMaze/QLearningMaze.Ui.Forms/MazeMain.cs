@@ -138,7 +138,7 @@
                 _agentPrimary = MazeUtilities.ConvertLoadedAgent(loaded);
                 _agentSecondary = MazeUtilities.ConvertLoadedAgent(loaded);
                 _agentSecondary.Environment = MazeUtilities.CopyEnvironment(loaded.Environment);
-                _agentSecondary.Environment.StartPosition = 56;
+                
                 AgentSubscribeEvents(_agentPrimary);
                 AgentSubscribeEvents(_agentSecondary);
 
@@ -200,34 +200,43 @@
 
                 var newSpace = GetSpaceByPosition(e.NewState % agent.Environment.StatesPerPhase);
 
+                Label rewardsLabel;
+                string prefix;
+                ObservationSpace activeSpace;
+
                 if (newSpace != null)
                 {
-                    if (MazeSpace.ActiveSpace != null)
+                    if (agent == _agentPrimary)
                     {
-                        MazeSpace.ActiveSpace.SetInactive();
-                        MazeSpace.ActiveSpace.Invalidate();
+                        if (MazeSpace.ActiveSpacePrimary != null)
+                        {
+                            MazeSpace.ActiveSpacePrimary.SetInactive();
+                            MazeSpace.ActiveSpacePrimary.Invalidate();
+                        }
+
+                        MazeSpace.ActiveSpacePrimary = newSpace;
+                        prefix = "Primary Agent -";
+                        rewardsLabel = rewardsLabelPrimary;
+                    }
+                    else
+                    {
+                        if (MazeSpace.ActiveSpaceSecondary != null)
+                        {
+                            MazeSpace.ActiveSpaceSecondary.SetInactive();
+                            MazeSpace.ActiveSpaceSecondary.Invalidate();
+                        }
+
+                        MazeSpace.ActiveSpaceSecondary = newSpace;
+                        prefix = "Secondary Agent -";
+                        rewardsLabel = rewardsLabelSecondary;
                     }
 
-                    MazeSpace.ActiveSpace = newSpace;
                     newSpace.SetActive();
                     newSpace.Invalidate();
                     mazeSpace.Invalidate();
                     newSpace.Refresh();
                     System.Threading.Thread.Sleep(_movementPause);
 
-                    Label rewardsLabel;
-                    string prefix;
-
-                    if (agent == _agentPrimary)
-                    {
-                        prefix = "Primary Agent -";
-                        rewardsLabel = rewardsLabelPrimary;
-                    }
-                    else
-                    {
-                        prefix = "Secondary Agent -";
-                        rewardsLabel = rewardsLabelSecondary;
-                    }
 
                     rewardsLabel.Text = $"{prefix} Moves: {e.MovesMade} Reward: {e.RewardsEarned}";
 
@@ -240,7 +249,6 @@
                     }
                     rewardsLabel.Invalidate();
                     rewardsLabel.Refresh();
-                    //Application.DoEvents();
                 }
             }
         }
@@ -280,9 +288,14 @@
 
         private void RunMaze()
         {
-            if (MazeSpace.ActiveSpace != null)
+            if (MazeSpace.ActiveSpacePrimary != null)
             {
-                MazeSpace.ActiveSpace.SetInactive();
+                MazeSpace.ActiveSpacePrimary.SetInactive();
+            }
+
+            if (MazeSpace.ActiveSpaceSecondary != null)
+            {
+                MazeSpace.ActiveSpaceSecondary.SetInactive();
             }
 
             Cursor = Cursors.WaitCursor;
@@ -306,11 +319,12 @@
 
             var startSpacePrimary = GetSpaceByPosition(_agentPrimary.Environment.StartPosition);
             startSpacePrimary.SetActive();
-            MazeSpace.ActiveSpace = startSpacePrimary;
+            MazeSpace.ActiveSpacePrimary = startSpacePrimary;
             startSpacePrimary.Refresh();
 
             var startSpaceSecondary = GetSpaceByPosition(_agentSecondary.Environment.StartPosition);
             startSpaceSecondary.SetActive();
+            MazeSpace.ActiveSpaceSecondary = startSpaceSecondary;
             startSpaceSecondary.Refresh();
 
             System.Threading.Thread.Sleep(_movementPause);
@@ -370,6 +384,7 @@
             rowsText.Text = _agentPrimary.Environment.Rows.ToString();
             columnsText.Text = _agentPrimary.Environment.Columns.ToString();
             startPositionText.Text = _agentPrimary.Environment.StartPosition.ToString();
+            secondaryStartTextBox.Text = startPositionText.Text;
             goalPositionText.Text = _agentPrimary.Environment.GoalPosition.ToString();
             discountRateText.Text = _agentPrimary.DiscountRate.ToString("0.##");
             learningRateText.Text = _agentPrimary.LearningRate.ToString("0.##");
@@ -477,8 +492,9 @@
             if (Convert.ToInt32(trainingEpisodesText.Text) != _agentPrimary.NumberOfTrainingEpisodes)
             {
                 _agentPrimary.NumberOfTrainingEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
-                _agentSecondary.NumberOfTrainingEpisodes = _agentPrimary.NumberOfTrainingEpisodes;
             }
+
+            _agentSecondary.NumberOfTrainingEpisodes = _agentPrimary.NumberOfTrainingEpisodes;
 
             try
             { 
@@ -581,15 +597,27 @@
 
         private void startPositionText_Leave(object sender, EventArgs e)
         {
+            if (sender == startPositionText)
+            {
+                ChangeAgentStartPosition(_agentPrimary, startPositionText);
+            }
+            else
+            {
+                ChangeAgentStartPosition(_agentSecondary, secondaryStartTextBox);
+            }
+        }
+
+        private void ChangeAgentStartPosition(MazeAgent agent, TextBox sourceTextBox)
+        {
             int newStartPosition;
             int oldStartPosition;
 
-            if (_agentPrimary.Environment.StartPosition.ToString() != startPositionText.Text &&
-                MazeTextChanged(startPositionText, false))
+            if (agent.Environment.StartPosition.ToString() != sourceTextBox.Text &&
+                MazeTextChanged(sourceTextBox, false))
             {
-                oldStartPosition = _agentPrimary.Environment.StartPosition;
-                newStartPosition = Convert.ToInt32(startPositionText.Text);
-                _agentPrimary.Environment.StartPosition = newStartPosition;
+                oldStartPosition = agent.Environment.StartPosition;
+                newStartPosition = Convert.ToInt32(sourceTextBox.Text);
+                agent.Environment.StartPosition = newStartPosition;
                 GetSpaceByPosition(oldStartPosition).SetStart(false);
                 GetSpaceByPosition(newStartPosition).SetStart(true);
             }
@@ -622,6 +650,8 @@
                 _needsRetrain = true;
             }
 
+            _agentSecondary.DiscountRate = _agentPrimary.DiscountRate;
+
             _overrideRespawn = false;
         }
 
@@ -635,6 +665,8 @@
                 _agentPrimary.LearningRate = Convert.ToDouble(learningRateText.Text);
                 _needsRetrain = true;
             }
+
+            _agentSecondary.LearningRate = _agentPrimary.LearningRate;
 
             _overrideRespawn = false;
         }

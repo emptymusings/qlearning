@@ -126,13 +126,13 @@
 
             if (newSpace != null)
             {
-                if (MazeSpace.ActiveSpace != null)
+                if (MazeSpace.ActiveSpacePrimary != null)
                 {
-                    MazeSpace.ActiveSpace.SetInactive();
-                    MazeSpace.ActiveSpace.Invalidate();
+                    MazeSpace.ActiveSpacePrimary.SetInactive();
+                    MazeSpace.ActiveSpacePrimary.Invalidate();
                 }
 
-                MazeSpace.ActiveSpace = newSpace;
+                MazeSpace.ActiveSpacePrimary = newSpace;
 
                 var start = _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agentPrimary.Environment.StatesPerPhase);
                 start.SetInactive();
@@ -149,7 +149,6 @@
                 newSpace.Refresh();
                 _mazeSpace.Refresh();
                 System.Threading.Thread.Sleep(_movementPause);
-                //Application.DoEvents();
             }
         }
 

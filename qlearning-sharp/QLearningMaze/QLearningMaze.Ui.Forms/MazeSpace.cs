@@ -14,8 +14,8 @@
         }
 
         public List<ObservationSpaceRow> Rows { get; set; } = new List<ObservationSpaceRow>();
-        public static ObservationSpace ActiveSpace { get; set; }
-
+        public static ObservationSpace ActiveSpacePrimary { get; set; }
+        public static ObservationSpace ActiveSpaceSecondary { get; set; }
         public void CreateMazeControls(IMaze maze)
         {
             this.SuspendLayout();
