@@ -160,16 +160,35 @@
 
         private Task RunAgentTrainingSessions()
         {
-            if (_agentPrimary.LearningStyle == QLearning.Core.LearningStyles.QLearning)
-                _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.SARSA;
-            else
-                _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.QLearning;
+            if (_agentSecondary != null)
+            { 
+                if (_agentPrimary.LearningStyle == QLearning.Core.LearningStyles.QLearning)
+                {
+                    _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.SARSA;
+                }
+                else
+                {
+                    _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.QLearning;
+                }
+            }
 
-            Task[] tasks = new Task[]
+            Task[] tasks;
+            
+            if (_agentSecondary != null)
             {
-                TrainingTask(),
-                Task.Run(() => _agentSecondary.Train())
-            };
+                tasks = new Task[]
+                {
+                    TrainingTask(),
+                    Task.Run(() => _agentSecondary.Train())
+                };
+            }
+            else
+            {
+                tasks = new Task[]
+                {
+                    TrainingTask()
+                };
+            }
 
             Task.WaitAll(tasks);
             return Task.CompletedTask;

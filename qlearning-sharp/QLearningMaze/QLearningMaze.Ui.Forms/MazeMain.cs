@@ -16,7 +16,7 @@
     {
         private MazeAgent _agentPrimary;
         private MazeAgent _agentSecondary;
-        
+        private bool _useSecondaryAgent;
         private int _movementPause = 100;
         private bool _overrideRespawn = false;
         private bool _needsRetrain = false;
@@ -217,21 +217,24 @@
                         MazeSpace.ActiveSpacePrimary = newSpace;
                         prefix = "Primary Agent -";
                         rewardsLabel = rewardsLabelPrimary;
+
+                        newSpace.SetActive();
                     }
                     else
                     {
                         if (MazeSpace.ActiveSpaceSecondary != null)
                         {
-                            MazeSpace.ActiveSpaceSecondary.SetInactive();
+                            MazeSpace.ActiveSpaceSecondary.SetInactive(false);
                             MazeSpace.ActiveSpaceSecondary.Invalidate();
                         }
 
                         MazeSpace.ActiveSpaceSecondary = newSpace;
                         prefix = "Secondary Agent -";
                         rewardsLabel = rewardsLabelSecondary;
+
+                        newSpace.SetActive(false);
                     }
 
-                    newSpace.SetActive();
                     newSpace.Invalidate();
                     mazeSpace.Invalidate();
                     newSpace.Refresh();
@@ -295,7 +298,7 @@
 
             if (MazeSpace.ActiveSpaceSecondary != null)
             {
-                MazeSpace.ActiveSpaceSecondary.SetInactive();
+                MazeSpace.ActiveSpaceSecondary.SetInactive(false);
             }
 
             Cursor = Cursors.WaitCursor;
@@ -322,26 +325,41 @@
             MazeSpace.ActiveSpacePrimary = startSpacePrimary;
             startSpacePrimary.Refresh();
 
-            var startSpaceSecondary = GetSpaceByPosition(_agentSecondary.Environment.StartPosition);
-            startSpaceSecondary.SetActive();
-            MazeSpace.ActiveSpaceSecondary = startSpaceSecondary;
-            startSpaceSecondary.Refresh();
+            if (_useSecondaryAgent)
+            {
+                var startSpaceSecondary = GetSpaceByPosition(_agentSecondary.Environment.StartPosition);
+                startSpaceSecondary.SetActive(false);
+                MazeSpace.ActiveSpaceSecondary = startSpaceSecondary;
+                startSpaceSecondary.Refresh();
+            }
 
             System.Threading.Thread.Sleep(_movementPause);
             
             try
             {
-                Task[] tasks = new Task[]
+                Task[] tasks;
+
+                if (_useSecondaryAgent)
                 {
-                    Task.Run(() => RunAgentAsync(_agentPrimary)),
-                    Task.Run(() => RunAgentAsync(_agentSecondary))
-                };
+                    tasks = new Task[]
+                    {
+                        Task.Run(() => RunAgentAsync(_agentPrimary)),
+                        Task.Run(() => RunAgentAsync(_agentSecondary))
+                    };
+                }
+                else
+                {
+                    tasks = new Task[]
+                    {
+                        Task.Run(() => RunAgentAsync(_agentPrimary))
+                    };
+                }
 
                 Task.WaitAll(tasks);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.Message);
             }
 
             entryPanel.Enabled = true;
@@ -367,7 +385,7 @@
                     prefix = "Secondary";
                 }
 
-                MessageBox.Show($"{prefix} Agent Error: {ex}");
+                MessageBox.Show($"{prefix} Agent Error: {ex.Message}");
             }
             return Task.CompletedTask;
         }
@@ -494,7 +512,10 @@
                 _agentPrimary.NumberOfTrainingEpisodes = Convert.ToInt32(trainingEpisodesText.Text);
             }
 
-            _agentSecondary.NumberOfTrainingEpisodes = _agentPrimary.NumberOfTrainingEpisodes;
+            if (_useSecondaryAgent)
+            {
+                _agentSecondary.NumberOfTrainingEpisodes = _agentPrimary.NumberOfTrainingEpisodes;
+            }
 
             try
             { 
@@ -507,7 +528,7 @@
             catch { }
 
             _agentPrimary.State = _agentPrimary.Environment.StartPosition;
-            var dlg = new TrainingProgress(_agentPrimary, _agentSecondary);
+            var dlg = new TrainingProgress(_agentPrimary, (_useSecondaryAgent ? _agentSecondary : null));
             this.Cursor = Cursors.WaitCursor;
             this.Enabled = false;
 
@@ -618,8 +639,19 @@
                 oldStartPosition = agent.Environment.StartPosition;
                 newStartPosition = Convert.ToInt32(sourceTextBox.Text);
                 agent.Environment.StartPosition = newStartPosition;
-                GetSpaceByPosition(oldStartPosition).SetStart(false);
-                GetSpaceByPosition(newStartPosition).SetStart(true);
+                bool isPrimary = (agent == _agentPrimary);
+                var otherAgent = (isPrimary ? _agentSecondary : _agentPrimary);
+
+                GetSpaceByPosition(oldStartPosition).SetStart(false, isPrimary);
+                GetSpaceByPosition(newStartPosition).SetStart(true, isPrimary);
+
+                if (otherAgent.Environment.StartPosition == oldStartPosition &&
+                    _useSecondaryAgent)
+                {
+                    var space = GetSpaceByPosition(oldStartPosition);
+                    space.SetStart(true, !isPrimary);
+                    space.SetActive(!isPrimary);
+                }
             }
         }
 
@@ -804,5 +836,12 @@
             }
         }
 
+        private void secondaryAgentCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            _useSecondaryAgent = secondaryAgentCheckbox.Checked;
+
+            secondaryAgentStartLabel.Visible = _useSecondaryAgent;
+            secondaryStartTextBox.Visible = _useSecondaryAgent;
+        }
     }
 }

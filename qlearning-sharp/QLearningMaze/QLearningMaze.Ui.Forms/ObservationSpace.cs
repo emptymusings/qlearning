@@ -14,14 +14,28 @@
 
         public int Position { get; private set; }
 
-        public void SetActive()
+        public void SetActive(bool isPrimary = true)
         {
-            activeImage.Visible = true;
+            if (isPrimary)
+            {
+                activeImage.Visible = true;
+            }
+            else
+            {
+                activeImageSecondary.Visible = true;
+            }
         }
 
-        public void SetInactive()
+        public void SetInactive(bool isPrimary = true)
         {
-            activeImage.Visible = false;
+            if (isPrimary)
+            {
+                activeImage.Visible = false;
+            }
+            else
+            {
+                activeImageSecondary.Visible = false;
+            }
         }
 
         public void SetGoal(bool isGoal)
@@ -29,10 +43,18 @@
             goalLabel.Visible = isGoal;
         }
 
-        public void SetStart(bool isStart)
+        public void SetStart(bool isStart, bool isPrimary = true)
         {
             startLabel.Visible = isStart;
-            activeImage.Visible = isStart;
+
+            if (isPrimary)
+            {
+                activeImage.Visible = isStart;
+            }
+            else
+            {
+                activeImageSecondary.Visible = isStart;
+            }
         }
 
         public void SetReward(bool isReward, double value = 0)
