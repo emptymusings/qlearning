@@ -160,7 +160,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.groupBox1.Size = new System.Drawing.Size(438, 147);
+            this.groupBox1.Size = new System.Drawing.Size(229, 147);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Learning Style";
