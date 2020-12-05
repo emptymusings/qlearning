@@ -1,11 +1,11 @@
 {
+  "StartPosition": 11,
   "TrainingSessions": null,
   "BestTrainingSession": null,
   "MaximumAllowedBacktracks": 3,
   "Environment": {
     "Columns": 8,
     "Rows": 8,
-    "StartPosition": 11,
     "GoalPosition": 31,
     "MovementPunishement": -1.0,
     "Obstructions": [
@@ -4850,6 +4850,9 @@
       ]
     ],
     "ObjectiveStates": [
+      31,
+      31,
+      31,
       31
     ],
     "ObjectiveAction": 0,
@@ -4867,6 +4870,6 @@
   "MaximumAllowedMoves": 384,
   "NumberOfTrainingEpisodes": 10000,
   "State": 0,
-  "Moves": 31,
-  "Score": 223.0
+  "Moves": 0,
+  "Score": 0.0
 }

@@ -57,7 +57,7 @@
                     var space = new ObservationSpace();
                     space.SetPosition(position);
 
-                    if (position == maze.StartPosition)
+                    if (position == maze.GetInitialState())
                     {
                         space.SetStart(true);
                         space.SetActive();

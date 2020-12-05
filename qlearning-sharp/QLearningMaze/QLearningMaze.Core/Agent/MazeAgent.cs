@@ -26,5 +26,22 @@
         {
 
         }
+
+        private int _startPosition;
+
+        public int StartPosition
+        {
+            get { return _startPosition; }
+            set 
+            { 
+                _startPosition = value;
+
+                if (Environment != null)
+                {
+                    Environment.SetInitialState(value);
+                }
+            }
+        }
+
     }
 }

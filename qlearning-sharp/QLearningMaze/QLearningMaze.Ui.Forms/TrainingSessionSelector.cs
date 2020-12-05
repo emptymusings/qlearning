@@ -2,6 +2,7 @@
 {
     using QLearning.Core.Agent;
     using QLearningMaze.Core;
+    using QLearningMaze.Core.Agent;
     using QLearningMaze.Core.Mazes;
     using System;
     using System.Collections.Generic;
@@ -9,10 +10,10 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-
+    
     public partial class TrainingSessionSelector : Form
     {
-        private ITDAgent<MazeBase> _agent;
+        private MazeAgent _agent;
         private bool _isChecking;
         private int _moves;
         private double _score;
@@ -20,7 +21,7 @@
         private List<TrainingSessionEx> trainingSessions = new List<TrainingSessionEx>();
         public TrainingSessionEx SelectedSession { get; set; }
 
-        public TrainingSessionSelector(ITDAgent<MazeBase> agent)
+        public TrainingSessionSelector(MazeAgent agent)
         {
             InitializeComponent();
             _agent = agent;
@@ -124,7 +125,7 @@
 
                 try
                 {
-                    agent.Run(agent.Environment.StartPosition);
+                    agent.Run(agent.StartPosition);
                     session.Succeeded = true;
                 }
                 catch 
@@ -165,9 +166,9 @@
             return Task.CompletedTask;
         }
 
-        private ITDAgent<IMaze> GetTestAgent()
+        private MazeAgent GetTestAgent()
         {
-            ITDAgent<IMaze> agent = new TDAgent<IMaze>
+            MazeAgent agent = new MazeAgent
             {
                 DiscountRate = _agent.DiscountRate,
                 Environment = GetTestMaze(),
@@ -193,9 +194,10 @@
             var maze = new MazeBase(
                 _agent.Environment.Columns,
                 _agent.Environment.Rows,
-                _agent.Environment.StartPosition,
+                _agent.StartPosition,
                 _agent.Environment.GoalPosition,
                 _agent.Environment.ObjectiveReward);
+
             maze.RewardsTable = _agent.Environment.RewardsTable;
             maze.StatesTable = _agent.Environment.StatesTable;
             maze.AdditionalRewards = _agent.Environment.AdditionalRewards;

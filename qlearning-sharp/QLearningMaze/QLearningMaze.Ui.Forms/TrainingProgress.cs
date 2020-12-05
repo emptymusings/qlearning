@@ -87,7 +87,7 @@
         {
             _mazeSpace = new MazeSpace();
             _mazeSpace.CreateMazeControls(_agentPrimary.Environment);
-            _mazeSpace.GetSpaceByPosition(_agentPrimary.Environment.StartPosition).SetStart(false);
+            _mazeSpace.GetSpaceByPosition(_agentPrimary.StartPosition).SetStart(false);
             _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agentPrimary.Environment.StatesPerPhase).SetStart(true);
             Form frm = new Form();
             frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);

@@ -28,15 +28,17 @@
             {
                 DiscountRate = loaded.DiscountRate,
                 Environment = loaded.Environment,
+                StartPosition = loaded.StartPosition,
                 EpsilonDecayEnd = loaded.EpsilonDecayEnd,
                 EpsilonDecayStart = loaded.EpsilonDecayStart,
                 LearningRate = loaded.LearningRate,
                 MaximumAllowedBacktracks = loaded.MaximumAllowedBacktracks,
                 MaximumAllowedMoves = loaded.MaximumAllowedMoves,
                 NumberOfTrainingEpisodes = loaded.NumberOfTrainingEpisodes,
-                TrainingSessions = loaded.TrainingSessions
+                TrainingSessions = loaded.TrainingSessions                
             };
 
+            
             if (converted.Environment.ObjectiveReward == 0)
             {
                 converted.Environment.ObjectiveReward = 20;
@@ -64,7 +66,6 @@
                 QualityTable = environment.CopyQuality(),
                 RewardsTable = environment.RewardsTable,
                 Rows = environment.Rows,
-                StartPosition = environment.StartPosition,
                 StatesPerPhase = environment.StatesPerPhase,
                 StatesTable = environment.StatesTable
             };

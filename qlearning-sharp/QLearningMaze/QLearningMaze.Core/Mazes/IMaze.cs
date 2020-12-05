@@ -15,10 +15,6 @@
         /// </summary>
         int Rows { get; set; }
         /// <summary>
-        /// Gets or Sets the position (state) in which the agent will start
-        /// </summary>
-        int StartPosition { get; set; }
-        /// <summary>
         /// Gets or Sets the position (state) in which the maze ends
         /// </summary>
         int GoalPosition { get; }
@@ -26,6 +22,11 @@
         /// Gets or Sets any obstructions (walls) preventing movement of the agent between states
         /// </summary>
         List<MazeObstruction> Obstructions { get; set; }
+
+        void SetInitialState(int state);
+
+        int GetInitialState();
+
         /// <summary>
         /// Adds an obstruction between 2 states
         /// </summary>
