@@ -348,3 +348,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Ignore the environment and saved q-tables from the MountainCar tutorial
+python/MountainCar/gym-env/
+python/MountainCar/qtables/
