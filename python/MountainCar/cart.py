@@ -62,8 +62,8 @@ for episode in range(EPISODES):
         episode_reward += reward
         new_discrete_state = get_discrete_state(new_state)
 
-        #if (render):
-        #    env.render()
+        if (render):
+            env.render()
         
         action_count = action_count + 1
 
