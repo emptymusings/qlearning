@@ -12,6 +12,7 @@
         private int _objectivesMoves = 0;
         private double _objectiveRewards = 0;
         private MazeBase _objectiveMaze;
+        private int _initialState;
 
         public MazeBase() 
         {
@@ -29,7 +30,7 @@
             Columns = columns;
             Rows = rows;
             StatesPerPhase = columns * rows;
-            StartPosition = startPosition;
+            _initialState = startPosition;
             ObjectiveReward = goalValue;
             SetGoalPosition(goalPosition);
             SetupStandardValues();
@@ -64,7 +65,6 @@
                 StatesPerPhase = Columns * _rows;
             }
         }
-        public int StartPosition { get; set; }
 
         private int _goalPosition = -1;
 
@@ -94,6 +94,17 @@
             ObjectiveStates.Clear();
             ObjectiveStates.Add(position);
         }
+
+        public virtual void SetInitialState(int state)
+        {
+            _initialState = state;
+        }
+
+        public virtual int GetInitialState()
+        {
+            return _initialState;
+        }
+
         protected override void InitializeStatesTable()
         {
             if (AdditionalRewards == null)
@@ -156,7 +167,7 @@
             }
 
 
-            PrioritizeFromState = StartPosition;
+            PrioritizeFromState = _initialState;
 
             // Use the base rewards assignment
             base.InitializeRewardsTable(true);
@@ -304,7 +315,7 @@
                 }
 
                 _objectivesMoves = 0;
-                RunToObjective(reward, StartPosition, reward.State);
+                RunToObjective(reward, _initialState, reward.State);
                 var startToReward = _objectivesMoves;
 
                 RunToObjective(reward, reward.State, GoalPosition);

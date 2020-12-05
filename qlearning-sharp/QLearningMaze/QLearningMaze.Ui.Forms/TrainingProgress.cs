@@ -1,7 +1,8 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
     using QLearning.Core.Agent;
-    using QLearningMaze.Core;
+    using QLearningMaze.Core.Agent;
+    using QLearningMaze.Core.Mazes;
     using System;
     using System.Drawing;
     using System.Threading.Tasks;
@@ -10,7 +11,8 @@
 
     public partial class TrainingProgress : Form
     {
-        private ITDAgent<IMaze> _agent;
+        private MazeAgent _agentPrimary;
+        private MazeAgent _agentSecondary;
         int _successfulRuns = 0;
         double _averageMoves = 0;
         double _averageScore = 0;
@@ -27,20 +29,21 @@
         private delegate void UpdateTextHandler(string withValue);
         private delegate void UpdateLabelHandler(string newText);
 
-        public TrainingProgress(ITDAgent<IMaze> agent)
+        public TrainingProgress(MazeAgent agentPrimary, MazeAgent agentSecondary)
         {
             InitializeComponent();
-            _agent = agent;
+            _agentPrimary = agentPrimary;
+            _agentSecondary = agentSecondary;
 
-            if (_agent.MaximumAllowedBacktracks < 0)
+            if (_agentPrimary.MaximumAllowedBacktracks < 0)
             {
-                _agent.MaximumAllowedBacktracks = 3;
+                _agentPrimary.MaximumAllowedBacktracks = 3;
             }
 
-            _showEvery = _agent.NumberOfTrainingEpisodes/5;
+            _showEvery = _agentPrimary.NumberOfTrainingEpisodes/5;
             
             //_maze = agent.Environment;
-            _agent.TrainingEpisodeCompleted += _maze_TrainingEpisodeCompleted;
+            _agentPrimary.TrainingEpisodeCompleted += _maze_TrainingEpisodeCompleted;
             _totalMoves = 0;
             _totalScore = 0;
             _averageMoves = 0;
@@ -83,9 +86,9 @@
         private void RenderTraining()
         {
             _mazeSpace = new MazeSpace();
-            _mazeSpace.CreateMazeControls(_agent.Environment);
-            _mazeSpace.GetSpaceByPosition(_agent.Environment.StartPosition).SetStart(false);
-            _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agent.Environment.StatesPerPhase).SetStart(true);
+            _mazeSpace.CreateMazeControls(_agentPrimary.Environment);
+            _mazeSpace.GetSpaceByPosition(_agentPrimary.StartPosition).SetStart(false);
+            _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agentPrimary.Environment.StatesPerPhase).SetStart(true);
             Form frm = new Form();
             frm.Size = _mazeSpace.Size = new Size(_mazeSpace.Width + 10, _mazeSpace.Height + 10);
             frm.Controls.Add(_mazeSpace);
@@ -97,8 +100,8 @@
 
             try
             {
-                _agent.AgentStateChanged += _maze_AgentStateChanged;
-                _agent.Run(_episodeStartSpace);
+                _agentPrimary.AgentStateChanged += _maze_AgentStateChanged;
+                _agentPrimary.Run(_episodeStartSpace);
             }
             catch 
             {
@@ -112,30 +115,30 @@
                 frm.Dispose();
                 frm = null;
 
-                _agent.AgentStateChanged -= _maze_AgentStateChanged;
+                _agentPrimary.AgentStateChanged -= _maze_AgentStateChanged;
             }
         }
 
         private void _maze_AgentStateChanged(object sender, QLearning.Core.AgentStateChangedEventArgs e)
         {
-            int position = e.NewState % _agent.Environment.StatesPerPhase;
+            int position = e.NewState % _agentPrimary.Environment.StatesPerPhase;
             var newSpace = _mazeSpace.GetSpaceByPosition(position);
 
             if (newSpace != null)
             {
-                if (MazeSpace.ActiveSpace != null)
+                if (MazeSpace.ActiveSpacePrimary != null)
                 {
-                    MazeSpace.ActiveSpace.SetInactive();
-                    MazeSpace.ActiveSpace.Invalidate();
+                    MazeSpace.ActiveSpacePrimary.SetInactive();
+                    MazeSpace.ActiveSpacePrimary.Invalidate();
                 }
 
-                MazeSpace.ActiveSpace = newSpace;
+                MazeSpace.ActiveSpacePrimary = newSpace;
 
-                var start = _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agent.Environment.StatesPerPhase);
+                var start = _mazeSpace.GetSpaceByPosition(_episodeStartSpace % _agentPrimary.Environment.StatesPerPhase);
                 start.SetInactive();
                 start.Invalidate();
 
-                if (_agent.Environment.RewardsTable[e.NewState][_agent.Environment.GetRewardAction] > 0)
+                if (_agentPrimary.Environment.RewardsTable[e.NewState][_agentPrimary.Environment.GetRewardAction] > 0)
                 {
                     newSpace.SetReward(false);
                 }
@@ -144,26 +147,62 @@
                 newSpace.Invalidate();
                 _mazeSpace.Invalidate();
                 newSpace.Refresh();
+                _mazeSpace.Refresh();
                 System.Threading.Thread.Sleep(_movementPause);
-                Application.DoEvents();
             }
         }
 
         private void closeButton_Click(object sender, EventArgs e)
         {
-            _agent.TrainingEpisodeCompleted -= _maze_TrainingEpisodeCompleted;
+            _agentPrimary.TrainingEpisodeCompleted -= _maze_TrainingEpisodeCompleted;
             this.Close();
+        }
+
+        private Task RunAgentTrainingSessions()
+        {
+            if (_agentSecondary != null)
+            { 
+                if (_agentPrimary.LearningStyle == QLearning.Core.LearningStyles.QLearning)
+                {
+                    _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.SARSA;
+                }
+                else
+                {
+                    _agentSecondary.LearningStyle = QLearning.Core.LearningStyles.QLearning;
+                }
+            }
+
+            Task[] tasks;
+            
+            if (_agentSecondary != null)
+            {
+                tasks = new Task[]
+                {
+                    TrainingTask(),
+                    Task.Run(() => _agentSecondary.Train())
+                };
+            }
+            else
+            {
+                tasks = new Task[]
+                {
+                    TrainingTask()
+                };
+            }
+
+            Task.WaitAll(tasks);
+            return Task.CompletedTask;
         }
 
         private Task TrainingTask()
         {
             EnableControls(false);
             this.Refresh();
-            _agent.Train();
+            _agentPrimary.Train();
             EnableControls(true);
             this.DialogResult = DialogResult.OK;
 
-            _agent.TrainingEpisodeCompleted -= _maze_TrainingEpisodeCompleted;
+            _agentPrimary.TrainingEpisodeCompleted -= _maze_TrainingEpisodeCompleted;
 
             return Task.CompletedTask;
         }
@@ -214,10 +253,10 @@
         private void TrainingProgress_Shown(object sender, EventArgs e)
         {
 
-            trainingProgressBar.Maximum = _agent.NumberOfTrainingEpisodes;
+            trainingProgressBar.Maximum = _agentPrimary.NumberOfTrainingEpisodes;
             trainingProgressBar.Value = 0;
             trainingProgressBar.Step = 1;
-            TrainingTask();
+            RunAgentTrainingSessions();
         }
 
     }

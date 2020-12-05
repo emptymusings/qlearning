@@ -30,7 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MazeMain));
             this.entryPanel = new System.Windows.Forms.Panel();
-            this.rewardsLabel = new System.Windows.Forms.Label();
+            this.secondaryAgentCheckbox = new System.Windows.Forms.CheckBox();
+            this.secondaryAgentStartLabel = new System.Windows.Forms.Label();
+            this.secondaryStartTextBox = new System.Windows.Forms.TextBox();
+            this.rewardsLabelSecondary = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.sarsaRadio = new System.Windows.Forms.RadioButton();
+            this.qLearningRadio = new System.Windows.Forms.RadioButton();
+            this.rewardsLabelPrimary = new System.Windows.Forms.Label();
             this.runMazeButton = new System.Windows.Forms.Button();
             this.trainMazeButton = new System.Windows.Forms.Button();
             this.rewardsButton = new System.Windows.Forms.Button();
@@ -63,19 +70,20 @@
             this.trainStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runMazeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qualityStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.qLearningRadio = new System.Windows.Forms.RadioButton();
-            this.sarsaRadio = new System.Windows.Forms.RadioButton();
             this.entryPanel.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // entryPanel
             // 
+            this.entryPanel.Controls.Add(this.secondaryAgentCheckbox);
+            this.entryPanel.Controls.Add(this.secondaryAgentStartLabel);
+            this.entryPanel.Controls.Add(this.secondaryStartTextBox);
+            this.entryPanel.Controls.Add(this.rewardsLabelSecondary);
             this.entryPanel.Controls.Add(this.groupBox1);
-            this.entryPanel.Controls.Add(this.rewardsLabel);
+            this.entryPanel.Controls.Add(this.rewardsLabelPrimary);
             this.entryPanel.Controls.Add(this.runMazeButton);
             this.entryPanel.Controls.Add(this.trainMazeButton);
             this.entryPanel.Controls.Add(this.rewardsButton);
@@ -97,48 +105,133 @@
             this.entryPanel.Location = new System.Drawing.Point(0, 40);
             this.entryPanel.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.entryPanel.Name = "entryPanel";
-            this.entryPanel.Size = new System.Drawing.Size(1775, 213);
+            this.entryPanel.Size = new System.Drawing.Size(2126, 273);
             this.entryPanel.TabIndex = 0;
             // 
-            // rewardsLabel
+            // secondaryAgentCheckbox
             // 
-            this.rewardsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.rewardsLabel.Location = new System.Drawing.Point(1065, 148);
-            this.rewardsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.rewardsLabel.Name = "rewardsLabel";
-            this.rewardsLabel.Size = new System.Drawing.Size(678, 41);
-            this.rewardsLabel.TabIndex = 16;
-            this.rewardsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.secondaryAgentCheckbox.AutoSize = true;
+            this.secondaryAgentCheckbox.Location = new System.Drawing.Point(966, 21);
+            this.secondaryAgentCheckbox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.secondaryAgentCheckbox.Name = "secondaryAgentCheckbox";
+            this.secondaryAgentCheckbox.Size = new System.Drawing.Size(261, 36);
+            this.secondaryAgentCheckbox.TabIndex = 5;
+            this.secondaryAgentCheckbox.Text = "Use a Second Agent";
+            this.secondaryAgentCheckbox.UseVisualStyleBackColor = true;
+            this.secondaryAgentCheckbox.CheckedChanged += new System.EventHandler(this.secondaryAgentCheckbox_CheckedChanged);
+            // 
+            // secondaryAgentStartLabel
+            // 
+            this.secondaryAgentStartLabel.AutoSize = true;
+            this.secondaryAgentStartLabel.Location = new System.Drawing.Point(613, 77);
+            this.secondaryAgentStartLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.secondaryAgentStartLabel.Name = "secondaryAgentStartLabel";
+            this.secondaryAgentStartLabel.Size = new System.Drawing.Size(271, 32);
+            this.secondaryAgentStartLabel.TabIndex = 19;
+            this.secondaryAgentStartLabel.Text = "Secondary Start Position";
+            this.secondaryAgentStartLabel.Visible = false;
+            // 
+            // secondaryStartTextBox
+            // 
+            this.secondaryStartTextBox.Location = new System.Drawing.Point(891, 73);
+            this.secondaryStartTextBox.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.secondaryStartTextBox.Name = "secondaryStartTextBox";
+            this.secondaryStartTextBox.Size = new System.Drawing.Size(58, 39);
+            this.secondaryStartTextBox.TabIndex = 6;
+            this.secondaryStartTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.secondaryStartTextBox.Visible = false;
+            this.secondaryStartTextBox.Leave += new System.EventHandler(this.startPositionText_Leave);
+            // 
+            // rewardsLabelSecondary
+            // 
+            this.rewardsLabelSecondary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rewardsLabelSecondary.Location = new System.Drawing.Point(1319, 209);
+            this.rewardsLabelSecondary.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rewardsLabelSecondary.Name = "rewardsLabelSecondary";
+            this.rewardsLabelSecondary.Size = new System.Drawing.Size(678, 41);
+            this.rewardsLabelSecondary.TabIndex = 18;
+            this.rewardsLabelSecondary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.sarsaRadio);
+            this.groupBox1.Controls.Add(this.qLearningRadio);
+            this.groupBox1.Location = new System.Drawing.Point(1579, 17);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.groupBox1.Size = new System.Drawing.Size(229, 147);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Learning Style";
+            // 
+            // sarsaRadio
+            // 
+            this.sarsaRadio.AutoSize = true;
+            this.sarsaRadio.Location = new System.Drawing.Point(7, 96);
+            this.sarsaRadio.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.sarsaRadio.Name = "sarsaRadio";
+            this.sarsaRadio.Size = new System.Drawing.Size(115, 36);
+            this.sarsaRadio.TabIndex = 1;
+            this.sarsaRadio.Text = "SARSA";
+            this.sarsaRadio.UseVisualStyleBackColor = true;
+            // 
+            // qLearningRadio
+            // 
+            this.qLearningRadio.AutoSize = true;
+            this.qLearningRadio.Checked = true;
+            this.qLearningRadio.Location = new System.Drawing.Point(7, 38);
+            this.qLearningRadio.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.qLearningRadio.Name = "qLearningRadio";
+            this.qLearningRadio.Size = new System.Drawing.Size(165, 36);
+            this.qLearningRadio.TabIndex = 0;
+            this.qLearningRadio.TabStop = true;
+            this.qLearningRadio.Text = "Q-Learning";
+            this.qLearningRadio.UseVisualStyleBackColor = true;
+            this.qLearningRadio.CheckedChanged += new System.EventHandler(this.qLearningRadio_CheckedChanged);
+            // 
+            // rewardsLabelPrimary
+            // 
+            this.rewardsLabelPrimary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rewardsLabelPrimary.Location = new System.Drawing.Point(1319, 147);
+            this.rewardsLabelPrimary.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rewardsLabelPrimary.Name = "rewardsLabelPrimary";
+            this.rewardsLabelPrimary.Size = new System.Drawing.Size(678, 41);
+            this.rewardsLabelPrimary.TabIndex = 16;
+            this.rewardsLabelPrimary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // runMazeButton
             // 
-            this.runMazeButton.Location = new System.Drawing.Point(388, 145);
+            this.runMazeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.runMazeButton.Location = new System.Drawing.Point(388, 207);
             this.runMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.runMazeButton.Name = "runMazeButton";
             this.runMazeButton.Size = new System.Drawing.Size(150, 47);
-            this.runMazeButton.TabIndex = 9;
+            this.runMazeButton.TabIndex = 12;
             this.runMazeButton.Text = "Run Maze";
             this.runMazeButton.UseVisualStyleBackColor = true;
             this.runMazeButton.Click += new System.EventHandler(this.runMaze_Click);
             // 
             // trainMazeButton
             // 
-            this.trainMazeButton.Location = new System.Drawing.Point(195, 145);
+            this.trainMazeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.trainMazeButton.Location = new System.Drawing.Point(195, 207);
             this.trainMazeButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.trainMazeButton.Name = "trainMazeButton";
             this.trainMazeButton.Size = new System.Drawing.Size(150, 47);
-            this.trainMazeButton.TabIndex = 8;
+            this.trainMazeButton.TabIndex = 11;
             this.trainMazeButton.Text = "Train";
             this.trainMazeButton.UseVisualStyleBackColor = true;
             this.trainMazeButton.Click += new System.EventHandler(this.trainMazeButton_Click);
             // 
             // rewardsButton
             // 
-            this.rewardsButton.Location = new System.Drawing.Point(13, 145);
+            this.rewardsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.rewardsButton.Location = new System.Drawing.Point(13, 207);
             this.rewardsButton.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.rewardsButton.Name = "rewardsButton";
             this.rewardsButton.Size = new System.Drawing.Size(150, 47);
-            this.rewardsButton.TabIndex = 7;
+            this.rewardsButton.TabIndex = 10;
             this.rewardsButton.Text = "Objectives";
             this.rewardsButton.UseVisualStyleBackColor = true;
             this.rewardsButton.Click += new System.EventHandler(this.rewardsButton_Click);
@@ -146,7 +239,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(945, 70);
+            this.label7.Location = new System.Drawing.Point(1250, 73);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(199, 32);
@@ -155,11 +248,11 @@
             // 
             // trainingEpisodesText
             // 
-            this.trainingEpisodesText.Location = new System.Drawing.Point(1148, 70);
+            this.trainingEpisodesText.Location = new System.Drawing.Point(1452, 73);
             this.trainingEpisodesText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.trainingEpisodesText.Name = "trainingEpisodesText";
             this.trainingEpisodesText.Size = new System.Drawing.Size(97, 39);
-            this.trainingEpisodesText.TabIndex = 6;
+            this.trainingEpisodesText.TabIndex = 8;
             this.trainingEpisodesText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.trainingEpisodesText.Leave += new System.EventHandler(this.trainingEpisodesText_Leave);
             // 
@@ -206,16 +299,16 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(661, 13);
+            this.label4.Location = new System.Drawing.Point(643, 19);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(153, 32);
+            this.label4.Size = new System.Drawing.Size(240, 32);
             this.label4.TabIndex = 0;
-            this.label4.Text = "Start Position";
+            this.label4.Text = "Primary Start Position";
             // 
             // startPositionText
             // 
-            this.startPositionText.Location = new System.Drawing.Point(843, 13);
+            this.startPositionText.Location = new System.Drawing.Point(891, 17);
             this.startPositionText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.startPositionText.Name = "startPositionText";
             this.startPositionText.Size = new System.Drawing.Size(58, 39);
@@ -226,7 +319,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(661, 70);
+            this.label3.Location = new System.Drawing.Point(966, 73);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(153, 32);
@@ -235,11 +328,11 @@
             // 
             // goalPositionText
             // 
-            this.goalPositionText.Location = new System.Drawing.Point(843, 70);
+            this.goalPositionText.Location = new System.Drawing.Point(1148, 73);
             this.goalPositionText.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.goalPositionText.Name = "goalPositionText";
             this.goalPositionText.Size = new System.Drawing.Size(58, 39);
-            this.goalPositionText.TabIndex = 5;
+            this.goalPositionText.TabIndex = 7;
             this.goalPositionText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.goalPositionText.Leave += new System.EventHandler(this.goalPositionText_Leave);
             // 
@@ -287,10 +380,10 @@
             // 
             this.panel2.Controls.Add(this.mazeSpace);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 253);
+            this.panel2.Location = new System.Drawing.Point(0, 313);
             this.panel2.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1775, 686);
+            this.panel2.Size = new System.Drawing.Size(2126, 626);
             this.panel2.TabIndex = 1;
             // 
             // mazeSpace
@@ -301,7 +394,7 @@
             this.mazeSpace.Location = new System.Drawing.Point(0, 0);
             this.mazeSpace.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.mazeSpace.Name = "mazeSpace";
-            this.mazeSpace.Size = new System.Drawing.Size(1775, 686);
+            this.mazeSpace.Size = new System.Drawing.Size(2126, 626);
             this.mazeSpace.TabIndex = 0;
             this.mazeSpace.TabStop = false;
             // 
@@ -314,7 +407,7 @@
             this.mazeStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1775, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(2126, 40);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -402,45 +495,11 @@
             this.qualityStripMenuItem.Size = new System.Drawing.Size(294, 44);
             this.qualityStripMenuItem.Text = "Select &Quality";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.sarsaRadio);
-            this.groupBox1.Controls.Add(this.qLearningRadio);
-            this.groupBox1.Location = new System.Drawing.Point(1275, 13);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(438, 148);
-            this.groupBox1.TabIndex = 17;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Learning Style";
-            // 
-            // qLearningRadio
-            // 
-            this.qLearningRadio.AutoSize = true;
-            this.qLearningRadio.Checked = true;
-            this.qLearningRadio.Location = new System.Drawing.Point(7, 39);
-            this.qLearningRadio.Name = "qLearningRadio";
-            this.qLearningRadio.Size = new System.Drawing.Size(165, 36);
-            this.qLearningRadio.TabIndex = 0;
-            this.qLearningRadio.TabStop = true;
-            this.qLearningRadio.Text = "Q-Learning";
-            this.qLearningRadio.UseVisualStyleBackColor = true;
-            this.qLearningRadio.CheckedChanged += new System.EventHandler(this.qLearningRadio_CheckedChanged);
-            // 
-            // sarsaRadio
-            // 
-            this.sarsaRadio.AutoSize = true;
-            this.sarsaRadio.Location = new System.Drawing.Point(7, 96);
-            this.sarsaRadio.Name = "sarsaRadio";
-            this.sarsaRadio.Size = new System.Drawing.Size(115, 36);
-            this.sarsaRadio.TabIndex = 1;
-            this.sarsaRadio.Text = "SARSA";
-            this.sarsaRadio.UseVisualStyleBackColor = true;
-            // 
             // MazeMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1775, 939);
+            this.ClientSize = new System.Drawing.Size(2126, 939);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.entryPanel);
             this.Controls.Add(this.menuStrip1);
@@ -451,11 +510,11 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.entryPanel.ResumeLayout(false);
             this.entryPanel.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -490,7 +549,7 @@
         private System.Windows.Forms.ToolStripMenuItem viewStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem qualityMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rewardsMenuItem;
-        private System.Windows.Forms.Label rewardsLabel;
+        private System.Windows.Forms.Label rewardsLabelPrimary;
         private System.Windows.Forms.Button rewardsButton;
         private System.Windows.Forms.ToolStripMenuItem mazeStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem trainStripMenuItem;
@@ -500,6 +559,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton sarsaRadio;
         private System.Windows.Forms.RadioButton qLearningRadio;
+        private System.Windows.Forms.Label rewardsLabelSecondary;
+        private System.Windows.Forms.Label secondaryAgentStartLabel;
+        private System.Windows.Forms.TextBox secondaryStartTextBox;
+        private System.Windows.Forms.CheckBox secondaryAgentCheckbox;
     }
 }
 

@@ -3,6 +3,7 @@
     using Mazes;
     using Newtonsoft.Json;
     using QLearning.Core.Agent;
+    using Agent;
     using System.IO;
 
     public class MazeUtilities
@@ -21,25 +22,53 @@
             return loaded;
         }
 
-        public static ITDAgent<IMaze> ConvertLoadedAgent(TDAgent<MazeBase> loaded)
+        public static MazeAgent ConvertLoadedAgent(MazeAgent loaded)
         {
-            var converted = new TDAgent<IMaze>
+            var converted = new MazeAgent
             {
                 DiscountRate = loaded.DiscountRate,
                 Environment = loaded.Environment,
+                StartPosition = loaded.StartPosition,
                 EpsilonDecayEnd = loaded.EpsilonDecayEnd,
                 EpsilonDecayStart = loaded.EpsilonDecayStart,
                 LearningRate = loaded.LearningRate,
                 MaximumAllowedBacktracks = loaded.MaximumAllowedBacktracks,
                 MaximumAllowedMoves = loaded.MaximumAllowedMoves,
                 NumberOfTrainingEpisodes = loaded.NumberOfTrainingEpisodes,
-                TrainingSessions = loaded.TrainingSessions
+                TrainingSessions = loaded.TrainingSessions                
             };
 
+            
             if (converted.Environment.ObjectiveReward == 0)
             {
                 converted.Environment.ObjectiveReward = 20;
             }
+
+            return converted;
+        }
+
+        public static MazeBase CopyEnvironment(MazeBase environment)
+        {
+            var converted = new MazeBase
+            {
+                AdditionalRewards = environment.AdditionalRewards,
+                Columns = environment.Columns,
+                GetRewardAction = environment.GetRewardAction,
+                GoalPosition = environment.GoalPosition,
+                MovementPunishement = environment.MovementPunishement,
+                ObjectiveAction = environment.ObjectiveAction,
+                ObjectiveReward = environment.ObjectiveReward,
+                ObjectiveStates = environment.ObjectiveStates,
+                Obstructions = environment.Obstructions,
+                PrioritizeFromState = environment.PrioritizeFromState,
+                QualitySaveDirectory = environment.QualitySaveDirectory,
+                QualitySaveFrequency = environment.QualitySaveFrequency,
+                QualityTable = environment.CopyQuality(),
+                RewardsTable = environment.RewardsTable,
+                Rows = environment.Rows,
+                StatesPerPhase = environment.StatesPerPhase,
+                StatesTable = environment.StatesTable
+            };
 
             return converted;
         }

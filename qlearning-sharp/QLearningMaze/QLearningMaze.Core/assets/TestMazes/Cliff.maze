@@ -1,11 +1,11 @@
 {
+  "StartPosition": 36,
   "TrainingSessions": null,
   "BestTrainingSession": null,
   "MaximumAllowedBacktracks": 3,
   "Environment": {
     "Columns": 12,
     "Rows": 4,
-    "StartPosition": 36,
     "GoalPosition": 47,
     "MovementPunishement": -1.0,
     "Obstructions": [],
@@ -1254,6 +1254,7 @@
     ],
     "ObjectiveStates": [
       47,
+      47,
       47
     ],
     "ObjectiveAction": 0,
@@ -1262,7 +1263,7 @@
     "QualitySaveFrequency": 100,
     "StatesPerPhase": 48
   },
-  "LearningStyle": 1,
+  "LearningStyle": 0,
   "DiscountRate": 0.85,
   "LearningRate": 0.1,
   "EpsilonDecayStart": 0.0,
