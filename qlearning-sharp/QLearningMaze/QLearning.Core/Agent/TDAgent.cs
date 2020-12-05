@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Environment;
+    using Newtonsoft.Json;
 
     public partial class TDAgent<TEnvironment> : AgentBase<TEnvironment>, ITDAgent<TEnvironment>
         where TEnvironment : ITDEnvironment
@@ -29,7 +30,7 @@
             MaximumAllowedBacktracks = maximumAllowedBacktracks;
         }
 
-        
+        [JsonIgnore]
         public virtual IList<TrainingSession> TrainingSessions { get; set; }
         public virtual TrainingSession BestTrainingSession
         {
