@@ -38,7 +38,7 @@
 
         private void SetupStandardValues()
         {
-            _numberOfActions = Enum.GetNames(typeof(Actions)).Length;
+            NumberOfActions = Enum.GetNames(typeof(Actions)).Length;
             ObjectiveAction = (int)Actions.CompleteRun;
             GetRewardAction = (int)Actions.GetCustomReward;
         }
@@ -76,7 +76,7 @@
                 if (value != _goalPosition)
                 {
                     _goalPosition = value;
-                    base.AddObjective(_goalPosition);
+                    base.AddTerminalState(_goalPosition);
                 }
             }
         }
@@ -112,7 +112,7 @@
 
             OnStateTableCreating();
 
-            _numberOfStates = Rows * Columns * GetCustomRewardPhaseAdjustment();
+            NumberOfStates = Rows * Columns * GetCustomRewardPhaseAdjustment();
             base.InitializeStatesTable(true);
             ObjectiveAction = (int)Actions.CompleteRun;
 

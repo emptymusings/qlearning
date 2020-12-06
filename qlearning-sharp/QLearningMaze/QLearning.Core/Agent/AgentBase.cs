@@ -1,10 +1,13 @@
 ﻿namespace QLearning.Core.Agent
 {
     using System;
+    using System.Collections.Generic;
     using Environment;
     public abstract partial class AgentBase<TEnvironment> : IAgent<TEnvironment>
         where TEnvironment : IRLEnvironment
     {
+        protected Random _random = new Random();
+
         public TEnvironment Environment { get; set; }
 
         public LearningStyles LearningStyle { get; set; } = LearningStyles.QLearning;
@@ -49,6 +52,31 @@
         }
 
         public virtual void Run(int fromState, bool overrideBaseEvents)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual int GetPreferredNextAction(int state, int[] excludedActions = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get the next action to take from the current state
+        /// </summary>
+        /// <param name="state">The state in which the agent currently resides</param>
+        /// <param name="epsilon"></param>
+        protected virtual (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual int GetRandomNextAction(int state)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual List<int> GetPossibleNextActions(int state)
         {
             throw new NotImplementedException();
         }

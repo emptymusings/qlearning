@@ -106,7 +106,7 @@
 
             while (phase < StatesTable.Length)
             {
-                for (int i = 0; i < _numberOfActions; ++i)
+                for (int i = 0; i < NumberOfActions; ++i)
                 {
                     RewardsTable[phase][i] = objective.Value;
                 }
@@ -117,7 +117,7 @@
 
         protected virtual void SetObjectiveActionNextState(int state)
         {
-            for (int i = 0; i < _numberOfActions; ++i)
+            for (int i = 0; i < NumberOfActions; ++i)
             {
                 StatesTable[state][i] = -1;
             }
