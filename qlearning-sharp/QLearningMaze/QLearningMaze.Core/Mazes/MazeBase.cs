@@ -81,7 +81,7 @@
             }
         }
 
-        public double MovementPunishement { get; set; } = -1;
+        public double DefaultActionPunishment { get; set; } = -1;
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
 
         public void SetGoalPosition(int position)
