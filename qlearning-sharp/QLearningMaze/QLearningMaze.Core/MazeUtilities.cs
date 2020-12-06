@@ -55,7 +55,7 @@
                 Columns = environment.Columns,
                 GetRewardAction = environment.GetRewardAction,
                 GoalPosition = environment.GoalPosition,
-                MovementPunishement = environment.MovementPunishement,
+                DefaultActionPunishment = environment.DefaultActionPunishment,
                 ObjectiveAction = environment.ObjectiveAction,
                 ObjectiveReward = environment.ObjectiveReward,
                 TerminalStates = environment.TerminalStates,

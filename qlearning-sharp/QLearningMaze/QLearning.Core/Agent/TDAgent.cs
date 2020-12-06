@@ -9,8 +9,7 @@
     public partial class TDAgent<TEnvironment> : AgentBase<TEnvironment>, ITDAgent<TEnvironment>
         where TEnvironment : ITDEnvironment
     {
-        private Random _random = new Random();
-        private int _trainingEpisodeStartPoint;
+        protected int _trainingEpisodeStartPoint;
 
         public TDAgent() { }
 
@@ -68,7 +67,7 @@
                 if (Environment.QualityTable == null)
                     throw new InvalidOperationException($"The Q-table has not been initialized.  Train the agent first");
 
-                action = Environment.GetPreferredNextAction(fromState);
+                action = GetPreferredNextAction(fromState);
 
                 var stepValues = Environment.Step(fromState, action);
 
@@ -179,18 +178,18 @@
             while (!done)
             {
                 // Determine the next action to take
-                var nextActionSet = Environment.GetNextAction(State, epsilon);
+                var nextActionSet = GetNextAction(State, epsilon);
                 int nextAction = nextActionSet.nextAction;
                 var oldQuality = Environment.QualityTable[State][nextAction];
 
                 // Update the quality table
                 if (LearningStyle == LearningStyles.QLearning)
                 {
-                    Environment.CalculateQLearning(State, nextAction, LearningRate, DiscountRate);
+                    CalculateQLearning(State, nextAction, LearningRate, DiscountRate);
                 }
                 else
                 {
-                    Environment.CalculateSarsa(State, nextAction, LearningRate, DiscountRate, epsilon);
+                    CalculateSarsa(State, nextAction, LearningRate, DiscountRate, epsilon);
                 }
 
                 // Step to the next state using the assigned action
@@ -244,5 +243,148 @@
 
             return epsilon;
         }
+
+        /// <summary>
+        /// Selects the agent's next action based on the highest Q-Table's value for its current state
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        protected override int GetPreferredNextAction(int state, int[] excludedActions = null)
+        {
+            int preferredNext = -1;
+            double max = double.MinValue;
+
+            for (int i = 0; i < Environment.QualityTable[state].Length; ++i)
+            {
+                if (excludedActions != null &&
+                    excludedActions.Contains(i))
+                {
+                    continue;
+                }
+
+                if (Environment.QualityTable[state][i] > max &&
+                    Environment.QualityTable[state][i] != 0)
+                {
+                    max = Environment.QualityTable[state][i];
+                    preferredNext = i;
+                }
+            }
+
+            return preferredNext;
+        }
+
+        /// <summary>
+        /// Get the next action to take from the current state
+        /// </summary>
+        /// <param name="state">The state in which the agent currently resides</param>
+        /// <param name="epsilon"></param>
+        protected override (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
+        {
+            double randRand = _random.NextDouble();
+            int nextAction = -1;
+            bool usedGreedy = false;
+
+            if (randRand > epsilon)
+            {
+                int preferredNext = GetPreferredNextAction(state);
+
+                if (preferredNext >= 0)
+                {
+                    nextAction = preferredNext;
+                    usedGreedy = true;
+                }
+            }
+
+            while (nextAction < 0)
+                nextAction = GetRandomNextAction(state);
+
+            return (nextAction, usedGreedy);
+        }
+
+
+        /// <summary>
+        /// Selects the agent's next action randomly based on its current state
+        /// </summary>
+        protected override int GetRandomNextAction(int state)
+        {
+            List<int> possibleNextStates = GetPossibleNextActions(state);
+
+            int count = possibleNextStates.Count;
+            int index = _random.Next(0, count);
+
+            if (possibleNextStates.Count > 0)
+                return possibleNextStates[index];
+            else
+                throw new NullReferenceException($"There are no possible actions that can be taken from the state {state}");
+        }
+
+        /// <summary>
+        /// Gets all possible actions available to the agent in its current state
+        /// </summary>
+        protected override List<int> GetPossibleNextActions(int state)
+        {
+            List<int> result = new List<int>();
+            int actionCount = Environment.NumberOfActions;
+
+            for (int i = 0; i < actionCount; ++i)
+            {
+                if (Environment.StatesTable[state][i] >= 0)
+                {
+                    result.Add(i);
+                }
+            }
+
+            return result;
+        }
+
+        public virtual void CalculateQLearning(int state, int action, double learningRate, double discountRate)
+        {
+            var step = Environment.Step(state, action);
+            var forecaster = GetFuturePositionMaxQ(step.newState);
+            var maxQ = forecaster.maxQ;
+            Environment.QualityTable[state][action] += (learningRate * (step.reward + (discountRate * maxQ) - step.quality));
+
+        }
+
+        public virtual void CalculateSarsa(int state, int action, double learningRate, double discountRate, double epsilon)
+        {
+            var step = Environment.Step(state, action);
+            var nextActionSet = GetNextAction(step.newState, epsilon);
+            var newQ = Environment.QualityTable[step.newState][nextActionSet.nextAction];
+            Environment.QualityTable[state][action] += (learningRate * (step.reward + (discountRate * newQ) - step.quality));
+        }
+
+        protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int nextState)
+        {
+            double maxQ = double.MinValue;
+
+
+            List<int> possNextNextActions = GetPossibleNextActions(nextState);
+            int selectedNextState = -1;
+
+            for (int i = 0; i < possNextNextActions.Count; ++i)
+            {
+                int futureNextAction = possNextNextActions[i];  // short alias
+
+                double futureQuality = Environment.QualityTable[nextState][futureNextAction];
+
+                if (!Environment.IsValidState(nextState))
+                {
+                    throw new InvalidOperationException($"Attempting action {futureNextAction} from state {nextState} returned an invalid value");
+                }
+
+
+                if (futureQuality > maxQ)
+                {
+                    maxQ = futureQuality;
+                    selectedNextState = nextState;
+                }
+            }
+
+
+            return (selectedNextState, maxQ);
+        }
+
+
     }
 }

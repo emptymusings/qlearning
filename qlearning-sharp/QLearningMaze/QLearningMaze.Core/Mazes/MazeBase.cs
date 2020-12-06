@@ -38,7 +38,7 @@
 
         private void SetupStandardValues()
         {
-            _numberOfActions = Enum.GetNames(typeof(Actions)).Length;
+            NumberOfActions = Enum.GetNames(typeof(Actions)).Length;
             ObjectiveAction = (int)Actions.CompleteRun;
             GetRewardAction = (int)Actions.GetCustomReward;
         }
@@ -76,12 +76,12 @@
                 if (value != _goalPosition)
                 {
                     _goalPosition = value;
-                    base.AddObjective(_goalPosition);
+                    base.AddTerminalState(_goalPosition);
                 }
             }
         }
 
-        public double MovementPunishement { get; set; } = -1;
+        public double DefaultActionPunishment { get; set; } = -1;
         public List<MazeObstruction> Obstructions { get; set; } = new List<MazeObstruction>();
 
         public void SetGoalPosition(int position)
@@ -112,7 +112,7 @@
 
             OnStateTableCreating();
 
-            _numberOfStates = Rows * Columns * GetCustomRewardPhaseAdjustment();
+            NumberOfStates = Rows * Columns * GetCustomRewardPhaseAdjustment();
             base.InitializeStatesTable(true);
             ObjectiveAction = (int)Actions.CompleteRun;
 

@@ -410,7 +410,7 @@
             trainingEpisodesText.Text = _agentPrimary.NumberOfTrainingEpisodes.ToString();
 
 
-            _agentPrimary.Environment.AddObjective(_agentPrimary.Environment.GoalPosition);
+            _agentPrimary.Environment.AddTerminalState(_agentPrimary.Environment.GoalPosition);
 
             if (_agentPrimary.LearningStyle == LearningStyles.QLearning)
             {
@@ -666,7 +666,7 @@
             {
                 oldGoalPosition = _agentPrimary.Environment.GoalPosition;
                 newGoalPosition = Convert.ToInt32(goalPositionText.Text);
-                _agentPrimary.Environment.AddObjective(newGoalPosition);
+                _agentPrimary.Environment.AddTerminalState(newGoalPosition);
                 GetSpaceByPosition(oldGoalPosition).SetGoal(false);
                 GetSpaceByPosition(newGoalPosition).SetGoal(true);
             }            
