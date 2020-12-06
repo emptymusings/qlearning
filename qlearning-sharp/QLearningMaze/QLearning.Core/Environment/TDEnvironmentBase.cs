@@ -33,7 +33,7 @@
             QualitySaveDirectory = qualitySaveDirectory;
             ObjectiveReward = objectiveReward;
             ObjectiveAction = objectiveAction;
-            ObjectiveStates = objectiveStates;
+            TerminalStates = objectiveStates;
         }
 
         public virtual int NumberOfStates
@@ -49,7 +49,7 @@
         public virtual int[][] StatesTable { get; set; }
         public virtual double[][] RewardsTable { get; set; }
         public virtual double[][] QualityTable { get; set; }
-        public virtual List<int> ObjectiveStates { get; set; } = new List<int>();
+        public virtual List<int> TerminalStates { get; set; } = new List<int>();
         public virtual int ObjectiveAction { get; set; }
         public virtual double ObjectiveReward { get; set; } = 1;
         public virtual string QualitySaveDirectory { get; set; }
@@ -146,11 +146,11 @@
 
         public virtual void AddObjective(int state)
         {
-            if (ObjectiveStates == null) ObjectiveStates = new List<int>();
+            if (TerminalStates == null) TerminalStates = new List<int>();
 
-            if (!ObjectiveStates.Contains(state))
+            if (!TerminalStates.Contains(state))
             {
-                ObjectiveStates.Add(state);
+                TerminalStates.Add(state);
             }
         }
 
@@ -166,7 +166,7 @@
 
         public virtual bool IsTerminalState(int state, int moves, int maximumAllowedMoves)
         {
-            bool result = ObjectiveStates.Contains(state % StatesPerPhase) ||
+            bool result = TerminalStates.Contains(state % StatesPerPhase) ||
                     (maximumAllowedMoves > 0 && moves > maximumAllowedMoves);
             return result;
         }

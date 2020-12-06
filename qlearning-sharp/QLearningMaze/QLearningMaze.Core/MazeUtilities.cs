@@ -58,7 +58,7 @@
                 MovementPunishement = environment.MovementPunishement,
                 ObjectiveAction = environment.ObjectiveAction,
                 ObjectiveReward = environment.ObjectiveReward,
-                ObjectiveStates = environment.ObjectiveStates,
+                TerminalStates = environment.TerminalStates,
                 Obstructions = environment.Obstructions,
                 PrioritizeFromState = environment.PrioritizeFromState,
                 QualitySaveDirectory = environment.QualitySaveDirectory,

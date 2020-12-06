@@ -76,7 +76,7 @@
 
                 if (Environment.Step(fromState, action).newState < 0)
                 {
-                    OnAgentCompleted(Moves, Score, (Environment.ObjectiveStates.Contains(fromState)));
+                    OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
                     throw new InvalidOperationException($"I guess I didn't learn very well.  Please try training again (perhaps adjusing the learning rate, discount rate, and/or episode count)");
                 }
 
@@ -85,7 +85,7 @@
 
                 if (Moves > MaximumAllowedMoves)
                 {
-                    OnAgentCompleted(Moves, Score, (Environment.ObjectiveStates.Contains(fromState)));
+                    OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
                     throw new InvalidOperationException($"Something's gone wrong, I've wandered around far too many times");
                 }
 
@@ -94,7 +94,7 @@
                     if (MaximumAllowedBacktracks >= 0 &&
                         numberOfBacktracks > MaximumAllowedBacktracks)
                     {
-                        OnAgentCompleted(Moves, Score, (Environment.ObjectiveStates.Contains(fromState)));
+                        OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
                         throw new InvalidOperationException($"The agent has exceeded the maximum number of backtracks: {MaximumAllowedBacktracks}");
                     }
                     else
@@ -116,7 +116,7 @@
             }
 
             if (!overrideBaseEvents)
-                OnAgentCompleted(Moves, Score, (Environment.ObjectiveStates.Contains(fromState)));
+                OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
         }
 
         public override void Train()
@@ -161,7 +161,7 @@
                 epsilon = DecayEpsilon(episode, epsilon);
 
                 if (!overrideBaseEvents)
-                    OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, _trainingEpisodeStartPoint, moves, Score, Environment.ObjectiveStates.Contains(state % Environment.StatesPerPhase));
+                    OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, _trainingEpisodeStartPoint, moves, Score, Environment.TerminalStates.Contains(state % Environment.StatesPerPhase));
             }
         }
 

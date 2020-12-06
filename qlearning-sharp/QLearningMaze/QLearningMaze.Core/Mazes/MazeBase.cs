@@ -86,13 +86,13 @@
 
         public void SetGoalPosition(int position)
         {
-            if (ObjectiveStates == null)
+            if (TerminalStates == null)
             {
-                ObjectiveStates = new List<int>();
+                TerminalStates = new List<int>();
             }
 
-            ObjectiveStates.Clear();
-            ObjectiveStates.Add(position);
+            TerminalStates.Clear();
+            TerminalStates.Add(position);
         }
 
         public virtual void SetInitialState(int state)

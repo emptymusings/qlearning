@@ -59,7 +59,7 @@
         /// <summary>
         /// Gets or Sets the states in which terminal states exist
         /// </summary>
-        List<int> ObjectiveStates { get; set; }
+        List<int> TerminalStates { get; set; }
         /// <summary>
         /// Gets or Sets the specific action to be taken when reaching a terminal state to reach completion.
         /// </summary>
