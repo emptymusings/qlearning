@@ -11,23 +11,17 @@
         <ViewModels:MazeViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <ListView 
+        <ItemsControl 
             ItemsSource="{Binding ObservationRows}"
             VerticalAlignment="Stretch"
             BorderThickness="0" BorderBrush="{x:Null}">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Padding" Value="0" />
-                    <Setter Property="Margin" Value="0" />
-                    <Setter Property="BorderThickness" Value="0" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
+            
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <controls:ObservationRow Margin="0,-5,0,-5" />
+                    <controls:ObservationRow />
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
             
     </Grid>
 </UserControl>

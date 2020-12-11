@@ -8,7 +8,7 @@
              Width="100"
              Height="100"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Foreground="#FFF0F7B7">
+             d:DesignHeight="450" d:DesignWidth="800" Foreground="#FFF0F7B7" BorderThickness="1" BorderBrush="#F03D3B3B">
     <Grid Background="#FFDCD6AC">
         <Image Name="LeftWall" Source="/assets/VerticalWall.bmp" HorizontalAlignment="Left" Height="Auto" Visibility="{Binding LeftWallVisibility}"/>
         <Image Name="RightWall" Source="/assets/VerticalWall.bmp" HorizontalAlignment="Right" Height="Auto" Visibility="{Binding RightWallVisibility}"/>
