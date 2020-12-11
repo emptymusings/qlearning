@@ -1,5 +1,7 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
+    using Controls;
+
     partial class MazeMain
     {
         /// <summary>
@@ -56,7 +58,7 @@
             this.rowsText = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.mazeSpace = new QLearningMaze.Ui.Forms.MazeSpace();
+            this.mazeSpace = new QLearningMaze.Ui.Forms.Controls.MazeSpace();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveMenuItem = new System.Windows.Forms.ToolStripMenuItem();

@@ -3,6 +3,7 @@
     using QLearning.Core.Agent;
     using QLearningMaze.Core.Agent;
     using QLearningMaze.Core.Mazes;
+    using Controls;
     using System;
     using System.Drawing;
     using System.Threading.Tasks;
