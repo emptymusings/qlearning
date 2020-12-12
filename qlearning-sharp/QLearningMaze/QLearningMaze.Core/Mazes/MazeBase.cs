@@ -93,6 +93,7 @@
 
             TerminalStates.Clear();
             TerminalStates.Add(position);
+            _goalPosition = position;
         }
 
         public virtual void SetInitialState(int state)

@@ -31,7 +31,10 @@
         public Visibility ActiveVisibility
         {
             get { return _activeVisibility; }
-            set { SetProperty(ref _activeVisibility, value); }
+            set 
+            { 
+                SetProperty(ref _activeVisibility, value); 
+            }
         }
 
         private bool _isStart;
@@ -140,7 +143,7 @@
                 ActiveImageSource = "/assets/ActiveDotSecondary.bmp";
             }
 
-            ActiveVisibility = Visibility.Hidden;
+            ActiveVisibility = Visibility.Visible;
         }
 
         public void SetInactive()

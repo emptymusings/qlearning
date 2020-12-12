@@ -24,11 +24,7 @@
     {
         public MainWindow()
         {
-            InitializeComponent();
-            MazeViewModel mvm = new MazeViewModel();
-            this.mazeControl.DataContext = mvm;
-            mvm.InitializeMaze();
-            
+            InitializeComponent();            
         }
     }
 }

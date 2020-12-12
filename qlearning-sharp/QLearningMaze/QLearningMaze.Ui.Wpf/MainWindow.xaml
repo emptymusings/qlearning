@@ -7,13 +7,55 @@
         xmlns:Controls="clr-namespace:QLearningMaze.Ui.Wpf.Controls" xmlns:ViewModels="clr-namespace:QLearningMaze.Ui.Wpf.ViewModels" x:Class="QLearningMaze.Ui.Wpf.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        WindowState="Maximized">
+        WindowState="Maximized" >
+    <Window.DataContext>
+        <ViewModels:AgentViewModel/>
+    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Content="Placeholder" />
-        <Controls:Maze Grid.Row="1" x:Name="mazeControl" />
+        <Grid Grid.Row="0" IsEnabled="{Binding EnableEntry}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="Rows:" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=MazeVm.Maze.Rows}" />
+            <Label Grid.Row="1" Grid.Column="0" Content="Columns:" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=MazeVm.Maze.Columns}" />
+            <Label Grid.Row="0" Grid.Column="2" Content="Discount Rate:" />
+            <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Path=PrimaryAgent.DiscountRate}" />
+            <Label Grid.Row="1" Grid.Column="2" Content="Learning Rate:" />
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Path=PrimaryAgent.LearningRate}" />
+            <Label Grid.Row="0" Grid.Column="4" Content="Primary Start Pos:" />
+            <TextBox Grid.Row="0" Grid.Column="5" Text="{Binding Path=PrimaryAgent.StartPosition}" />
+            <Label Grid.Row="1" Grid.Column="4" Content="Secondary Start Pos:" Visibility="{Binding SecondAgentVisibility}" />
+            <TextBox Grid.Row="1" Grid.Column="5" Text="{Binding Path=SecondaryAgent.StartPosition}" Visibility="{Binding SecondAgentVisibility}" />
+            <Label Grid.Row="0" Grid.Column="6" Content="Use 2nd Agent:" />
+            <CheckBox Grid.Row="0" Grid.Column="7" IsChecked="{Binding UseSecondAgent}" />
+            <Label Grid.Row="1" Grid.Column="6" Content="Goal Position:" />
+            <TextBox Grid.Row="1" Grid.Column="7" Text="{Binding Path=MazeVm.Maze.GoalPosition}" />
+            <Label Grid.Row="0" Grid.Column="8" Content="Training Episodes:" />
+            <TextBox Grid.Row="0" Grid.Column="9" Text="{Binding Path=PrimaryAgent.NumberOfTrainingEpisodes}" />
+            <Button Grid.Row="2" Grid.Column="0" Content="Objectives" />
+            <Button Grid.Row="2" Grid.Column="1" Content="Train" Command="{Binding TrainCommand}" />
+            <Button Grid.Row="2" Grid.Column="2" Content="Run Maze" Command="{Binding RunMazeCommand}" />
+        </Grid>
+        <Controls:Maze Grid.Row="1" x:Name="mazeControl" DataContext="{Binding Path=MazeVm}" />
     </Grid>
 </Window>

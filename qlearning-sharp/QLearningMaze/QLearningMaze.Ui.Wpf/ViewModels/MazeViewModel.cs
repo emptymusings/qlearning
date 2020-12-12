@@ -8,13 +8,13 @@
     using Core.Agent;
     using System.Runtime.CompilerServices;
     using Controls;
-
+    using System.Linq;
+    using Core;
+    
     public class MazeViewModel : ViewModelBase
     {
-        public MazeViewModel()
-        {
-            _maze = new MazeBase(8, 8, 0, 63, 200);
-        }
+        public int PrimaryActiveState { get; set; }
+        public int SecondaryActiveState { get; set; }
 
         private IMaze _maze;
 
@@ -43,6 +43,9 @@
         {
             int position = 0;
             ObservableCollection<ObservationRowViewModel> rows = new ObservableCollection<ObservationRowViewModel>();
+
+            if (Maze == null)
+                return;
 
             for (int i = 0; i < Maze.Rows; i++)
             {
@@ -74,8 +77,84 @@
             }
 
             ObservationRows = rows;
+
+            SetObstructions();
+
+            //var startSpace = GetSpaceByPosition(Maze.GetInitialState());
+            //startSpace.IsStart = true;
+            //startSpace.SetActive(true);
+
+            var goalSpace = GetSpaceByPosition(Maze.GoalPosition);
+            goalSpace.IsGoal = true;
+        }
+        
+        protected void SetObstructions()
+        {
+            foreach(var obstruction in Maze.Obstructions)
+            {
+                var betweenSpace = GetSpaceByPosition(obstruction.BetweenSpace);
+                var andSpace = GetSpaceByPosition(obstruction.AndSpace);
+                int diff = betweenSpace.Position - andSpace.Position;
+
+                if (Maze.Columns * -1 == diff)
+                {
+                    betweenSpace.BottomWallVisibility = System.Windows.Visibility.Visible;
+                    andSpace.TopWallVisibility = System.Windows.Visibility.Visible;
+                }
+                else if (Maze.Columns == diff)
+                {
+                    betweenSpace.TopWallVisibility = System.Windows.Visibility.Visible;
+                    andSpace.BottomWallVisibility = System.Windows.Visibility.Visible;
+                }
+                else if (diff == -1)
+                {
+                    betweenSpace.RightWallVisibility = System.Windows.Visibility.Visible;
+                    andSpace.LeftWallVisibility = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    betweenSpace.LeftWallVisibility = System.Windows.Visibility.Visible;
+                    andSpace.RightWallVisibility = System.Windows.Visibility.Visible;
+                }
+            }
         }
 
+        public void SetActiveState(int state, bool isPrimary = true)
+        {
+            int previousState;
 
+            if (isPrimary)
+            {
+                previousState = PrimaryActiveState;
+            }
+            else
+            {
+                previousState = SecondaryActiveState;
+            }
+
+            int position = previousState % Maze.StatesPerPhase;
+            var oldSpace = GetSpaceByPosition(position);
+            oldSpace.SetInactive();
+
+            position = state % Maze.StatesPerPhase;
+            var newSpace = GetSpaceByPosition(position);
+            newSpace.SetActive(isPrimary);
+
+            if (isPrimary)
+            {
+                PrimaryActiveState = state;
+            }
+            else;
+            {
+                SecondaryActiveState = state;
+            }
+        }
+
+        public ObservationSpaceViewModel GetSpaceByPosition(int position)
+        {
+            var row = ObservationRows.Where(r => r.ObservationSpaces.Any(s => s.Position == position)).FirstOrDefault();
+            var space = row.ObservationSpaces.Where(p => p.Position == position).FirstOrDefault();
+            return space;
+        }
     }
 }
