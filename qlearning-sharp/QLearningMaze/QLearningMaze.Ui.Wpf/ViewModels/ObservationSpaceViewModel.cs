@@ -8,6 +8,7 @@
     public class ObservationSpaceViewModel : ViewModelBase
     {        
         private bool _isActive;
+        private object _visibilityLock = new object();
 
         public bool IsActive
         {
@@ -47,7 +48,8 @@
                 if (value != _isStart)
                 {
                     SetProperty(ref _isStart, value);
-                    StartVisibility = _isStart ? Visibility.Hidden : Visibility.Hidden;
+                    OnPropertyChanged(nameof(ExtrasMessage));
+                    OnPropertyChanged(nameof(ExtrasVisibility));
                 }
             }
         }
@@ -62,8 +64,45 @@
                 if (value != _isGoal)
                 {
                     SetProperty(ref _isGoal, value);
-                    GoalVisibility = _isGoal ? Visibility.Hidden : Visibility.Hidden;
+                    OnPropertyChanged(nameof(ExtrasMessage));
+                    OnPropertyChanged(nameof(ExtrasVisibility));
                 }
+            }
+        }
+
+        public string ExtrasMessage
+        {
+            get
+            {
+                if (IsStart)
+                {
+                    return "Start";
+                }
+
+                if (IsGoal)
+                {
+                    return "Goal";
+                }
+                
+                if (Reward > 0)
+                {
+                    return $"Reward: {Reward}";
+                }
+
+                if (Reward < 0)
+                {
+                    return $"Punish: {Reward}";
+                }
+
+                return null;
+            }
+        }
+
+        public Visibility ExtrasVisibility
+        {
+            get
+            {
+                return string.IsNullOrEmpty(ExtrasMessage) ? Visibility.Hidden : Visibility.Visible;
             }
         }
 
@@ -80,7 +119,12 @@
         public double Reward
         {
             get { return _reward; }
-            set { SetProperty(ref _reward, value); }
+            set 
+            { 
+                SetProperty(ref _reward, value);
+                OnPropertyChanged(nameof(ExtrasMessage));
+                OnPropertyChanged(nameof(ExtrasVisibility));
+            }
         }
 
         private Visibility _leftWallVisibility = Visibility.Hidden;
@@ -116,22 +160,6 @@
             set { SetProperty(ref _bottomWallVisibility, value); }
         }
 
-        private Visibility _startVisibility;
-
-        public Visibility StartVisibility
-        {
-            get { return _startVisibility; }
-            set { SetProperty(ref _startVisibility, value); }
-        }
-
-        private Visibility _goalVisibility;
-
-        public Visibility GoalVisibility
-        {
-            get { return _goalVisibility; }
-            set { SetProperty(ref _goalVisibility, value); }
-        }
-
         public void SetActive(bool isPrimaryAgent)
         {
             if (isPrimaryAgent)
@@ -143,12 +171,20 @@
                 ActiveImageSource = "/assets/ActiveDotSecondary.bmp";
             }
 
-            ActiveVisibility = Visibility.Visible;
+            lock (_visibilityLock)
+            {
+                ActiveVisibility = Visibility.Visible;
+                OnPropertyChanged(nameof(ActiveVisibility));
+            }
         }
 
         public void SetInactive()
         {
-            ActiveVisibility = Visibility.Hidden;
+            lock (_visibilityLock)
+            {
+                ActiveVisibility = Visibility.Collapsed;
+                OnPropertyChanged(nameof(ActiveVisibility));
+            }
         }
     }
 }

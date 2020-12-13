@@ -31,6 +31,7 @@
                 if (_primaryAgent != null)
                 {
                     _primaryAgent.AgentStateChanged += AgentStateChanged;
+                    _primaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
                     MazeVm.PrimaryActiveState = _primaryAgent.StartPosition;                    
                     MazeVm.SetActiveState(MazeVm.PrimaryActiveState);
                 }
@@ -99,6 +100,22 @@
             }
         }
 
+        private int _trainingEpisodesCompleted = 0;
+
+        public int TrainingEpisodesCompleted
+        {
+            get { return _trainingEpisodesCompleted; }
+            set { SetProperty(ref _trainingEpisodesCompleted, value); }
+        }
+
+        private Visibility _trainingProgressVisibility = Visibility.Hidden;
+
+        public Visibility TrainingProgressVisibility
+        {
+            get { return _trainingProgressVisibility; }
+            set { SetProperty(ref _trainingProgressVisibility, value); }
+        }
+
 
         public bool EnableEntry 
         { 
@@ -149,35 +166,70 @@
         private void TempLoadAgent()
         {
             string path = @"C:\Dev\.Net\q-learning\qlearning-sharp\QLearningMaze\QLearningMaze.Core\assets\TestMazes\Demo 8x8 c.maze";
-            PrimaryAgent = MazeUtilities.LoadObject<MazeAgent>(path);
+            LoadAgent(path);
+        }
+
+        private void LoadAgent(string path)
+        {
+            var loaded = MazeUtilities.LoadObject<MazeAgent>(path);
+            PrimaryAgent = MazeUtilities.ConvertLoadedAgent(loaded);
+            SecondaryAgent = MazeUtilities.ConvertLoadedAgent(loaded);
+            SecondaryAgent.Environment = MazeUtilities.CopyEnvironment(loaded.Environment);
+            SecondaryAgent.StartPosition = PrimaryAgent.StartPosition;
+
+            if (PrimaryAgent.LearningStyle == QLearning.Core.LearningStyles.QLearning)
+            {
+                SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.SARSA;
+            }
+            else
+            {
+                SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.QLearning;
+            }
         }
 
         public Task Train()
         {
-            List<Task> tasks;
+            List<Task> tasks = new List<Task>();
+            List<MazeAgent> agents = new List<MazeAgent>();
 
+            agents.Add(PrimaryAgent);
+
+            if (SecondaryAgent != null)
+            {
+                SecondaryAgent.LearningRate = PrimaryAgent.LearningRate;
+                SecondaryAgent.DiscountRate = PrimaryAgent.DiscountRate;
+                SecondaryAgent.NumberOfTrainingEpisodes = PrimaryAgent.NumberOfTrainingEpisodes;
+                SecondaryAgent.Environment.QualitySaveDirectory = null;
+
+                if (PrimaryAgent.LearningStyle == QLearning.Core.LearningStyles.QLearning)
+                {
+                    SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.SARSA;
+                }
+                else
+                {
+                    SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.QLearning;
+                }
+
+                agents.Add(SecondaryAgent);
+            }
+
+            TrainingEpisodesCompleted = 0;
+            TrainingProgressVisibility = Visibility.Visible;
+                        
             IsTraining = true;
 
-            if (UseSecondAgent)
+            var result = Parallel.ForEach(agents, (agent) =>
             {
-                tasks = new List<Task>()
-                {
-                    TrainAgent(PrimaryAgent),
-                    TrainAgent(SecondaryAgent)
-                };
+                TrainAgent(agent);
+            });
+
+            while (!result.IsCompleted)
+            {
 
             }
-            else
-            {
-                tasks = new List<Task>()
-                {
-                    TrainAgent(PrimaryAgent)
-                };
-            }
-
-            Task.WaitAll(tasks.ToArray());
 
             IsTraining = false;
+            TrainingProgressVisibility = Visibility.Hidden;
             return Task.CompletedTask;
             
         }
@@ -190,28 +242,27 @@
 
         public Task Run()
         {
-            List<Task> tasks;
-
-            IsRunning = true;
+            var agents = new List<MazeAgent>();
+            agents.Add(PrimaryAgent);
 
             if (UseSecondAgent)
             {
-                tasks = new List<Task>()
-                {
-                    RunAgent(PrimaryAgent),
-                    RunAgent(SecondaryAgent)
-                };
+                agents.Add(SecondaryAgent);
             }
-            else
+
+
+            IsRunning = true;
+
+            var pResults = Parallel.ForEach(agents, (agent) =>
             {
-                tasks = new List<Task>()
-                {
-                    RunAgent(PrimaryAgent)
-                };
+                RunAgent(agent);
+            });
+
+            while (!pResults.IsCompleted)
+            {
+
             }
-
-            Task.WaitAll(tasks.ToArray());
-
+            
             IsRunning = false;
 
             return Task.CompletedTask;
@@ -219,7 +270,17 @@
 
         private Task RunAgent(MazeAgent agent)
         {
-            agent.Run(agent.StartPosition);
+            try
+            {
+                agent.Run(agent.StartPosition);
+            }
+            catch (Exception ex)
+            {
+                string agentVal = agent == PrimaryAgent ? "Primary" : "Secondary";
+
+                MessageBox.Show($"Error with {agentVal} Agent: {ex.Message}");
+            }
+
             return Task.CompletedTask;
         }
 
@@ -229,6 +290,11 @@
             
             MazeVm.SetActiveState(e.NewState, isPrimary);
             System.Threading.Thread.Sleep(250);
+        }
+
+        private void AgentTrainingEpisodeCompleted(object sender, QLearning.Core.TrainingEpisodeCompletedEventArgs e)
+        {
+            TrainingEpisodesCompleted++;
         }
     }
 }

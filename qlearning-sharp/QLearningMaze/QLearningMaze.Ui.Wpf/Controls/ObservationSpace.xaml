@@ -23,8 +23,9 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="{Binding Position}" Margin="5,2,0,0" ContentStringFormat="P:{0}" />
+            <Label Grid.Row="0" Grid.Column="0" Content="{Binding Position}" Margin="5,2,0,0" FontStyle="Oblique" />
             <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Width="20" Height="20" Grid.RowSpan="2" Source="{Binding ActiveImageSource}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ActiveVisibility}" />
+            <Label Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Content="{Binding ExtrasMessage}" />
         </Grid>
     </Grid>
 </UserControl>

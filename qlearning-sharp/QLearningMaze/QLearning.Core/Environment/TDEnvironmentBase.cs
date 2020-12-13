@@ -205,7 +205,11 @@
 
             foreach(string file in Directory.GetFiles(QualitySaveDirectory))
             {
-                File.Delete(file);
+                try
+                {
+                    File.Delete(file);
+                }
+                catch { }
             }
         }
 

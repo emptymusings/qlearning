@@ -68,6 +68,13 @@
                         observationSpace.IsStart = true;
                     }
 
+                    var reward = Maze.AdditionalRewards.Where(p => p.State == position).FirstOrDefault();
+
+                    if (reward != null)
+                    {
+                        observationSpace.Reward = reward.Value;
+                    }
+
                     row.ObservationSpaces.Add(observationSpace);
 
                     position++;
@@ -79,10 +86,6 @@
             ObservationRows = rows;
 
             SetObstructions();
-
-            //var startSpace = GetSpaceByPosition(Maze.GetInitialState());
-            //startSpace.IsStart = true;
-            //startSpace.SetActive(true);
 
             var goalSpace = GetSpaceByPosition(Maze.GoalPosition);
             goalSpace.IsGoal = true;
@@ -144,7 +147,7 @@
             {
                 PrimaryActiveState = state;
             }
-            else;
+            else
             {
                 SecondaryActiveState = state;
             }
