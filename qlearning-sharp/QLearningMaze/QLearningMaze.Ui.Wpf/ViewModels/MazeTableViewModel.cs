@@ -26,6 +26,7 @@
             _tableType = tableType;
             _arrayValues = arrayValues;
             _numberOfStates = numberOfStates;
+            DetailsViewTitle = tableType.ToString() + " Details";
         }
 
         public MazeTableViewModel(int[][] arrayValues, int numberOfStates, TableTypes tableType)
@@ -36,13 +37,15 @@
 
             for (int i = 0; i < arrayValues.Length; ++i)
             {
-                _arrayValues[i] = new double[_arrayValues[i].Length];
+                _arrayValues[i] = new double[arrayValues[i].Length];
 
                 for(int j = 0; j < arrayValues[i].Length; ++j)
                 {
                     _arrayValues[i][j] = arrayValues[i][j];
                 }
             }
+
+            DetailsViewTitle = tableType.ToString() + " Details";
         }
 
         private DataTable _tableValues;
@@ -52,6 +55,15 @@
             get { return _tableValues; }
             set { SetProperty(ref _tableValues, value); }
         }
+
+        private string _detailsViewTitle;
+
+        public string DetailsViewTitle
+        {
+            get { return _detailsViewTitle; }
+            set { SetProperty(ref _detailsViewTitle, value); }
+        }
+
 
         public void InitializeTable()
         {
@@ -78,6 +90,8 @@
 
                 result.Rows.Add(dr);
             }
+
+            TableValues = result;
         }
     }
 }
