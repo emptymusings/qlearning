@@ -163,6 +163,51 @@
             }
         }
 
+        private RelayCommand _viewQualityCommand;
+
+        public RelayCommand ViewQualityCommand
+        {
+            get 
+            { 
+                if (_viewQualityCommand == null)
+                {
+                    _viewQualityCommand = new RelayCommand(() => ShowDetailedView(MazeTableViewModel.TableTypes.Quality));
+                }
+                return _viewQualityCommand; 
+            }
+        }
+
+        private RelayCommand _viewRewardsCommand;
+
+        public RelayCommand ViewRewardsCommand
+        {
+            get 
+            { 
+                if (_viewRewardsCommand == null)
+                {
+                    _viewRewardsCommand = new RelayCommand(() => ShowDetailedView(MazeTableViewModel.TableTypes.Rewards));
+                }
+
+                return _viewRewardsCommand; 
+            }
+        }
+
+        private RelayCommand _viewStatesCommand;
+
+        public RelayCommand ViewStatesCommand
+        {
+            get 
+            { 
+                if (_viewStatesCommand == null)
+                {
+                    _viewStatesCommand = new RelayCommand(() => ShowDetailedView(MazeTableViewModel.TableTypes.States));
+                }
+
+                return _viewStatesCommand; 
+            }
+        }
+
+
         private void TempLoadAgent()
         {
             string path = @"C:\Dev\.Net\q-learning\qlearning-sharp\QLearningMaze\QLearningMaze.Core\assets\TestMazes\Demo 8x8 c.maze";
@@ -282,6 +327,30 @@
             }
 
             return Task.CompletedTask;
+        }
+
+        private void ShowDetailedView(MazeTableViewModel.TableTypes tableType)
+        {
+            MazeTableViewModel mtvm;
+
+            switch(tableType)
+            {
+                case MazeTableViewModel.TableTypes.Quality:
+                    mtvm = new MazeTableViewModel(PrimaryAgent.Environment.QualityTable, PrimaryAgent.Environment.NumberOfStates, tableType);
+                    break;
+                case MazeTableViewModel.TableTypes.Rewards:
+                    mtvm = new MazeTableViewModel(PrimaryAgent.Environment.RewardsTable, PrimaryAgent.Environment.NumberOfStates, tableType);
+                    break;
+                default:
+                    mtvm = new MazeTableViewModel(PrimaryAgent.Environment.StatesTable, PrimaryAgent.Environment.NumberOfStates, tableType);
+                    break;
+            }
+
+            mtvm.InitializeTable();
+
+            var view = new Views.TabledDetailsView();
+            view.DataContext = mtvm;
+            view.Show();
         }
 
         private void AgentStateChanged(object sender, QLearning.Core.AgentStateChangedEventArgs e)

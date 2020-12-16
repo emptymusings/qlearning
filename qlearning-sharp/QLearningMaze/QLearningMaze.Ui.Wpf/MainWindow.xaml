@@ -11,12 +11,32 @@
     <Window.DataContext>
         <ViewModels:AgentViewModel/>
     </Window.DataContext>
+    
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="2*" />
             <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" IsEnabled="{Binding EnableEntry}">
+        <DockPanel Grid.Row="0">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open" />
+                    <MenuItem Header="_Save" />
+                    <MenuItem Header="E_xit" />
+                </MenuItem>
+                <MenuItem Header="_View">
+                    <MenuItem Header="_Quality Table" Command="{Binding ViewQualityCommand}" />
+                    <MenuItem Header="_Rewards Table" Command="{Binding ViewRewardsCommand}" />
+                    <MenuItem Header="_States Table" Command="{Binding ViewStatesCommand}" />
+                </MenuItem>
+                <MenuItem Header="_Maze">
+                    <MenuItem Header="_Train" Command="{Binding TrainCommand}" />
+                    <MenuItem Header="_Run Maze" Command="{Binding RunMazeCommand}" />
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <Grid Grid.Row="1" IsEnabled="{Binding EnableEntry}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -87,6 +107,6 @@
                          Value="{Binding TrainingEpisodesCompleted}"
                          Visibility="{Binding TrainingProgressVisibility}" />
         </Grid>
-        <Controls:Maze Grid.Row="1" x:Name="mazeControl" DataContext="{Binding Path=MazeVm}" />
+        <Controls:Maze Grid.Row="2" x:Name="mazeControl" DataContext="{Binding Path=MazeVm}" />
     </Grid>
 </Window>
