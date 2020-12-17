@@ -65,6 +65,10 @@
         /// </summary>
         double ObjectiveReward { get; set; }
         /// <summary>
+        /// Gets or Sets the value that determines whether or not to save quality tables periodically during training for later evaluation
+        /// </summary>
+        bool SaveQualityToDisk { get; set; }
+        /// <summary>
         /// Gets or Sets the directory to which quality tables should periodically be saved during the training process for later evaluation
         /// </summary>
         string QualitySaveDirectory { get; set; }        

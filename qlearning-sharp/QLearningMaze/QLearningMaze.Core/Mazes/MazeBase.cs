@@ -349,7 +349,7 @@
 
             _objectiveMaze.Obstructions = Obstructions;
             _objectiveMaze.ObjectiveReward = reward.Value * 10;
-            _objectiveMaze.QualitySaveFrequency = prioritizeTrainingEpisodes * 2;
+            _objectiveMaze.SaveQualityToDisk = false;
 
             ITDAgent<MazeBase> tempAgent = new TDAgent<MazeBase>(
                 _objectiveMaze,

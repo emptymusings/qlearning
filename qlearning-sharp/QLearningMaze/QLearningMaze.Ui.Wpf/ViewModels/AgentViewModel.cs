@@ -389,6 +389,7 @@
         private void LoadAgent(string path)
         {
             var loaded = MazeUtilities.LoadObject<MazeAgent>(path);
+            loaded.Environment.QualitySaveFrequency = 100;
             PrimaryAgent = MazeUtilities.ConvertLoadedAgent(loaded);
             SecondaryAgent = MazeUtilities.ConvertLoadedAgent(loaded);
             SecondaryAgent.Environment = MazeUtilities.CopyEnvironment(loaded.Environment);
@@ -477,7 +478,7 @@
                 agents.Add(SecondaryAgent);
                 SecondaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
 
-                SecondaryAgent.Environment.QualitySaveFrequency = -1;
+                SecondaryAgent.Environment.SaveQualityToDisk = false;
             }
 
             _sessionsVm = null;
