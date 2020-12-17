@@ -15,6 +15,8 @@
 
     public class AgentViewModel : ViewModelBase
     {
+        TrainingSessionsViewModel _sessionsVm;
+
         public AgentViewModel()
         {
             TempLoadAgent();            
@@ -313,6 +315,22 @@
             }
         }
 
+        private RelayCommand _selectQualityCommand;
+
+        public RelayCommand SelectQualityCommand
+        {
+            get 
+            { 
+                if (_selectQualityCommand == null)
+                {
+                    _selectQualityCommand = new RelayCommand(() => GetQualityFromTraining());
+                }
+
+                return _selectQualityCommand; 
+            }
+        }
+
+
         private void ChangeStartPosition(MazeAgent agent, int newStart)
         {
             var space = MazeVm.GetSpaceByPosition(agent.StartPosition);
@@ -361,6 +379,8 @@
             }
 
             OnPropertyChanged(nameof(SelectedLearningStyle));
+            OnPropertyChanged(nameof(PrimaryAgent));
+            OnPropertyChanged(nameof(SecondaryAgent));
         }
 
         public Task Train()
@@ -387,8 +407,11 @@
                     SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.QLearning;
                 }
 
+
                 agents.Add(SecondaryAgent);
             }
+
+            _sessionsVm = null;
 
             TrainingEpisodesCompleted = 0;
             TrainingProgressVisibility = Visibility.Visible;
@@ -405,16 +428,40 @@
 
             }
 
+            if (_sessionsVm == null)
+            {
+                _sessionsVm = new TrainingSessionsViewModel(PrimaryAgent);
+                
+                Task.Run(() => _sessionsVm.InitializeSessions());
+            }
+
             IsTraining = false;
             TrainingProgressVisibility = Visibility.Hidden;
-            return Task.CompletedTask;
+
+            Application.Current.Dispatcher.Invoke(() => GetQualityFromTraining());
             
+
+            return Task.CompletedTask;            
         }
 
         private Task TrainAgent(MazeAgent agent)
         {
             agent.Train();
             return Task.CompletedTask;
+        }
+
+
+        [STAThread]
+        private void GetQualityFromTraining()
+        {            
+            var dialog = new Views.TrainingSessionSelectorView();
+            dialog.DataContext = _sessionsVm;
+            var results = dialog.ShowDialog();
+
+            if (results != null && results == true)
+            {
+                PrimaryAgent.Environment.QualityTable = _sessionsVm.SelectedSession.Quality;
+            }
         }
 
         public Task Run()

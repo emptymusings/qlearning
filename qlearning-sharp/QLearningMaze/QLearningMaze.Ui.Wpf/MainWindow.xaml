@@ -33,6 +33,7 @@
                 <MenuItem Header="_Maze">
                     <MenuItem Header="_Train" Command="{Binding TrainCommand}" />
                     <MenuItem Header="_Run Maze" Command="{Binding RunMazeCommand}" />
+                    <MenuItem Header="Select _Quality" Command="{Binding SelectQualityCommand}" />
                 </MenuItem>
             </Menu>
         </DockPanel>
