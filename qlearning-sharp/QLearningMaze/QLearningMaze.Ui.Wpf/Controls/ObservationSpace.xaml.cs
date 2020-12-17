@@ -22,6 +22,15 @@
         public ObservationSpace()
         {
             InitializeComponent();
-        }        
+        }
+
+        private void WallMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var context = (ViewModels.ObservationSpaceViewModel)DataContext;
+            var wall = (Image)sender;
+            var wallName = wall.Name.Replace("Wall", "");
+
+            context.SetWallOpacity(wallName);
+        }
     }
 }

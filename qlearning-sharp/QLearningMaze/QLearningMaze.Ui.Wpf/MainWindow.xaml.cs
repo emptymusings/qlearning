@@ -26,5 +26,10 @@
         {
             InitializeComponent();            
         }
+
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();            
+        }
     }
 }

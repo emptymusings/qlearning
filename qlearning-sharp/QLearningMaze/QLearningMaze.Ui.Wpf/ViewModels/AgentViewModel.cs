@@ -10,6 +10,8 @@
     using Commands;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Win32;
+    using System.Linq;
 
     public class AgentViewModel : ViewModelBase
     {
@@ -38,6 +40,16 @@
             }
         }
 
+        public int PrimaryAgentStartPosition
+        {
+            get { return PrimaryAgent.StartPosition; }
+            set 
+            {
+                ChangeStartPosition(PrimaryAgent, value);
+                OnPropertyChanged(nameof(PrimaryAgentStartPosition));
+            }
+        }
+
         private MazeAgent _secondaryAgent = new MazeAgent();
 
         public MazeAgent SecondaryAgent
@@ -56,12 +68,34 @@
             }
         }
 
+        public int SecondaryAgentStartPosition
+        {
+            get { return SecondaryAgent.StartPosition; }
+            set 
+            {
+                ChangeStartPosition(SecondaryAgent, value);
+                OnPropertyChanged(nameof(SecondaryAgentStartPosition));
+            }
+        }
+
+
+
         private MazeViewModel _mazeVm = new MazeViewModel();
 
         public MazeViewModel MazeVm
         {
             get { return _mazeVm; }
             set { SetProperty(ref _mazeVm, value); }
+        }
+
+        public int GoalPosition
+        {
+            get { return MazeVm.Maze.GoalPosition; }
+            set
+            {
+                ChangeGoalPosition(value);
+                OnPropertyChanged(nameof(GoalPosition));
+            }
         }
 
         private bool _useSecondAgent;
@@ -72,6 +106,18 @@
             set 
             { 
                 SetProperty(ref _useSecondAgent, value);
+
+                if (_useSecondAgent)
+                {
+                    ChangeStartPosition(SecondaryAgent, SecondaryAgent.StartPosition);                    
+                }
+                else
+                {
+                    var space = MazeVm.GetSpaceByPosition(SecondaryAgent.StartPosition);
+                    space.SetInactive();
+                    space.IsStart = false;
+                }
+
                 OnPropertyChanged(nameof(SecondAgentVisibility));
             }
         }
@@ -116,6 +162,36 @@
             set { SetProperty(ref _trainingProgressVisibility, value); }
         }
 
+        public List<string> LearningStyles
+        {
+            get
+            {
+                return Enum.GetNames(typeof(QLearning.Core.LearningStyles)).ToList();
+            }
+        }
+
+        public string SelectedLearningStyle
+        {
+            get { return PrimaryAgent.LearningStyle.ToString(); }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    PrimaryAgent.LearningStyle = (QLearning.Core.LearningStyles)Enum.Parse(typeof(QLearning.Core.LearningStyles), value, true);
+
+                    if (PrimaryAgent.LearningStyle == QLearning.Core.LearningStyles.QLearning)
+                    {
+                        SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.SARSA;
+                    }
+                    else;
+                    {
+                        SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.QLearning;
+                    }
+                }
+
+                OnPropertyChanged(nameof(SelectedLearningStyle));
+            }
+        }
 
         public bool EnableEntry 
         { 
@@ -207,6 +283,59 @@
             }
         }
 
+        private RelayCommand _openAgentMazeCommand;
+
+        public RelayCommand OpenAgentMazeCommand
+        {
+            get 
+            { 
+                if (_openAgentMazeCommand == null)
+                {
+                    _openAgentMazeCommand = new RelayCommand(() => OpenAgentMaze());
+                }
+
+                return _openAgentMazeCommand; 
+            }
+        }
+
+        private RelayCommand _saveAgentMazeCommand;
+
+        public RelayCommand SaveAgentMazeCommand
+        {
+            get 
+            { 
+                if (_saveAgentMazeCommand == null)
+                {
+                    _saveAgentMazeCommand = new RelayCommand(() => SaveAgentMaze());
+                }
+
+                return _saveAgentMazeCommand; 
+            }
+        }
+
+        private void ChangeStartPosition(MazeAgent agent, int newStart)
+        {
+            var space = MazeVm.GetSpaceByPosition(agent.StartPosition);
+            space.IsStart = false;
+
+            agent.StartPosition = newStart;
+            space = MazeVm.GetSpaceByPosition(agent.StartPosition);
+            space.IsStart = true;
+            MazeVm.SetActiveState(newStart, agent == PrimaryAgent);
+        }
+
+
+        private void ChangeGoalPosition(int newGoal)
+        {
+            var space = MazeVm.GetSpaceByPosition(MazeVm.Maze.GoalPosition);
+            space.IsGoal = false;
+
+            space = MazeVm.GetSpaceByPosition(newGoal);
+            space.IsGoal = true;
+            MazeVm.Maze.GoalPosition = newGoal;
+            PrimaryAgent.Environment.GoalPosition = newGoal;
+            SecondaryAgent.Environment.GoalPosition = newGoal;
+        }
 
         private void TempLoadAgent()
         {
@@ -230,6 +359,8 @@
             {
                 SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.QLearning;
             }
+
+            OnPropertyChanged(nameof(SelectedLearningStyle));
         }
 
         public Task Train()
@@ -239,7 +370,8 @@
 
             agents.Add(PrimaryAgent);
 
-            if (SecondaryAgent != null)
+            if (UseSecondAgent &&
+                SecondaryAgent != null)
             {
                 SecondaryAgent.LearningRate = PrimaryAgent.LearningRate;
                 SecondaryAgent.DiscountRate = PrimaryAgent.DiscountRate;
@@ -351,6 +483,30 @@
             var view = new Views.TabledDetailsView();
             view.DataContext = mtvm;
             view.Show();
+        }
+
+        private void OpenAgentMaze()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "Ageng Maze File|*.maze";
+            bool? result = dialog.ShowDialog();
+
+            if (result.HasValue && result.Value == true)
+            {
+                LoadAgent(dialog.FileName);
+            }
+        }
+
+        private void SaveAgentMaze()
+        {
+            var dialog = new SaveFileDialog();
+            dialog.Filter = "Agent Maze File|*.maze";
+            bool? result = dialog.ShowDialog();
+
+            if (result.HasValue && result.Value == true)
+            {
+                MazeUtilities.SaveObject(dialog.FileName, PrimaryAgent);
+            }
         }
 
         private void AgentStateChanged(object sender, QLearning.Core.AgentStateChangedEventArgs e)

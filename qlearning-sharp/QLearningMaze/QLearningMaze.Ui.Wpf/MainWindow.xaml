@@ -21,9 +21,9 @@
         <DockPanel Grid.Row="0">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open" />
-                    <MenuItem Header="_Save" />
-                    <MenuItem Header="E_xit" />
+                    <MenuItem Header="_Open" Command="{Binding OpenAgentMazeCommand}" />
+                    <MenuItem Header="_Save" Command="{Binding SaveAgentMazeCommand}" />
+                    <MenuItem Header="E_xit" Click="ExitMenuItem_Click" />
                 </MenuItem>
                 <MenuItem Header="_View">
                     <MenuItem Header="_Quality Table" Command="{Binding ViewQualityCommand}" />
@@ -63,15 +63,24 @@
             <Label Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Learning Rate:" />
             <TextBox Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=PrimaryAgent.LearningRate}" />
             <Label Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Content="Primary Start Pos:" />
-            <TextBox Grid.Row="0" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=PrimaryAgent.StartPosition}" />
+            <TextBox Grid.Row="0" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding PrimaryAgentStartPosition}" />
             <Label Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Content="Secondary Start Pos:" Visibility="{Binding SecondAgentVisibility}" />
-            <TextBox Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=SecondaryAgent.StartPosition}" Visibility="{Binding SecondAgentVisibility}" />
+            <TextBox Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding SecondaryAgentStartPosition}" Visibility="{Binding SecondAgentVisibility}" />
             <Label Grid.Row="0" Grid.Column="6" VerticalAlignment="Center" Content="Use 2nd Agent:" />
             <CheckBox Grid.Row="0" Grid.Column="7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" IsChecked="{Binding UseSecondAgent}" />
             <Label Grid.Row="1" Grid.Column="6" VerticalAlignment="Center" Content="Goal Position:" />
-            <TextBox Grid.Row="1" Grid.Column="7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=MazeVm.Maze.GoalPosition}" />
+            <TextBox Grid.Row="1" Grid.Column="7" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding GoalPosition}" />
             <Label Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" Content="Training Episodes:" />
             <TextBox Grid.Row="0" Grid.Column="9" VerticalAlignment="Center" HorizontalAlignment="Left" Width="60" HorizontalContentAlignment="Right" Text="{Binding Path=PrimaryAgent.NumberOfTrainingEpisodes, StringFormat={}{0:#,##0}}" />
+            <Label Grid.Row="1" Grid.Column="8" VerticalAlignment="Center" Content="Primary Agent Learning Style:" />
+            <ComboBox Grid.Row="1"
+                      Grid.Column="9"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      ItemsSource="{Binding LearningStyles}"
+                      SelectedValue="{Binding SelectedLearningStyle}"
+                      IsEditable="True"
+                      IsReadOnly="True" />
             <Button Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="80" Height="30" Content="Objectives" />
             <Button Grid.Row="2" 
                     Grid.Column="1" 
