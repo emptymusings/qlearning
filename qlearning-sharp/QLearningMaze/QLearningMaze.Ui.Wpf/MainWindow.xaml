@@ -33,6 +33,7 @@
                 <MenuItem Header="_Maze">
                     <MenuItem Header="_Train" Command="{Binding TrainCommand}" />
                     <MenuItem Header="_Run Maze" Command="{Binding RunMazeCommand}" />
+                    <MenuItem Header="_Edit Objectives" Command="{Binding EditObjectivesCommand}" />
                     <MenuItem Header="Select _Quality" Command="{Binding SelectQualityCommand}" />
                 </MenuItem>
             </Menu>
@@ -56,9 +57,9 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Content="Rows:" />
-            <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=MazeVm.Maze.Rows}" />
+            <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=MazeVm.Rows}" />
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Columns:" />
-            <TextBox Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=MazeVm.Maze.Columns}" />
+            <TextBox Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=MazeVm.Columns}" />
             <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Content="Discount Rate:" />
             <TextBox Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40" HorizontalContentAlignment="Right" Text="{Binding Path=PrimaryAgent.DiscountRate}" />
             <Label Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Learning Rate:" />
@@ -81,31 +82,39 @@
                       ItemsSource="{Binding LearningStyles}"
                       SelectedValue="{Binding SelectedLearningStyle}"
                       IsEditable="True"
-                      IsReadOnly="True" />
-            <Button Grid.Row="2" 
-                    Grid.Column="0" 
-                    VerticalAlignment="Center" 
-                    HorizontalAlignment="Center" 
-                    Width="80" 
-                    Height="30" 
-                    Content="Objectives"
-                    Command="{Binding EditObjectivesCommand}" />
-            <Button Grid.Row="2" 
-                    Grid.Column="1" 
-                    VerticalAlignment="Center" 
-                    HorizontalAlignment="Center" 
-                    Width="80" 
-                    Height="30" 
-                    Content="Train" 
-                    Command="{Binding TrainCommand}" />
-            <Button Grid.Row="2" 
-                    Grid.Column="2" 
-                    VerticalAlignment="Center" 
-                    HorizontalAlignment="Center" 
-                    Width="80" 
-                    Height="30" 
-                    Content="Run Maze" 
-                    Command="{Binding RunMazeCommand}" />
+                      IsReadOnly="True" Margin="0,-3,10,0" />
+            <Grid
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="4">
+                <StackPanel Orientation="Horizontal">
+                    <Button 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" 
+                        Width="80" 
+                        Height="30" 
+                        Content="Objectives"
+                        Command="{Binding EditObjectivesCommand}" 
+                        Margin="0,0,20,0" />
+                    <Button 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" 
+                        Width="80" 
+                        Height="30" 
+                        Content="Train" 
+                        Command="{Binding TrainCommand}"
+                        Margin="0,0,20,0" />
+                    <Button 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" 
+                        Width="80" 
+                        Height="30" 
+                        Content="Run Maze" 
+                        Command="{Binding RunMazeCommand}"
+                        Margin="0,0,20,0" />
+                </StackPanel>
+            </Grid>
+            
             <Label Grid.Row="2" 
                    Grid.Column="5" 
                    Grid.ColumnSpan="2" 

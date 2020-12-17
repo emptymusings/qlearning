@@ -39,6 +39,28 @@
             set { SetProperty(ref _observationRows, value); }
         }
 
+        public int Rows
+        {
+            get { return _maze.Rows; }
+            set 
+            { 
+                _maze.Rows = value;                 
+                InitializeMaze();
+                OnPropertyChanged(nameof(Rows));
+            }
+        }
+
+        public int Columns
+        {
+            get { return _maze.Columns; }
+            set 
+            { 
+                _maze.Columns = value;
+                InitializeMaze();
+                OnPropertyChanged(nameof(Columns));
+            }
+        }
+
         public virtual void InitializeMaze()
         {
             int position = 0;
@@ -92,7 +114,13 @@
             SetObstructions();
 
             var goalSpace = GetSpaceByPosition(Maze.GoalPosition);
-            goalSpace.IsGoal = true;
+
+            if (goalSpace != null)
+            {
+                goalSpace.IsGoal = true;
+            }
+
+            
         }
 
         protected void SetObstructions()

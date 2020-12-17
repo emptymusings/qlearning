@@ -151,6 +151,7 @@
                 var moves = episodeResults.moves;
 
                 if (Environment.IsTerminalState(state, moves, MaximumAllowedMoves) &&
+                    Environment.QualitySaveFrequency >= 1 &&
                     (1 + episode) % Environment.QualitySaveFrequency == 0)
                 {
                     var trainingEpisode = Environment.SaveQualityForEpisode(episode + 1, moves, Score);

@@ -36,8 +36,6 @@
 
                 if (_primaryAgent != null)
                 {
-                    _primaryAgent.AgentStateChanged += AgentStateChanged;
-                    _primaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
                     MazeVm.PrimaryActiveState = _primaryAgent.StartPosition;                    
                     MazeVm.SetActiveState(MazeVm.PrimaryActiveState);
                     OnPropertyChanged(nameof(PrimaryAgentStartPosition));
@@ -66,7 +64,6 @@
 
                 if (_secondaryAgent != null)
                 {
-                    _secondaryAgent.AgentStateChanged += AgentStateChanged;
                     MazeVm.SecondaryActiveState = _secondaryAgent.StartPosition;
                     MazeVm.SetActiveState(MazeVm.SecondaryActiveState);
                     OnPropertyChanged(nameof(SecondaryAgentStartPosition));
@@ -366,13 +363,27 @@
         private void ChangeGoalPosition(int newGoal)
         {
             var space = MazeVm.GetSpaceByPosition(MazeVm.Maze.GoalPosition);
-            space.IsGoal = false;
+
+            if (space != null)
+            {
+                space.IsGoal = false;
+            }
 
             space = MazeVm.GetSpaceByPosition(newGoal);
             space.IsGoal = true;
             MazeVm.Maze.GoalPosition = newGoal;
-            PrimaryAgent.Environment.GoalPosition = newGoal;
-            SecondaryAgent.Environment.GoalPosition = newGoal;
+            
+            if (PrimaryAgent.Environment == null)
+            {
+                PrimaryAgent.Environment = new MazeBase(MazeVm.Columns, MazeVm.Rows, PrimaryAgent.StartPosition, newGoal, 200);
+                PrimaryAgent.Environment.Initialize();
+                SecondaryAgent.Environment = MazeUtilities.CopyEnvironment(PrimaryAgent.Environment);
+            }
+            else
+            { 
+                PrimaryAgent.Environment.GoalPosition = newGoal;
+                SecondaryAgent.Environment.GoalPosition = newGoal;
+            }
         }
 
         private void LoadAgent(string path)
@@ -395,6 +406,8 @@
             OnPropertyChanged(nameof(SelectedLearningStyle));
             OnPropertyChanged(nameof(PrimaryAgent));
             OnPropertyChanged(nameof(SecondaryAgent));
+            OnPropertyChanged(nameof(GoalPosition));
+            OnPropertyChanged(nameof(MazeVm));
         }
 
         private void EditObjectives()
@@ -431,8 +444,14 @@
         {
             List<Task> tasks = new List<Task>();
             List<MazeAgent> agents = new List<MazeAgent>();
+            
+            if (PrimaryAgent.MaximumAllowedMoves == 0)
+            {
+                PrimaryAgent.MaximumAllowedMoves = MazeVm.Rows * MazeVm.Columns * 100;
+            }
 
             agents.Add(PrimaryAgent);
+            PrimaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
 
             if (UseSecondAgent &&
                 SecondaryAgent != null)
@@ -440,7 +459,6 @@
                 SecondaryAgent.LearningRate = PrimaryAgent.LearningRate;
                 SecondaryAgent.DiscountRate = PrimaryAgent.DiscountRate;
                 SecondaryAgent.NumberOfTrainingEpisodes = PrimaryAgent.NumberOfTrainingEpisodes;
-                SecondaryAgent.Environment.QualitySaveDirectory = null;
 
                 if (PrimaryAgent.LearningStyle == QLearning.Core.LearningStyles.QLearning)
                 {
@@ -451,8 +469,15 @@
                     SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.QLearning;
                 }
 
+                if (SecondaryAgent.MaximumAllowedMoves == 0)
+                {
+                    SecondaryAgent.MaximumAllowedMoves = MazeVm.Rows * MazeVm.Columns * 100;
+                }
 
                 agents.Add(SecondaryAgent);
+                SecondaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
+
+                SecondaryAgent.Environment.QualitySaveFrequency = -1;
             }
 
             _sessionsVm = null;
@@ -484,6 +509,10 @@
 
             Application.Current.Dispatcher.Invoke(() => GetQualityFromTraining());
             
+            foreach(var agent in agents)
+            {
+                agent.TrainingEpisodeCompleted -= AgentTrainingEpisodeCompleted;
+            }
 
             return Task.CompletedTask;            
         }
@@ -512,9 +541,11 @@
         {
             var agents = new List<MazeAgent>();
             agents.Add(PrimaryAgent);
+            PrimaryAgent.AgentStateChanged += AgentStateChanged;
 
             if (UseSecondAgent)
             {
+                SecondaryAgent.AgentStateChanged += AgentStateChanged;
                 agents.Add(SecondaryAgent);
             }
 
@@ -532,6 +563,11 @@
             }
             
             IsRunning = false;
+
+            foreach(var agent in agents)
+            {
+                agent.AgentStateChanged -= AgentStateChanged;
+            }
 
             return Task.CompletedTask;
         }
@@ -605,7 +641,7 @@
             bool isPrimary = sender == _primaryAgent;
             
             MazeVm.SetActiveState(e.NewState, isPrimary);
-            System.Threading.Thread.Sleep(250);
+            System.Threading.Thread.Sleep(200);
         }
 
         private void AgentTrainingEpisodeCompleted(object sender, QLearning.Core.TrainingEpisodeCompletedEventArgs e)
