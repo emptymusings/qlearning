@@ -12,6 +12,7 @@
     using System.Threading.Tasks;
     using Microsoft.Win32;
     using System.Linq;
+    using QLearningMaze.Core.Mazes;
 
     public class AgentViewModel : ViewModelBase
     {
@@ -19,7 +20,8 @@
 
         public AgentViewModel()
         {
-            TempLoadAgent();            
+            //TempLoadAgent();     
+            MazeVm.Maze = new MazeBase();
         }
 
         private MazeAgent _primaryAgent = new MazeAgent();
@@ -38,6 +40,7 @@
                     _primaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
                     MazeVm.PrimaryActiveState = _primaryAgent.StartPosition;                    
                     MazeVm.SetActiveState(MazeVm.PrimaryActiveState);
+                    OnPropertyChanged(nameof(PrimaryAgentStartPosition));
                 }
             }
         }
@@ -66,6 +69,7 @@
                     _secondaryAgent.AgentStateChanged += AgentStateChanged;
                     MazeVm.SecondaryActiveState = _secondaryAgent.StartPosition;
                     MazeVm.SetActiveState(MazeVm.SecondaryActiveState);
+                    OnPropertyChanged(nameof(SecondaryAgentStartPosition));
                 }
             }
         }
@@ -208,6 +212,22 @@
             get
             {
                 return (_useSecondAgent ? Visibility.Visible : Visibility.Hidden);
+            }
+        }
+
+
+        private RelayCommand _editObjectivesCommand;
+
+        public RelayCommand EditObjectivesCommand
+        {
+            get 
+            { 
+                if (_editObjectivesCommand == null)
+                {
+                    _editObjectivesCommand = new RelayCommand(() => EditObjectives());
+                }
+
+                return _editObjectivesCommand; 
             }
         }
 
@@ -355,12 +375,6 @@
             SecondaryAgent.Environment.GoalPosition = newGoal;
         }
 
-        private void TempLoadAgent()
-        {
-            string path = @"C:\Dev\.Net\q-learning\qlearning-sharp\QLearningMaze\QLearningMaze.Core\assets\TestMazes\Demo 8x8 c.maze";
-            LoadAgent(path);
-        }
-
         private void LoadAgent(string path)
         {
             var loaded = MazeUtilities.LoadObject<MazeAgent>(path);
@@ -381,6 +395,36 @@
             OnPropertyChanged(nameof(SelectedLearningStyle));
             OnPropertyChanged(nameof(PrimaryAgent));
             OnPropertyChanged(nameof(SecondaryAgent));
+        }
+
+        private void EditObjectives()
+        {
+            var vm = new CustomObjectivesViewModel(PrimaryAgent.Environment);
+            vm.InitializeObjectives();
+            
+            Views.CustomObjectivesView dialog = new Views.CustomObjectivesView();
+            dialog.DataContext = vm;
+
+            var result = dialog.ShowDialog();
+
+            if (result.HasValue &&
+                result.Value)
+            {
+                PrimaryAgent.Environment.AdditionalRewards.Clear();
+
+                foreach(var objective in vm.Objectives)
+                {
+                    PrimaryAgent.Environment.AddReward(objective);
+                }
+
+                if (SecondaryAgent != null)
+                {
+                    SecondaryAgent.Environment = MazeUtilities.CopyEnvironment(PrimaryAgent.Environment);
+                }
+
+                MazeVm.InitializeMaze();
+            }
+            
         }
 
         public Task Train()

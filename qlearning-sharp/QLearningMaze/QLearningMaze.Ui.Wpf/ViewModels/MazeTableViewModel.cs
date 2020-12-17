@@ -8,6 +8,7 @@
 
     public class MazeTableViewModel : ViewModelBase
     {
+        private CustomObjectivesViewModel _test;
         public enum TableTypes
         {
             Quality,

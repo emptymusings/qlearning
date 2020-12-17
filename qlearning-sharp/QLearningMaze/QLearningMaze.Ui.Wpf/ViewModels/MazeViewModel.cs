@@ -47,6 +47,9 @@
             if (Maze == null)
                 return;
 
+            if (Maze.Rows == 0)
+                return;
+
             for (int i = 0; i < Maze.Rows; i++)
             {
                 var row = new ObservationRowViewModel();
@@ -170,6 +173,9 @@
 
         public ObservationSpaceViewModel GetSpaceByPosition(ObservationRowViewModel row, int position)
         {
+            if (row == null)
+                return null;
+
             var space = row.ObservationSpaces.Where(p => p.Position == position).FirstOrDefault();
             return space;
         }

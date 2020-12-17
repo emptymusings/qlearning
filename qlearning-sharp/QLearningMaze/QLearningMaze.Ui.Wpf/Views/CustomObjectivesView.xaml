@@ -1,0 +1,48 @@
+﻿<Window x:Class="QLearningMaze.Ui.Wpf.Views.CustomObjectivesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
+        xmlns:local="clr-namespace:QLearningMaze.Ui.Wpf.Views"
+        xmlns:vms="clr-namespace:QLearningMaze.Ui.Wpf.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="CustomObjectivesViewModel"
+        Title="CustomObjectivesView" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="12*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <DataGrid 
+            Grid.Row="0"
+            ItemsSource="{Binding Objectives}"
+            SelectedItem="{Binding SelectedObjective}"
+            AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="Auto"
+                    Header="Position"
+                    Binding="{Binding State}" />
+                <DataGridTextColumn
+                    Width="Auto"
+                    Header="Value"
+                    Binding="{Binding Value}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Name="OkButton" 
+                        VerticalAlignment="Center"
+                        Width="80"
+                        Content="OK" Margin="0,0,20,0"
+                        Click="OkButton_Click"/>
+                <Button Name="CancelButton" 
+                        VerticalAlignment="Center"
+                        Width="80"
+                        Content="Cancel" Margin="0,0,20,0"
+                        Click="CancelButton_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
