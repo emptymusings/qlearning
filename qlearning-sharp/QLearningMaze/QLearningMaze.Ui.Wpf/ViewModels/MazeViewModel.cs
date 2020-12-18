@@ -278,11 +278,13 @@
         private void AddWall(int betweenSpace, int andSpace)
         {
             Maze.AddObstruction(betweenSpace, andSpace);
+            OnPropertyChanged(nameof(Maze));
         }
 
         private void RemoveWall(int betweenSpace, int andSpace)
         {
             Maze.RemoveObstruction(betweenSpace, andSpace);
+            OnPropertyChanged(nameof(Maze));
         }
     }
 }

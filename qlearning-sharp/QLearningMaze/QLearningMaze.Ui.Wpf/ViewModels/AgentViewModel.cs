@@ -424,6 +424,11 @@
             if (result.HasValue &&
                 result.Value)
             {
+                if (PrimaryAgent.Environment != MazeVm.Maze)
+                {
+                    PrimaryAgent.Environment = (MazeBase)MazeVm.Maze;
+                }
+
                 PrimaryAgent.Environment.AdditionalRewards.Clear();
 
                 foreach(var objective in vm.Objectives)
@@ -451,6 +456,16 @@
                 PrimaryAgent.MaximumAllowedMoves = MazeVm.Rows * MazeVm.Columns * 100;
             }
 
+            if (PrimaryAgent.MaximumAllowedBacktracks == 0)
+            {
+                PrimaryAgent.MaximumAllowedBacktracks = 3;
+            }
+
+            if (PrimaryAgent.Environment != MazeVm.Maze)
+            {
+                PrimaryAgent.Environment = (MazeBase)MazeVm.Maze;
+            }
+
             agents.Add(PrimaryAgent);
             PrimaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
 
@@ -475,6 +490,12 @@
                     SecondaryAgent.MaximumAllowedMoves = MazeVm.Rows * MazeVm.Columns * 100;
                 }
 
+                if (SecondaryAgent.MaximumAllowedBacktracks == 0)
+                {
+                    SecondaryAgent.MaximumAllowedBacktracks = 3;
+                }
+
+                SecondaryAgent.Environment = MazeUtilities.CopyEnvironment((MazeBase)MazeVm.Maze);
                 agents.Add(SecondaryAgent);
                 SecondaryAgent.TrainingEpisodeCompleted += AgentTrainingEpisodeCompleted;
 

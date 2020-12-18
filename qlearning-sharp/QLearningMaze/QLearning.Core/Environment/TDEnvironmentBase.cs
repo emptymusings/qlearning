@@ -237,6 +237,9 @@
         {
             double[][] result;
 
+            if (QualityTable == null)
+                return null;
+
             result = new double[QualityTable.Length][];
 
             for (int i = 0; i < QualityTable.Length; ++i)

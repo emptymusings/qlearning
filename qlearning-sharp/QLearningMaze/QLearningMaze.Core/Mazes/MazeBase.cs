@@ -228,7 +228,7 @@
             var andAction = GetActionBetweenStates(obstruction.AndSpace, obstruction.BetweenSpace);
             var phase = 0;
 
-            while (obstruction.BetweenSpace + phase <= NumberOfStates)
+            while (obstruction.BetweenSpace + phase < NumberOfStates)
             {
                 StatesTable[obstruction.BetweenSpace + phase][(int)betweenAction] = -1;
                 StatesTable[obstruction.AndSpace + phase][(int)andAction] = -1;

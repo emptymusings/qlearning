@@ -20,17 +20,17 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
             <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_File">
+                <MenuItem Header="_File" IsTabStop="False">
                     <MenuItem Header="_Open" Command="{Binding OpenAgentMazeCommand}" />
                     <MenuItem Header="_Save" Command="{Binding SaveAgentMazeCommand}" />
                     <MenuItem Header="E_xit" Click="ExitMenuItem_Click" />
                 </MenuItem>
-                <MenuItem Header="_View">
+                <MenuItem Header="_View" IsTabStop="False">
                     <MenuItem Header="_Quality Table" Command="{Binding ViewQualityCommand}" />
                     <MenuItem Header="_Rewards Table" Command="{Binding ViewRewardsCommand}" />
                     <MenuItem Header="_States Table" Command="{Binding ViewStatesCommand}" />
                 </MenuItem>
-                <MenuItem Header="_Maze">
+                <MenuItem Header="_Maze" IsTabStop="False">
                     <MenuItem Header="_Train" Command="{Binding TrainCommand}" />
                     <MenuItem Header="_Run Maze" Command="{Binding RunMazeCommand}" />
                     <MenuItem Header="_Edit Objectives" Command="{Binding EditObjectivesCommand}" />
