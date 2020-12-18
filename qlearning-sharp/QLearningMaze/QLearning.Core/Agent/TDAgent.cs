@@ -126,27 +126,29 @@
         public override void Train(bool overrideBaseEvents)
         {
             Environment.Initialize();
-            double epsilon = 1;
 
-            EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
-            EpsilonDecayValue = GetEpsilonDecayValue(epsilon);
+            if (UseDecayingEpsilon)
+            {
+                EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
+                EpsilonDecayValue = GetEpsilonDecayValue();
+            }
 
             TrainingSessions = new List<TrainingSession>();
 
             if (!overrideBaseEvents)
                 OnTrainingStateChanged(true);
 
-            RunTrainingSet(epsilon, overrideBaseEvents);
+            RunTrainingSet(overrideBaseEvents);
 
             if (!overrideBaseEvents)
                 OnTrainingStateChanged(false);
         }
 
-        protected virtual void RunTrainingSet(double epsilon, bool overrideBaseEvents)
+        protected virtual void RunTrainingSet(bool overrideBaseEvents)
         {
             for (int episode = 0; episode < NumberOfTrainingEpisodes; ++episode)
             {
-                var episodeResults = RunTrainingEpisode(epsilon, overrideBaseEvents);
+                var episodeResults = RunTrainingEpisode(overrideBaseEvents);
                 var state = episodeResults.finalState;
                 var moves = episodeResults.moves;
 
@@ -157,14 +159,17 @@
                     TrainingSessions.Add(trainingEpisode);
                 }
 
-                epsilon = DecayEpsilon(episode, epsilon);
+                if (UseDecayingEpsilon)
+                {
+                    DecayEpsilon(episode);
+                }
 
                 if (!overrideBaseEvents)
                     OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, _trainingEpisodeStartPoint, moves, Score, Environment.TerminalStates.Contains(state % Environment.StatesPerPhase));
             }
         }
 
-        protected virtual (int finalState, int moves) RunTrainingEpisode(double epsilon, bool overrideBaseEvents)
+        protected virtual (int finalState, int moves) RunTrainingEpisode(bool overrideBaseEvents)
         {
             Moves = 0;
             int previousState = -1;
@@ -178,7 +183,7 @@
             while (!done)
             {
                 // Determine the next action to take
-                var nextActionSet = GetNextAction(State, epsilon);
+                var nextActionSet = GetNextAction(State);
                 int nextAction = nextActionSet.nextAction;
                 var oldQuality = Environment.QualityTable[State][nextAction];
 
@@ -189,7 +194,7 @@
                 }
                 else
                 {
-                    CalculateSarsa(State, nextAction, LearningRate, DiscountRate, epsilon);
+                    CalculateSarsa(State, nextAction, LearningRate, DiscountRate);
                 }
 
                 // Step to the next state using the assigned action
@@ -217,11 +222,11 @@
             return (State, Moves);
         }
 
-        protected virtual double GetEpsilonDecayValue(double epsilon)
+        protected virtual double GetEpsilonDecayValue()
         {
             if (EpsilonDecayValue < 0)
             {
-                return epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
+                return Epsilon / (EpsilonDecayEnd - EpsilonDecayStart);
             }
             else
             {
@@ -233,15 +238,13 @@
         /// <summary>
         /// Decays the epsilon value so that as training progesses, known values will be more likely to be used
         /// </summary>
-        protected virtual double DecayEpsilon(int episode, double epsilon)
+        protected virtual void DecayEpsilon(int episode)
         {
             if (EpsilonDecayEnd >= episode &&
                    episode >= EpsilonDecayStart)
             {
-                epsilon -= EpsilonDecayValue;
+                Epsilon -= EpsilonDecayValue;
             }
-
-            return epsilon;
         }
 
         /// <summary>
@@ -278,13 +281,13 @@
         /// </summary>
         /// <param name="state">The state in which the agent currently resides</param>
         /// <param name="epsilon"></param>
-        protected override (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
+        protected override (int nextAction, bool usedGreedy) GetNextAction(int state)
         {
             double randRand = _random.NextDouble();
             int nextAction = -1;
             bool usedGreedy = false;
 
-            if (randRand > epsilon)
+            if (randRand > Epsilon)
             {
                 int preferredNext = GetPreferredNextAction(state);
 
@@ -346,10 +349,10 @@
 
         }
 
-        public virtual void CalculateSarsa(int state, int action, double learningRate, double discountRate, double epsilon)
+        public virtual void CalculateSarsa(int state, int action, double learningRate, double discountRate)
         {
             var step = Environment.Step(state, action);
-            var nextActionSet = GetNextAction(step.newState, epsilon);
+            var nextActionSet = GetNextAction(step.newState);
             var newQ = Environment.QualityTable[step.newState][nextActionSet.nextAction];
             Environment.QualityTable[state][action] += (learningRate * (step.reward + (discountRate * newQ) - step.quality));
         }
