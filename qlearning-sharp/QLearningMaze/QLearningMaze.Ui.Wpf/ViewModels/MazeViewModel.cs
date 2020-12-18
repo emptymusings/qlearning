@@ -126,7 +126,6 @@
         protected void SetObstructions()
         {
             int visible = 100;
-            int invisible = 0;
 
             foreach(var obstruction in Maze.Obstructions)
             {

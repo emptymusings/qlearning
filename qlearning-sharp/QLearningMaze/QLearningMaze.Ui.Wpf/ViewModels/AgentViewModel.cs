@@ -186,7 +186,7 @@
                     {
                         SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.SARSA;
                     }
-                    else;
+                    else
                     {
                         SecondaryAgent.LearningStyle = QLearning.Core.LearningStyles.QLearning;
                     }

@@ -204,7 +204,6 @@
 
                 Label rewardsLabel;
                 string prefix;
-                ObservationSpace activeSpace;
 
                 if (newSpace != null)
                 {
