@@ -35,6 +35,7 @@
         /// <param name="action">The action the agent will be taking from its given state</param>
         /// <param name="learningRate">The learning rate (alpha) - how important new information is vs how much to rely on previous knowledge</param>
         /// <param name="discountRate">The discount rate (gamma) - how important immediate rewards/punishments are vs efficiency of reaching terminal state</param>
-        void CalculateSarsa(int state, int action, double learningRate, double discountRate);
+        /// <param name="epsilon">The epsilon to use when determining random or greedy next actions</param>
+        void CalculateSarsa(int state, int action, double learningRate, double discountRate, double epsilon);
     }
 }

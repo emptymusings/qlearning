@@ -19,8 +19,6 @@
         /// Gets or Sets the Learning Rate used in the Q-Learning formula (aka alpha)
         /// </summary>
         public double LearningRate { get; set; }
-        public bool UseDecayingEpsilon { get; set; } = true;
-        public double Epsilon { get; set; } = 1;
         /// <summary>
         /// Gets or Sets the episode in which epsilon (greedy strategy) decay will start.  Also used when calculating epsilon's decay value
         /// </summary>
@@ -68,7 +66,7 @@
         /// </summary>
         /// <param name="state">The state in which the agent currently resides</param>
         /// <param name="epsilon"></param>
-        protected virtual (int nextAction, bool usedGreedy) GetNextAction(int state)
+        protected virtual (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
         {
             throw new NotImplementedException();
         }
