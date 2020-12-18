@@ -55,6 +55,7 @@
         public virtual List<int> TerminalStates { get; set; } = new List<int>();
         public virtual int ObjectiveAction { get; set; }
         public virtual double ObjectiveReward { get; set; } = 1;
+        public virtual bool SaveQualityToDisk { get; set; } = true;
         public virtual string QualitySaveDirectory { get; set; }
         public virtual int QualitySaveFrequency { get; set; } = 100;
         public virtual int StatesPerPhase { get; set; }
@@ -205,7 +206,11 @@
 
             foreach(string file in Directory.GetFiles(QualitySaveDirectory))
             {
-                File.Delete(file);
+                try
+                {
+                    File.Delete(file);
+                }
+                catch { }
             }
         }
 
@@ -219,7 +224,10 @@
                 Quality = CopyQuality()
             };
 
-            Utilities.SaveObject($@"{QualitySaveDirectory}\Episode_{episode}_{DateTime.Now.ToString("HH_mm_ss")}.json", trainingEpisode);
+            if (SaveQualityToDisk)
+            {
+                Utilities.SaveObject($@"{QualitySaveDirectory}\Episode_{episode}_{DateTime.Now.ToString("HH_mm_ss")}.json", trainingEpisode);
+            }
 
             return trainingEpisode;
         }

@@ -17,13 +17,15 @@
         /// <summary>
         /// Gets or Sets the position (state) in which the maze ends
         /// </summary>
-        int GoalPosition { get; }
+        int GoalPosition { get; set; }
         /// <summary>
         /// Gets or Sets any obstructions (walls) preventing movement of the agent between states
         /// </summary>
         List<MazeObstruction> Obstructions { get; set; }
 
         void SetInitialState(int state);
+
+        void SetGoalPosition(int position);
 
         int GetInitialState();
 

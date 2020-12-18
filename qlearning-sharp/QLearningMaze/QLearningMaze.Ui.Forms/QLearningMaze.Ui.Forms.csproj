@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="MazeSpace.cs">
+    <Compile Update="Controls\MazeSpace.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">

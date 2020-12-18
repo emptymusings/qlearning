@@ -1,4 +1,4 @@
-﻿namespace QLearningMaze.Ui.Forms
+﻿namespace QLearningMaze.Ui.Forms.Controls
 {
     using Core.Mazes;
     using System.Collections.Generic;

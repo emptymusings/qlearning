@@ -1,0 +1,44 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QLearningMaze.Ui.Wpf.Controls"
+             xmlns:ViewModels="clr-namespace:QLearningMaze.Ui.Wpf.ViewModels" x:Class="QLearningMaze.Ui.Wpf.Controls.ObservationSpace"
+             Width="100"
+             Height="100"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Foreground="#FFF0F7B7" BorderThickness="1" BorderBrush="#F03D3B3B">
+    <Grid Background="#FFDCD6AC">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="12*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="12*" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            <Image Grid.Column="0" Grid.RowSpan="3" Name="LeftWall" Source="/assets/VerticalWall.bmp" HorizontalAlignment="Left" Height="Auto" Opacity="{Binding LeftWallVisibility}" MouseLeftButtonDown="WallMouseLeftButtonDown"/>
+            <Image Grid.Column="2" Grid.RowSpan="3" Name="RightWall" Source="/assets/VerticalWall.bmp" HorizontalAlignment="Right" Height="Auto" Opacity="{Binding RightWallVisibility}" MouseLeftButtonDown="WallMouseLeftButtonDown"/>
+            <Image Grid.Row="0" Grid.ColumnSpan="3" Name="TopWall" Source="/assets/HorizontalWall.bmp" VerticalAlignment="Top" Width="Auto" Opacity="{Binding TopWallVisibility}" MouseLeftButtonDown="WallMouseLeftButtonDown"/>
+            <Image Grid.Row="2" Grid.ColumnSpan="3" Name="BottomWall" Source="/assets/HorizontalWall.bmp" VerticalAlignment="Bottom" Width="Auto" Opacity="{Binding BottomWallVisibility}" MouseLeftButtonDown="WallMouseLeftButtonDown"/>
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Content="{Binding Position}" Margin="5,2,0,0" FontStyle="Oblique" />
+                <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Width="20" Height="20" Grid.RowSpan="2" Source="{Binding ActiveImageSource}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ActiveVisibility}" />
+                <Label Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Content="{Binding ExtrasMessage}" />
+            </Grid>
+        </Grid>
+
+    </Grid>
+</UserControl>

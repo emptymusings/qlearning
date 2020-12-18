@@ -1,5 +1,6 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
+    using Controls;
     using Core;
     using QLearning.Core;
     using QLearning.Core.Environment;
