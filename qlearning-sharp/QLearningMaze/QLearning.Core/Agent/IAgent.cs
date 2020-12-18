@@ -36,6 +36,9 @@
         /// Gets or Sets the environment in which the Agent will be performing its work
         /// </summary>
         TEnvironment Environment { get; set; }
+        /// <summary>
+        /// Gets or Sets the learning algorithm to use when training
+        /// </summary>
         LearningStyles LearningStyle { get; set; }
         /// <summary>
         /// Gets or Sets the Discount Rate, or Discount Factor, used in the Q-Learning formula (aka gamma)
