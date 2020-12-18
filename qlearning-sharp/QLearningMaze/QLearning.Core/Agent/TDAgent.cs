@@ -126,10 +126,13 @@
         public override void Train(bool overrideBaseEvents)
         {
             Environment.Initialize();
-            double epsilon = 1;
+            double epsilon = DefaultEpsilon;
 
-            EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
-            EpsilonDecayValue = GetEpsilonDecayValue(epsilon);
+            if (UseDecayingEpsilon)
+            {
+                EpsilonDecayEnd = NumberOfTrainingEpisodes / 2;
+                EpsilonDecayValue = GetEpsilonDecayValue(epsilon);
+            }
 
             TrainingSessions = new List<TrainingSession>();
 
@@ -157,7 +160,10 @@
                     TrainingSessions.Add(trainingEpisode);
                 }
 
-                epsilon = DecayEpsilon(episode, epsilon);
+                if (UseDecayingEpsilon)
+                {
+                    epsilon = DecayEpsilon(episode, epsilon);
+                }
 
                 if (!overrideBaseEvents)
                     OnTrainingEpisodeCompleted(episode, NumberOfTrainingEpisodes, _trainingEpisodeStartPoint, moves, Score, Environment.TerminalStates.Contains(state % Environment.StatesPerPhase));

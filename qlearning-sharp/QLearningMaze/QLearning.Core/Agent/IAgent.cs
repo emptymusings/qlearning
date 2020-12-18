@@ -49,6 +49,14 @@
         /// </summary>
         double LearningRate { get; set; }
         /// <summary>
+        /// Gets or Sets the value which determines if Epsilon will decay while training
+        /// </summary>
+        bool UseDecayingEpsilon { get; set; }
+        /// <summary>
+        /// Gets or Sets the default value for Epsilon.  This number will change over the course of training if UseDecayingEpsilon is set to True
+        /// </summary>
+        double DefaultEpsilon { get; set; }
+        /// <summary>
         /// Gets or Sets the episode in which epsilon (greedy strategy) decay will start.  Also used when calculating epsilon's decay value
         /// </summary>
         double EpsilonDecayStart { get; set; }
