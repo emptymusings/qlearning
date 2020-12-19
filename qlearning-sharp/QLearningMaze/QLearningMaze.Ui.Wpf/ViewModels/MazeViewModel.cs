@@ -13,10 +13,18 @@
     
     public class MazeViewModel : ViewModelBase
     {
+
+        private IMaze _maze;
+
+        public MazeViewModel() { }
+        public MazeViewModel(IMaze maze)
+        {
+            Maze = maze;
+        }
+
         public int PrimaryActiveState { get; set; }
         public int SecondaryActiveState { get; set; }
 
-        private IMaze _maze;
 
         public IMaze Maze
         {

@@ -21,6 +21,7 @@
         <DockPanel Grid.Row="0">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File" IsTabStop="False">
+                    <MenuItem Header="_New" Command="{Binding NewAgentMazeCommand}" />
                     <MenuItem Header="_Open" Command="{Binding OpenAgentMazeCommand}" />
                     <MenuItem Header="_Save" Command="{Binding SaveAgentMazeCommand}" />
                     <MenuItem Header="E_xit" Click="ExitMenuItem_Click" />

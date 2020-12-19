@@ -212,6 +212,21 @@
             }
         }
 
+        private RelayCommand _newAgentMazeCommand;
+
+        public RelayCommand NewAgentMazeCommand
+        {
+            get 
+            {
+                if (_newAgentMazeCommand == null)
+                {
+                    _newAgentMazeCommand = new RelayCommand(() => NewAgentMaze());
+                }
+
+                return _newAgentMazeCommand; 
+            }
+        }
+
 
         private RelayCommand _editObjectivesCommand;
 
@@ -632,6 +647,24 @@
             var view = new Views.TabledDetailsView();
             view.DataContext = mtvm;
             view.Show();
+        }
+
+        private void NewAgentMaze()
+        {
+            PrimaryAgent = new MazeAgent(0.5,0.5,1000,1000,3);
+            PrimaryAgent.MaximumAllowedBacktracks = 3;
+            PrimaryAgent.MaximumAllowedMoves = 1000;
+            
+            PrimaryAgent.Environment = new MazeBase(1, 1, 0, 0, 200);
+
+            SecondaryAgent = MazeUtilities.ConvertLoadedAgent(PrimaryAgent);
+            SecondaryAgent.Environment = MazeUtilities.CopyEnvironment(PrimaryAgent.Environment);
+
+            MazeVm = new MazeViewModel(PrimaryAgent.Environment);
+
+            OnPropertyChanged(nameof(PrimaryAgent));
+            OnPropertyChanged(nameof(SecondaryAgent));
+            OnPropertyChanged(nameof(GoalPosition));
         }
 
         private void OpenAgentMaze()
