@@ -20,7 +20,6 @@
 
         public AgentViewModel()
         {
-            //TempLoadAgent();     
             MazeVm.Maze = new MazeBase();
         }
 
