@@ -11,17 +11,20 @@
         <ViewModels:MazeViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <ItemsControl 
+        <ScrollViewer
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
+            <ItemsControl 
             ItemsSource="{Binding ObservationRows}"
             VerticalAlignment="Stretch"
             BorderThickness="0" BorderBrush="{x:Null}">
-            
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <controls:ObservationRow />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:ObservationRow />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
             
     </Grid>
 </UserControl>

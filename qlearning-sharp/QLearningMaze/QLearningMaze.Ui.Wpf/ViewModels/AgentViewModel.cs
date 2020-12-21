@@ -118,6 +118,7 @@
                     var space = MazeVm.GetSpaceByPosition(SecondaryAgent.StartPosition);
                     space.SetInactive();
                     space.IsStart = false;
+                    SecondaryAgentResultsVisibility = Visibility.Hidden;
                 }
 
                 OnPropertyChanged(nameof(SecondAgentVisibility));
@@ -210,6 +211,55 @@
                 return (_useSecondAgent ? Visibility.Visible : Visibility.Hidden);
             }
         }
+
+        private Visibility _primaryAgentResultsVisibility = Visibility.Hidden;
+
+        public Visibility PrimaryAgentResultsVisibility
+        {
+            get { return _primaryAgentResultsVisibility; }
+            set { SetProperty(ref _primaryAgentResultsVisibility, value); }
+        }
+
+        private int _primaryAgentResultsMoves;
+
+        public int PrimaryAgentResultsMoves
+        {
+            get { return _primaryAgentResultsMoves; }
+            set { SetProperty(ref _primaryAgentResultsMoves, value); }
+        }
+
+        private double _primaryAgentResultsScore;
+
+        public double PrimaryAgentResultsScore
+        {
+            get { return _primaryAgentResultsScore; }
+            set { SetProperty(ref _primaryAgentResultsScore, value); }
+        }
+
+        private Visibility _secondaryAgentResultsVisibility = Visibility.Hidden;
+
+        public Visibility SecondaryAgentResultsVisibility
+        {
+            get { return _secondaryAgentResultsVisibility; }
+            set { SetProperty(ref _secondaryAgentResultsVisibility, value); }
+        }
+
+        private int _secondaryAgentResultsMoves;
+
+        public int SecondaryAgentResultsMoves
+        {
+            get { return _secondaryAgentResultsMoves; }
+            set { SetProperty(ref _secondaryAgentResultsMoves, value); }
+        }
+
+        private double _secondaryAgentResultsScore;
+
+        public double SecondaryAgentResultsScore
+        {
+            get { return _secondaryAgentResultsScore; }
+            set { SetProperty(ref _secondaryAgentResultsScore, value); }
+        }
+
 
         private RelayCommand _newAgentMazeCommand;
 
@@ -695,6 +745,20 @@
             bool isPrimary = sender == _primaryAgent;
             
             MazeVm.SetActiveState(e.NewState, isPrimary);
+
+            if (isPrimary)
+            {
+                PrimaryAgentResultsVisibility = Visibility.Visible;
+                PrimaryAgentResultsMoves = e.MovesMade;
+                PrimaryAgentResultsScore = e.RewardsEarned;
+            }
+            else
+            {
+                SecondaryAgentResultsVisibility = Visibility.Visible;
+                SecondaryAgentResultsMoves = e.MovesMade;
+                SecondaryAgentResultsScore = e.RewardsEarned;
+            }
+
             System.Threading.Thread.Sleep(200);
         }
 
