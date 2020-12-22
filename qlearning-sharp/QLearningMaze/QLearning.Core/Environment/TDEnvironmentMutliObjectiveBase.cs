@@ -63,7 +63,6 @@
 
         protected virtual IOrderedEnumerable<CustomObjective> GetPrioritizedObjectives()
         {
-            // TODO: look into repalcing the literal movement number
             var prioritizedObjectives = AdditionalRewards.OrderByDescending((priority) =>
             {
                 int differential = (priority.State > PrioritizeFromState ? priority.State - PrioritizeFromState : PrioritizeFromState - priority.State);

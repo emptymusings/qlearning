@@ -22,11 +22,18 @@
         /// Gets or Sets any obstructions (walls) preventing movement of the agent between states
         /// </summary>
         List<MazeObstruction> Obstructions { get; set; }
-
+        /// <summary>
+        /// Sets the initial starting point for the maze
+        /// </summary>
         void SetInitialState(int state);
-
+        /// <summary>
+        /// Sets the state of the final objective
+        /// </summary>
         void SetGoalPosition(int position);
-
+        /// <summary>
+        /// Gets the initial starting point of the maze
+        /// </summary>
+        /// <returns></returns>
         int GetInitialState();
 
         /// <summary>

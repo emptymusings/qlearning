@@ -107,15 +107,16 @@
             return _initialState;
         }
 
-        protected override void InitializeStatesTable(bool overrideBaseEvents = false)
+        protected override void InitializeStatesTable(bool overrideBaseEvents = true)
         {
             if (AdditionalRewards == null)
                 AdditionalRewards = new List<CustomObjective>();
 
-            OnStateTableCreating();
+            if (overrideBaseEvents)
+                OnStateTableCreating();
 
             NumberOfStates = Rows * Columns * GetCustomRewardPhaseAdjustment();
-            base.InitializeStatesTable(true);
+            base.InitializeStatesTable(overrideBaseEvents);
             ObjectiveAction = (int)Actions.CompleteRun;
 
             for (int state = 0; state < NumberOfStates; ++state)
@@ -139,7 +140,8 @@
 
             SetObstructions();
 
-            OnStateTableCreated();
+            if (overrideBaseEvents)
+                OnStateTableCreated();
         }
 
         protected virtual int GetCustomRewardPhaseAdjustment()
@@ -147,9 +149,10 @@
             return (AdditionalRewards.Where(v => v.Value > 0).Count() + 1);
         }
 
-        protected override void InitializeRewardsTable(bool overrideBaseEvents = false)
+        protected override void InitializeRewardsTable(bool overrideBaseEvents = true)
         {
-            OnRewardTableCreating();
+            if (overrideBaseEvents)
+                OnRewardTableCreating();
 
             RewardsTable = new double[NumberOfStates][];
 
@@ -172,7 +175,7 @@
             PrioritizeFromState = _initialState;
 
             // Use the base rewards assignment
-            base.InitializeRewardsTable(true);
+            base.InitializeRewardsTable(overrideBaseEvents);
 
             int goalToEnd = StatesPerPhase - (GoalPosition % StatesPerPhase);
             int finalGoalRewardState = NumberOfStates - goalToEnd;
@@ -186,7 +189,8 @@
                 phase += StatesPerPhase;
             }
 
-            OnRewardTableCreated();
+            if (overrideBaseEvents)
+                OnRewardTableCreated();
         }
 
         protected virtual int GetPosition(int state)
@@ -301,7 +305,7 @@
 
         public override void Initialize(bool overrideBaseEvents = false)
         {
-            base.Initialize();
+            base.Initialize(overrideBaseEvents);
             AssignPriorityToRewards();
         }
 

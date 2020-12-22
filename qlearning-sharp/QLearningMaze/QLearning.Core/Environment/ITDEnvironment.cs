@@ -116,9 +116,15 @@
         /// <param name="score">The sum of rewards in the current episode</param>
         /// <returns></returns>
         TrainingSession SaveQualityForEpisode(int episode, int moves, double score);
-
+        /// <summary>
+        /// Addes a new terminal state to the collection
+        /// </summary>
+        /// <param name="state"></param>
         void AddTerminalState(int state);
-
+        /// <summary>
+        /// Copies the quality matrix of one environment to another
+        /// </summary>
+        /// <returns></returns>
         double[][] CopyQuality();
     }
 }
