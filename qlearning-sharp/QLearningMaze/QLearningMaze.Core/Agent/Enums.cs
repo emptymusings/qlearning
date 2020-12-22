@@ -1,4 +1,4 @@
-﻿namespace QLearningMaze.Core.Mazes
+﻿namespace QLearningMaze.Core.Agent
 {
     public enum Actions
     {

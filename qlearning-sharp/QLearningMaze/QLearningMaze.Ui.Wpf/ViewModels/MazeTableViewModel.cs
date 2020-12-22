@@ -1,6 +1,6 @@
 ﻿namespace QLearningMaze.Ui.Wpf.ViewModels
 {
-    using Core.Mazes;
+    using Core.Agent;
 
     using System.Data;
 
