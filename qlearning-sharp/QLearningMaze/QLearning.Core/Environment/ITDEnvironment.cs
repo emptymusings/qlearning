@@ -80,12 +80,8 @@
         /// <summary>
         /// Initializes the Environment (i.e. Q-Table, Rewards, and State spaces
         /// </summary>
-        void Initialize();
-        /// <summary>
-        /// Initializes the Environment (i.e. Q-Table, Rewards, and State spaces
-        /// </summary>
         /// <param name="overrideBaseEvents">Boolean value that determines whether to override events in this base class</param>
-        void Initialize(bool overrideBaseEvents);
+        void Initialize(bool overrideBaseEvents = false);
         /// <summary>
         /// Determines the next state, reward, and quality of taking the specified action from the specified state.
         /// Returns the next state, the reward for taking the given action, and the quality of taking the given action from the given state

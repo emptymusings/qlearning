@@ -106,7 +106,7 @@
             return _initialState;
         }
 
-        protected override void InitializeStatesTable()
+        protected override void InitializeStatesTable(bool overrideBaseEvents = false)
         {
             if (AdditionalRewards == null)
                 AdditionalRewards = new List<CustomObjective>();
@@ -146,7 +146,7 @@
             return (AdditionalRewards.Where(v => v.Value > 0).Count() + 1);
         }
 
-        protected override void InitializeRewardsTable()
+        protected override void InitializeRewardsTable(bool overrideBaseEvents = false)
         {
             OnRewardTableCreating();
 
@@ -298,7 +298,7 @@
             return AdditionalRewards;
         }
 
-        public override void Initialize()
+        public override void Initialize(bool overrideBaseEvents = false)
         {
             base.Initialize();
             AssignPriorityToRewards();

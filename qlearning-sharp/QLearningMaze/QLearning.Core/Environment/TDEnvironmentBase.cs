@@ -60,15 +60,8 @@
         public virtual int QualitySaveFrequency { get; set; } = 100;
         public virtual int StatesPerPhase { get; set; }
 
-        public virtual void Initialize()
-        {
-            InitializeStatesTable();
-            InitializeQualityTable();
-            InitializeRewardsTable();
-            InitializeSaveFolder();
-        }
 
-        public virtual void Initialize(bool overrideBaseEvents)
+        public virtual void Initialize(bool overrideBaseEvents = false)
         {
             InitializeStatesTable(overrideBaseEvents);
             InitializeQualityTable(overrideBaseEvents);
@@ -76,12 +69,7 @@
             InitializeSaveFolder();
         }
 
-        protected virtual void InitializeStatesTable()
-        {
-            InitializeStatesTable(false);
-        }
-
-        protected virtual void InitializeStatesTable(bool overrideBaseEvents)
+        protected virtual void InitializeStatesTable(bool overrideBaseEvents = false)
         {
             if (!overrideBaseEvents)
                 OnStateTableCreating();
@@ -102,12 +90,7 @@
                 OnStateTableCreated();
         }
 
-        protected virtual void InitializeRewardsTable()
-        {
-            InitializeRewardsTable(false);
-        }
-
-        protected virtual void InitializeRewardsTable(bool overrideBaseEvents)
+        protected virtual void InitializeRewardsTable(bool overrideBaseEvents = false)
         {
             if (!overrideBaseEvents)
                 OnRewardTableCreating();
@@ -127,12 +110,7 @@
                 OnRewardTableCreated();
         }
 
-        protected virtual void InitializeQualityTable()
-        {
-            InitializeQualityTable(false);
-        }
-
-        protected virtual void InitializeQualityTable(bool overrideBaseEvents)
+        protected virtual void InitializeQualityTable(bool overrideBaseEvents = false)
         {
             if (!overrideBaseEvents)
                 OnQualityTableCreating();
