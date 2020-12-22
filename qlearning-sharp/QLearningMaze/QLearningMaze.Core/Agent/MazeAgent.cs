@@ -1,9 +1,7 @@
 ﻿namespace QLearningMaze.Core.Agent
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Mazes;
+
     using QLearning.Core.Agent;
 
     public class MazeAgent : TDAgent<MazeBase>, ITDAgent<MazeBase>

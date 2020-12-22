@@ -1,17 +1,21 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
     using Controls;
+
     using Core;
+
     using QLearning.Core;
     using QLearning.Core.Environment;
+
     using QLearningMaze.Core.Agent;
     using QLearningMaze.Core.Mazes;
+
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using System.Windows.Forms;
     using System.Threading.Tasks;
+    using System.Windows.Forms;
 
     public partial class MazeMain : Form
     {

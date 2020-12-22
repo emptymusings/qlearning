@@ -1,10 +1,8 @@
 ﻿namespace QLearningMaze.Ui.Wpf.ViewModels
 {
-    using System;
-    using System.Data;
-    using System.Collections.Generic;
-    using System.Text;
     using Core.Mazes;
+
+    using System.Data;
 
     public class MazeTableViewModel : ViewModelBase
     {

@@ -1,6 +1,7 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
     using QLearningMaze.Core.Mazes;
+
     using System.Data;
     using System.Windows.Forms;
 

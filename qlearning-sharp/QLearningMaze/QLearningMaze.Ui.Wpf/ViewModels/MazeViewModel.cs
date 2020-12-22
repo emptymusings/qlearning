@@ -1,16 +1,10 @@
 ﻿namespace QLearningMaze.Ui.Wpf.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Collections.ObjectModel;
     using Core.Mazes;
-    using Core.Agent;
-    using System.Runtime.CompilerServices;
-    using Controls;
+
+    using System.Collections.ObjectModel;
     using System.Linq;
-    using Core;
-    
+
     public class MazeViewModel : ViewModelBase
     {
 

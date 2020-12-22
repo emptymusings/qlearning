@@ -1,10 +1,12 @@
 ﻿namespace QLearning.Core.Agent
 {
+    using Environment;
+
+    using Newtonsoft.Json;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Environment;
-    using Newtonsoft.Json;
 
     public partial class TDAgent<TEnvironment> : AgentBase<TEnvironment>, ITDAgent<TEnvironment>
         where TEnvironment : ITDEnvironment

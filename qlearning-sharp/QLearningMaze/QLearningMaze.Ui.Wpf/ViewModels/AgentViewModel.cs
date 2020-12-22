@@ -1,18 +1,19 @@
 ﻿namespace QLearningMaze.Ui.Wpf.ViewModels
 {
-    using System;
-    using System.Windows;    
-    using System.Windows.Input;
-    using System.Collections.Generic;
-    using System.Text;
+    using Commands;
+
     using Core;
     using Core.Agent;
-    using Commands;
-    using System.Threading;
-    using System.Threading.Tasks;
+
     using Microsoft.Win32;
-    using System.Linq;
+
     using QLearningMaze.Core.Mazes;
+
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows;
 
     public class AgentViewModel : ViewModelBase
     {

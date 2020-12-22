@@ -3,6 +3,7 @@
     using QLearning.Core;
     using QLearning.Core.Agent;
     using QLearning.Core.Environment;
+
     using System;
     using System.Collections.Generic;
     using System.Linq;

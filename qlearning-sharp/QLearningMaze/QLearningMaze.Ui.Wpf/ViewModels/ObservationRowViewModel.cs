@@ -1,10 +1,6 @@
 ﻿namespace QLearningMaze.Ui.Wpf.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Collections.ObjectModel;
-    using Controls;
 
     public class ObservationRowViewModel : ViewModelBase
     {

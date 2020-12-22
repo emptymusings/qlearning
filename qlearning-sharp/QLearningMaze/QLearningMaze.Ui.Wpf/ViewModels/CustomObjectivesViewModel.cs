@@ -1,13 +1,13 @@
 ﻿namespace QLearningMaze.Ui.Wpf.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Text;
-    using Core.Mazes;
-    using QLearning.Core.Environment;
-    using System.Linq;
     using Commands;
+
+    using Core.Mazes;
+
+    using QLearning.Core.Environment;
+
+    using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Windows;
 
     public class CustomObjectivesViewModel : ViewModelBase

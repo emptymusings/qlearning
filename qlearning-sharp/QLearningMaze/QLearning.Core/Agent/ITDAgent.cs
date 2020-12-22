@@ -1,8 +1,8 @@
 ﻿namespace QLearning.Core.Agent
 {
-    using System;
-    using System.Collections.Generic;
     using Environment;
+
+    using System.Collections.Generic;
 
     public interface ITDAgent<TEnvironment> : IAgent<TEnvironment>
         where TEnvironment : ITDEnvironment

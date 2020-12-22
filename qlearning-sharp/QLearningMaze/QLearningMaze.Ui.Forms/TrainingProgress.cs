@@ -1,14 +1,13 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
-    using QLearning.Core.Agent;
-    using QLearningMaze.Core.Agent;
-    using QLearningMaze.Core.Mazes;
     using Controls;
+
+    using QLearningMaze.Core.Agent;
+
     using System;
     using System.Drawing;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-    using System.Linq;
 
     public partial class TrainingProgress : Form
     {

@@ -1,7 +1,8 @@
 ﻿namespace QLearning.Core.Agent
 {
-    using System;
     using Environment;
+
+    using System;
     public interface IAgent<TEnvironment>
         where TEnvironment : IRLEnvironment
     {

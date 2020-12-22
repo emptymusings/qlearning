@@ -1,8 +1,9 @@
 ﻿namespace QLearning.Core.Environment
 {
+    using Agent;
+
     using System;
     using System.Collections.Generic;
-    using Agent;
 
     public interface ITDEnvironment : IRLEnvironment
     {

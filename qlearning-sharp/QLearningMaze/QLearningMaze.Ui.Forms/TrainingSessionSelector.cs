@@ -1,16 +1,15 @@
 ﻿namespace QLearningMaze.Ui.Forms
 {
-    using QLearning.Core.Agent;
-    using QLearningMaze.Core;
     using QLearningMaze.Core.Agent;
     using QLearningMaze.Core.Mazes;
+
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-    
+
     public partial class TrainingSessionSelector : Form
     {
         private MazeAgent _agent;

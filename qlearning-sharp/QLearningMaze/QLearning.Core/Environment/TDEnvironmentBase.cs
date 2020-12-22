@@ -1,10 +1,10 @@
 ﻿namespace QLearning.Core.Environment
 {
+    using Agent;
+
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using Agent;
 
     public abstract partial class TDEnvironmentBase : ITDEnvironment
     {
