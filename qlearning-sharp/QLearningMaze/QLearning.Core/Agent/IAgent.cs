@@ -96,24 +96,17 @@
         #endregion
 
         #region Methods
-
-        void Train();
         /// <summary>
         /// Trains the Agent for its environment
         /// </summary>
         /// <param name="overrideBaseEvents">True if base events will be used; False if they should be ignored</param>
-        void Train(bool overrideBaseEvents);
-
-        /// <summary>
-        /// Runs the agent through the environment utilizing the Q-Table policies for the best action(s) to take from a given state
-        /// </summary>
-        void Run(int fromState);
+        void Train(bool overrideBaseEvents = false);
         /// <summary>
         /// Runs the agent through the environment utilizing the Q-Table policies for the best action(s) to take from a given state
         /// </summary>
         /// <param name="fromState">The state from which the agent will start</param>
         /// <param name="overrideBaseEvents">Boolean value that determines whether to override events in this base class</param>
-        void Run(int fromState, bool overrideBaseEvents);
+        void Run(int fromState, bool overrideBaseEvents = false);
         
         #endregion
     }

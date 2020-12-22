@@ -48,14 +48,8 @@
         }
         public int MaximumAllowedBacktracks { get; set; }
 
-        public override void Run(int fromState)
+        public override void Run(int fromState, bool overrideBaseEvents = false)
         {
-            Run(fromState, false);
-        }
-
-        public override void Run(int fromState, bool overrideBaseEvents)
-        {
-
             int action = -1;
             int previousState = -1;
             int numberOfBacktracks = 0;
@@ -72,37 +66,14 @@
                 action = GetPreferredNextAction(fromState);
 
                 var stepValues = Environment.Step(fromState, action);
-
-                State = stepValues.newState;
-
-                if (Environment.Step(fromState, action).newState < 0)
-                {
-                    OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
-                    throw new InvalidOperationException($"I guess I didn't learn very well.  Please try training again (perhaps adjusing the learning rate, discount rate, and/or episode count)");
-                }
-
+                SetState(fromState, stepValues.newState);
+                
                 Score += stepValues.reward;
                 Moves++;
 
-                if (Moves > MaximumAllowedMoves)
-                {
-                    OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
-                    throw new InvalidOperationException($"Something's gone wrong, I've wandered around far too many times");
-                }
+                ValidateMoveCount(fromState);
 
-                if (State == previousState)
-                {
-                    if (MaximumAllowedBacktracks >= 0 &&
-                        numberOfBacktracks > MaximumAllowedBacktracks)
-                    {
-                        OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
-                        throw new InvalidOperationException($"The agent has exceeded the maximum number of backtracks: {MaximumAllowedBacktracks}");
-                    }
-                    else
-                    {
-                        numberOfBacktracks++;
-                    }
-                }
+                ValidateBacktracks(previousState, fromState, ref numberOfBacktracks);
 
                 previousState = fromState;
                 fromState = State;
@@ -110,14 +81,48 @@
                 if (!overrideBaseEvents)
                     OnAgentStateChanged(fromState, Moves, Score);
 
-                if (Environment.IsTerminalState(fromState, action, Moves, MaximumAllowedMoves))
-                {
-                    done = true;
-                }
+                done = Environment.IsTerminalState(fromState, action, Moves, MaximumAllowedMoves);
             }
 
             if (!overrideBaseEvents)
                 OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
+        }
+
+        protected virtual void SetState(int fromState, int toState)
+        {
+            State = toState;
+
+            if (State < 0)
+            {
+                OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
+                throw new InvalidOperationException($"I guess I didn't learn very well.  Please try training again (perhaps adjusing the learning rate, discount rate, and/or episode count)");
+            }
+        }
+
+        protected virtual void ValidateMoveCount(int fromState)
+        {
+            if (Moves > MaximumAllowedMoves)
+            {
+                OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
+                throw new InvalidOperationException($"Something's gone wrong, I've wandered around far too many times");
+            }
+        }
+
+        protected virtual void ValidateBacktracks(int previousState, int fromState, ref int numberOfBacktracks)
+        {
+            if (State == previousState)
+            {
+                if (MaximumAllowedBacktracks >= 0 &&
+                    numberOfBacktracks > MaximumAllowedBacktracks)
+                {
+                    OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
+                    throw new InvalidOperationException($"The agent has exceeded the maximum number of backtracks: {MaximumAllowedBacktracks}");
+                }
+                else
+                {
+                    numberOfBacktracks++;
+                }
+            }
         }
 
         public override void Train()

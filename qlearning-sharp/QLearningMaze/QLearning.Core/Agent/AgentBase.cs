@@ -54,12 +54,7 @@
             throw new NotImplementedException();
         }
 
-        public virtual void Run(int fromState)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void Run(int fromState, bool overrideBaseEvents)
+        public virtual void Run(int fromState, bool overrideBaseEvents = false)
         {
             throw new NotImplementedException();
         }
