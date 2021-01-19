@@ -169,7 +169,7 @@
         {
             MazeAgent agent = new MazeAgent
             {
-                DiscountRate = _agent.DiscountRate,
+                DiscountFactor = _agent.DiscountFactor,
                 Environment = GetTestMaze(),
                 EpsilonDecayEnd = _agent.EpsilonDecayEnd,
                 EpsilonDecayStart = _agent.EpsilonDecayStart,

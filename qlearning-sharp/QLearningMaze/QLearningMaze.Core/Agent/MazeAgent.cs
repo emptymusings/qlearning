@@ -10,14 +10,14 @@
 
         public MazeAgent(
             double learningRate,
-            double discountRate,
+            double discountFactor,
             int numberOfTrainingEpisodes,
             int maximumAllowedMoves = 1000,
             int maximumAllowedBacktracks = -1)
             : base (
                   new MazeBase(1, 1, 0, 0, 200),
                   learningRate,
-                  discountRate,
+                  discountFactor,
                   numberOfTrainingEpisodes,
                   maximumAllowedMoves,
                   maximumAllowedBacktracks)

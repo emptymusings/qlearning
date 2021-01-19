@@ -14,7 +14,7 @@
         /// <summary>
         /// Gets or Sets the Discount Rate, or Discount Factor, used in the Q-Learning formula (aka gamma)
         /// </summary>
-        public double DiscountRate { get; set; }
+        public double DiscountFactor { get; set; }
         /// <summary>
         /// Gets or Sets the Learning Rate used in the Q-Learning formula (aka alpha)
         /// </summary>
@@ -69,7 +69,7 @@
         /// </summary>
         /// <param name="state">The state in which the agent currently resides</param>
         /// <param name="epsilon"></param>
-        protected virtual (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
+        protected virtual (int nextAction, bool usedGreedy) GetTrainingNextAction(int state, double epsilon)
         {
             throw new NotImplementedException();
         }

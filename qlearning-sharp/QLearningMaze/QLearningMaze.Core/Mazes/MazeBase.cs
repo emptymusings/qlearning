@@ -342,7 +342,7 @@
         protected virtual void RunToObjective(CustomObjective reward, int startPosition, int goalPosition)
         {
             double prioritizeLearningRate = 0.1;
-            double prioritizeDiscountRate = .95;
+            double prioritizeDiscountFactor = .95;
             int prioritizeTrainingEpisodes = 5000;
             int prioritizeMaximumMoves = 1000;
             int priorizizeAllowedBacktracks = 3;
@@ -361,7 +361,7 @@
             ITDAgent<MazeBase> tempAgent = new TDAgent<MazeBase>(
                 _objectiveMaze,
                 prioritizeLearningRate,
-                prioritizeDiscountRate,
+                prioritizeDiscountFactor,
                 prioritizeTrainingEpisodes,
                 prioritizeMaximumMoves,
                 priorizizeAllowedBacktracks);            

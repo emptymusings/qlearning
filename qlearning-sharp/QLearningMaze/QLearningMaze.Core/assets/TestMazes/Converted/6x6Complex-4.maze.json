@@ -1481,7 +1481,7 @@
   "EpsilonDecayStart": 1.0,
   "EpsilonDecayEnd": 0.0,
   "LearningRate": 0.5,
-  "DiscountRate": 0.95,
+  "DiscountFactor": 0.95,
   "ObjectiveStates": [],
   "ObjectiveAction": 0,
   "MaximumAllowedMoves": 1000,

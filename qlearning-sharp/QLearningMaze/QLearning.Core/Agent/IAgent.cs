@@ -44,7 +44,7 @@
         /// <summary>
         /// Gets or Sets the Discount Rate, or Discount Factor, used in the Q-Learning formula (aka gamma)
         /// </summary>
-        double DiscountRate { get; set; }
+        double DiscountFactor { get; set; }
         /// <summary>
         /// Gets or Sets the Learning Rate used in the Q-Learning formula (aka alpha)
         /// </summary>

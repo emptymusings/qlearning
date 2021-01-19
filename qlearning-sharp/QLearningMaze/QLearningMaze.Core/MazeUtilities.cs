@@ -28,7 +28,7 @@
         {
             var converted = new MazeAgent
             {
-                DiscountRate = loaded.DiscountRate,
+                DiscountFactor = loaded.DiscountFactor,
                 Environment = loaded.Environment,
                 StartPosition = loaded.StartPosition,
                 EpsilonDecayEnd = loaded.EpsilonDecayEnd,

@@ -6405,7 +6405,7 @@
     "StatesPerPhase": 64
   },
   "LearningStyle": 0,
-  "DiscountRate": 0.85,
+  "DiscountFactor": 0.85,
   "LearningRate": 0.1,
   "EpsilonDecayStart": 1.0,
   "EpsilonDecayEnd": 25000.0,

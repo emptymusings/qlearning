@@ -2838,7 +2838,7 @@
   "EpsilonDecayStart": 1.0,
   "EpsilonDecayEnd": 0.0,
   "LearningRate": 0.1,
-  "DiscountRate": 0.95,
+  "DiscountFactor": 0.95,
   "ObjectiveStates": [
     5,
     5

@@ -538,7 +538,7 @@
                 SecondaryAgent != null)
             {
                 SecondaryAgent.LearningRate = PrimaryAgent.LearningRate;
-                SecondaryAgent.DiscountRate = PrimaryAgent.DiscountRate;
+                SecondaryAgent.DiscountFactor = PrimaryAgent.DiscountFactor;
                 SecondaryAgent.NumberOfTrainingEpisodes = PrimaryAgent.NumberOfTrainingEpisodes;
 
                 if (PrimaryAgent.LearningStyle == QLearning.Core.LearningStyles.QLearning)

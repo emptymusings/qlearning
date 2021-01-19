@@ -18,7 +18,7 @@
         public TDAgent(
             TEnvironment environment,
             double learningRate,
-            double discountRate,
+            double discountFactor,
             int numberOfTrainingEpisodes,
             int maximumAllowedMoves = 1000,
             int maximumAllowedBacktracks = -1)
@@ -26,13 +26,14 @@
             Environment = environment;
             NumberOfTrainingEpisodes = numberOfTrainingEpisodes;
             LearningRate = learningRate;
-            DiscountRate = discountRate;
+            DiscountFactor = discountFactor;
             MaximumAllowedMoves = maximumAllowedMoves;
             MaximumAllowedBacktracks = maximumAllowedBacktracks;
         }
 
         [JsonIgnore]
         public virtual IList<TrainingSession> TrainingSessions { get; set; }
+
         public virtual TrainingSession BestTrainingSession
         {
             get
@@ -88,6 +89,13 @@
                 OnAgentCompleted(Moves, Score, (Environment.TerminalStates.Contains(fromState)));
         }
 
+        #region Validation of State
+
+        /// <summary>
+        /// Sets a new state for the agent as it moves
+        /// </summary>
+        /// <param name="fromState">The state from which the agent is moving</param>
+        /// <param name="toState">The state to which the agent is moving</param>
         protected virtual void SetState(int fromState, int toState)
         {
             State = toState;
@@ -99,6 +107,10 @@
             }
         }
 
+        /// <summary>
+        /// Validates that the agent has not exceeded its allowed number of moves
+        /// </summary>
+        /// <param name="fromState">Indicator of which state the agent was in when it exceeded the allowed moves</param>
         protected virtual void ValidateMoveCount(int fromState)
         {
             if (Moves > MaximumAllowedMoves)
@@ -108,6 +120,12 @@
             }
         }
 
+        /// <summary>
+        /// Validates that the agent has not backtracked more than the acceptable number of times (helps keep the agent from taking too many redundant steps/moves)
+        /// </summary>
+        /// <param name="previousState">The state that the agent was in prior to moving into the fromState (if the current state matches this, it is considered a backtrack)</param>
+        /// <param name="fromState">The state from which the agent moved into its current state (will become the previousState after evaluation)</param>
+        /// <param name="numberOfBacktracks">The number of backtracks to allow the agent to take</param>
         protected virtual void ValidateBacktracks(int previousState, int fromState, ref int numberOfBacktracks)
         {
             if (State == previousState)
@@ -124,6 +142,10 @@
                 }
             }
         }
+
+        #endregion
+
+        #region Training
 
         public override void Train()
         {
@@ -152,6 +174,11 @@
                 OnTrainingStateChanged(false);
         }
 
+        /// <summary>
+        /// Iterates over the training episodes
+        /// </summary>
+        /// <param name="epsilon">The epsilon value used to determine whether to perform exploration/exploitation</param>
+        /// <param name="overrideBaseEvents">Allows the caller to override default events</param>
         protected virtual void RunTrainingSet(double epsilon, bool overrideBaseEvents)
         {
             for (int episode = 0; episode < NumberOfTrainingEpisodes; ++episode)
@@ -177,6 +204,12 @@
             }
         }
 
+        /// <summary>
+        /// Sends the Agent through a single training episode
+        /// </summary>
+        /// <param name="epsilon">The epsilon value used to determine whether to perform exploration/exploitation</param>
+        /// <param name="overrideBaseEvents">Allows the caller to override default events</param>
+        /// <returns>A tuple which indicates the final state of the agent before it terminated (whether successful or not), an the total number of moves it took</returns>
         protected virtual (int finalState, int moves) RunTrainingEpisode(double epsilon, bool overrideBaseEvents)
         {
             Moves = 0;
@@ -191,18 +224,18 @@
             while (!done)
             {
                 // Determine the next action to take
-                var nextActionSet = GetNextAction(State, epsilon);
+                var nextActionSet = GetTrainingNextAction(State, epsilon);
                 int nextAction = nextActionSet.nextAction;
                 var oldQuality = Environment.QualityTable[State][nextAction];
 
                 // Update the quality table
                 if (LearningStyle == LearningStyles.QLearning)
                 {
-                    CalculateQLearning(State, nextAction, LearningRate, DiscountRate);
+                    CalculateQLearning(State, nextAction, LearningRate, DiscountFactor);
                 }
                 else
                 {
-                    CalculateSarsa(State, nextAction, LearningRate, DiscountRate, epsilon);
+                    CalculateSarsa(State, nextAction, LearningRate, DiscountFactor, epsilon);
                 }
 
                 // Step to the next state using the assigned action
@@ -230,6 +263,9 @@
             return (State, Moves);
         }
 
+        /// <summary>
+        /// Calculates the rate at which the epsilon value will decay
+        /// </summary>
         protected virtual double GetEpsilonDecayValue(double epsilon)
         {
             if (EpsilonDecayValue < 0)
@@ -241,7 +277,6 @@
                 return EpsilonDecayValue;
             }
         }
-
 
         /// <summary>
         /// Decays the epsilon value so that as training progesses, known values will be more likely to be used
@@ -258,9 +293,144 @@
         }
 
         /// <summary>
-        /// Selects the agent's next action based on the highest Q-Table's value for its current state
+        /// Get the next action to take from the current state during a training session
         /// </summary>
-        /// <param name="state"></param>
+        /// <param name="state">The state in which the agent currently resides</param>
+        /// <param name="epsilon">The epsilon value used to determine whether to perform exploration/exploitation</param>
+        protected override (int nextAction, bool usedGreedy) GetTrainingNextAction(int state, double epsilon)
+        {
+            double randRand = _random.NextDouble();
+            int nextAction = -1;
+            bool usedGreedy = false;
+
+            if (randRand > epsilon)
+            {
+                int preferredNext = GetPreferredNextAction(state);
+
+                if (preferredNext >= 0)
+                {
+                    nextAction = preferredNext;
+                    usedGreedy = true;
+                }
+            }
+
+            while (nextAction < 0)
+                nextAction = GetRandomNextAction(state);
+
+            return (nextAction, usedGreedy);
+        }
+
+        /// <summary>
+        /// Selects the agent's next action randomly based on its current state (exploration)
+        /// </summary>
+        protected override int GetRandomNextAction(int state)
+        {
+            List<int> possibleNextStates = GetPossibleNextActions(state);
+
+            int count = possibleNextStates.Count;
+            int index = _random.Next(0, count);
+
+            if (possibleNextStates.Count > 0)
+                return possibleNextStates[index];
+            else
+                throw new NullReferenceException($"There are no possible actions that can be taken from the state {state}");
+        }
+
+        /// <summary>
+        /// Gets all possible actions available to the agent in its current state (exploitation)
+        /// </summary>
+        protected override List<int> GetPossibleNextActions(int state)
+        {
+            List<int> result = new List<int>();
+            int actionCount = Environment.NumberOfActions;
+
+            for (int i = 0; i < actionCount; ++i)
+            {
+                if (Environment.StatesTable[state][i] >= 0)
+                {
+                    result.Add(i);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieves the maximum Q-value of a future state/action pair based on the specified state
+        /// </summary>
+        /// <param name="state">The state from which the future maximum Q-value will be determined</param>
+        protected virtual double GetFuturePositionMaxQ(int state)
+        {
+            double maxQ = double.MinValue;
+
+
+            List<int> possNextNextActions = GetPossibleNextActions(state);
+            int selectedNextState = -1;
+
+            for (int i = 0; i < possNextNextActions.Count; ++i)
+            {
+                int futureNextAction = possNextNextActions[i];  // short alias
+
+                double futureQuality = Environment.QualityTable[state][futureNextAction];
+
+                if (!Environment.IsValidState(state))
+                {
+                    throw new InvalidOperationException($"Attempting action {futureNextAction} from state {state} returned an invalid value");
+                }
+
+
+                if (futureQuality > maxQ)
+                {
+                    maxQ = futureQuality;
+                    selectedNextState = state;
+                }
+            }
+
+
+            return maxQ;
+        }
+
+        #endregion
+
+        #region Quality functions
+
+        /// <summary>
+        /// Calculates quality based on the Q-Function
+        /// </summary>
+        /// <param name="state">The state in the Q-matrix to which the quality will be assigned</param>
+        /// <param name="action">The action in the Q-matrix to which the quality will be assigned</param>
+        /// <param name="learningRate">(AKA alpha) - A value between 0 and 1 that indicates weight given to new information, where 0 indicates no weight given to new information, and 1 indicates that only new information is important</param>
+        /// <param name="discountFactor">(AKA gamma) - A value between 0 and 1 that indicates weight between immediate and long-term rewards, where 0 indicates concern only with immediate rewards, and 1 indicates concern only with long term rewards</param>
+        public virtual void CalculateQLearning(int state, int action, double learningRate, double discountFactor)
+        {
+            var step = Environment.Step(state, action);
+            var maxQ = GetFuturePositionMaxQ(step.newState);
+            Environment.QualityTable[state][action] += (learningRate * (step.reward + (discountFactor * maxQ) - step.quality));
+        }
+
+        /// <summary>
+        /// Calculates quality based on the SARSA-Function
+        /// </summary>
+        /// <param name="state">The state in the Q-matrix to which the quality will be assigned</param>
+        /// <param name="action">The action in the Q-matrix to which the quality will be assigned</param>
+        /// <param name="learningRate">(AKA alpha) - A value between 0 and 1 that indicates weight given to new information, where 0 indicates no weight given to new information, and 1 indicates that only new information is important</param>
+        /// <param name="discountFactor">(AKA gamma) - A value between 0 and 1 that indicates weight between immediate and long-term rewards, where 0 indicates concern only with immediate rewards, and 1 indicates concern only with long term rewards</param>
+        /// <param name="epsilon">The epsilon value used to determine whether to perform exploration/exploitation.  In this context, it is used to perform the next action in the policy to "backfill" quality</param>
+        public virtual void CalculateSarsa(int state, int action, double learningRate, double discountFactor, double epsilon)
+        {
+            var step = Environment.Step(state, action);
+            var nextActionSet = GetTrainingNextAction(step.newState, epsilon);
+            var newQ = Environment.QualityTable[step.newState][nextActionSet.nextAction];
+            Environment.QualityTable[state][action] += (learningRate * (step.reward + (discountFactor * newQ) - step.quality));
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Retrieves the next action the agent should take from its current state based on the current policy
+        /// </summary>
+        /// <param name="state">The current state of the agent, from which its next action will be taken</param>
+        /// <param name="excludedActions">Optional array of actions to be considered illegal</param>
         /// <returns></returns>
         protected override int GetPreferredNextAction(int state, int[] excludedActions = null)
         {
@@ -285,119 +455,5 @@
 
             return preferredNext;
         }
-
-        /// <summary>
-        /// Get the next action to take from the current state
-        /// </summary>
-        /// <param name="state">The state in which the agent currently resides</param>
-        /// <param name="epsilon"></param>
-        protected override (int nextAction, bool usedGreedy) GetNextAction(int state, double epsilon)
-        {
-            double randRand = _random.NextDouble();
-            int nextAction = -1;
-            bool usedGreedy = false;
-
-            if (randRand > epsilon)
-            {
-                int preferredNext = GetPreferredNextAction(state);
-
-                if (preferredNext >= 0)
-                {
-                    nextAction = preferredNext;
-                    usedGreedy = true;
-                }
-            }
-
-            while (nextAction < 0)
-                nextAction = GetRandomNextAction(state);
-
-            return (nextAction, usedGreedy);
-        }
-
-
-        /// <summary>
-        /// Selects the agent's next action randomly based on its current state
-        /// </summary>
-        protected override int GetRandomNextAction(int state)
-        {
-            List<int> possibleNextStates = GetPossibleNextActions(state);
-
-            int count = possibleNextStates.Count;
-            int index = _random.Next(0, count);
-
-            if (possibleNextStates.Count > 0)
-                return possibleNextStates[index];
-            else
-                throw new NullReferenceException($"There are no possible actions that can be taken from the state {state}");
-        }
-
-        /// <summary>
-        /// Gets all possible actions available to the agent in its current state
-        /// </summary>
-        protected override List<int> GetPossibleNextActions(int state)
-        {
-            List<int> result = new List<int>();
-            int actionCount = Environment.NumberOfActions;
-
-            for (int i = 0; i < actionCount; ++i)
-            {
-                if (Environment.StatesTable[state][i] >= 0)
-                {
-                    result.Add(i);
-                }
-            }
-
-            return result;
-        }
-
-        public virtual void CalculateQLearning(int state, int action, double learningRate, double discountRate)
-        {
-            var step = Environment.Step(state, action);
-            var forecaster = GetFuturePositionMaxQ(step.newState);
-            var maxQ = forecaster.maxQ;
-            Environment.QualityTable[state][action] += (learningRate * (step.reward + (discountRate * maxQ) - step.quality));
-
-        }
-
-        public virtual void CalculateSarsa(int state, int action, double learningRate, double discountRate, double epsilon)
-        {
-            var step = Environment.Step(state, action);
-            var nextActionSet = GetNextAction(step.newState, epsilon);
-            var newQ = Environment.QualityTable[step.newState][nextActionSet.nextAction];
-            Environment.QualityTable[state][action] += (learningRate * (step.reward + (discountRate * newQ) - step.quality));
-        }
-
-        protected virtual (int selectedNextState, double maxQ) GetFuturePositionMaxQ(int nextState)
-        {
-            double maxQ = double.MinValue;
-
-
-            List<int> possNextNextActions = GetPossibleNextActions(nextState);
-            int selectedNextState = -1;
-
-            for (int i = 0; i < possNextNextActions.Count; ++i)
-            {
-                int futureNextAction = possNextNextActions[i];  // short alias
-
-                double futureQuality = Environment.QualityTable[nextState][futureNextAction];
-
-                if (!Environment.IsValidState(nextState))
-                {
-                    throw new InvalidOperationException($"Attempting action {futureNextAction} from state {nextState} returned an invalid value");
-                }
-
-
-                if (futureQuality > maxQ)
-                {
-                    maxQ = futureQuality;
-                    selectedNextState = nextState;
-                }
-            }
-
-
-            return (selectedNextState, maxQ);
-        }
-
-
     }
 }

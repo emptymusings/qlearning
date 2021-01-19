@@ -2822,7 +2822,7 @@
   "EpsilonDecayStart": 1.0,
   "EpsilonDecayEnd": 0.0,
   "LearningRate": 0.5,
-  "DiscountRate": 0.85,
+  "DiscountFactor": 0.85,
   "ObjectiveStates": [
     8,
     8

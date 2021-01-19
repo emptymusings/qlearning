@@ -409,7 +409,7 @@
             startPositionText.Text = _agentPrimary.StartPosition.ToString();
             secondaryStartTextBox.Text = startPositionText.Text;
             goalPositionText.Text = _agentPrimary.Environment.GoalPosition.ToString();
-            discountRateText.Text = _agentPrimary.DiscountRate.ToString("0.##");
+            discountFactorText.Text = _agentPrimary.DiscountFactor.ToString("0.##");
             learningRateText.Text = _agentPrimary.LearningRate.ToString("0.##");
             trainingEpisodesText.Text = _agentPrimary.NumberOfTrainingEpisodes.ToString();
 
@@ -676,18 +676,18 @@
             }            
         }
 
-        private void discountRateText_Leave(object sender, EventArgs e)
+        private void discountFactorText_Leave(object sender, EventArgs e)
         {
             _overrideRespawn = true;
 
-            if (_agentPrimary.DiscountRate.ToString() != discountRateText.Text &&
-                MazeTextChanged(discountRateText))
+            if (_agentPrimary.DiscountFactor.ToString() != discountFactorText.Text &&
+                MazeTextChanged(discountFactorText))
             {
-                _agentPrimary.DiscountRate = Convert.ToDouble(discountRateText.Text);
+                _agentPrimary.DiscountFactor = Convert.ToDouble(discountFactorText.Text);
                 _needsRetrain = true;
             }
 
-            _agentSecondary.DiscountRate = _agentPrimary.DiscountRate;
+            _agentSecondary.DiscountFactor = _agentPrimary.DiscountFactor;
 
             _overrideRespawn = false;
         }
