@@ -8,3 +8,4 @@ Based on [this article](https://docs.microsoft.com/en-us/archive/msdn-magazine/2
 
 The goal of this project is to explore Q-Learning, and to do so without the benefit of additional tooling, in order to better understand how it works.  Using the above article as a basis, this project creates a customizable maze which an agent will navigate through in an attempt to reach a specific goal state, allowing for multiple rewards/objectives along the path from start to goal.
 
+For the purpsoe of rapid UI development, I used older technologies for the desktop.
